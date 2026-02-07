@@ -1,1 +1,2 @@
 O Descomplica Celular é um consultor digital em PHP que auxilia clientes na escolha do smartphone ideal, baseando-se em suas reais necessidades. Traduz especificações técnicas em benefícios claros via assistente interativo e ranking inteligente. Inclui painel administrativo seguro. Tecnologia a favor da escolha certa. 📱
+# Meu Projeto LabSIS
