@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscrição - Hackathon</title>
+</head>
+<body>
+
+    <h1>Formulário de Inscrição: Hackathon da Escola</h1>
+    <form action="#" method="POST">
+        <fieldset>
+            <legend>Dados Pessoais</legend>
+            <label for="nome">Nome Completo:</label><br>
+            <input type="text" id="nome" name="nome" required><br><br>
+            <label for="email">E-mail Institucional:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="senha">Senha para o sistema:</label><br>
+            <input type="password" id="senha" name="senha" required><br><br>
+            <label for="nascimento">Data de Nascimento:</label><br>
+            <input type="date" id="nascimento" name="nascimento" required>
+        </fieldset><br>
+
+        <fieldset>
+            <legend>Perfil Técnico</legend>
+            <p>Quais linguagens você tem interesse?</p>
+            <input type="checkbox" id="lang-html" name="linguagem" value="html">
+            <label for="lang-html">HTML & CSS</label><br>
+            <input type="checkbox" id="lang-js" name="linguagem" value="js">
+            <label for="lang-js">JavaScript</label><br><br>
+
+            <p>Nível de Experiência:</p>
+            <input type="radio" id="exp-iniciante" name="experiencia" value="iniciante">
+            <label for="exp-iniciante">Iniciante</label><br>
+            <input type="radio" id="exp-intermediario" name="experiencia" value="intermediario">
+            <label for="exp-intermediario">Intermediário</label><br><br>
+
+            <label for="curriculo">Anexe seu Currículo:</label><br>
+            <input type="file" id="curriculo" name="curriculo" accept=".pdf, .docx">
+        </fieldset><br>
+
+        <fieldset>
+            <legend>Detalhes do Evento</legend>
+            <label for="tamanho-camisa">Tamanho da Camiseta:</label><br>
+            <select id="tamanho-camisa" name="tamanho-camisa">
+                <option value="" disabled selected>Escolha um tamanho...</option>
+                <option value="p">Tamanho P</option>
+                <option value="m">Tamanho M</option>
+            </select><br><br>
+            <label for="motivacao">Carta de Motivação:</label><br>
+            <textarea id="motivacao" name="motivacao" rows="5" cols="40"></textarea>
+        </fieldset><br>
+
+        <button type="submit">Finalizar Inscrição</button>
+    </form>
+
+</body>
+</html>
