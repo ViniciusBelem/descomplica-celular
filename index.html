@@ -4,60 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Descomplica Celular | Consultor Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <div class="ambient-background"></div>
+
     <header>
-        <h1>Descomplica Celular</h1>
-        <p>A ponte inteligente entre as especificações e o seu estilo de vida.</p>
+        <div class="header-container">
+            <img src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png" alt="Descomplica Celular" class="header-logo">
+            <div class="title-container">
+                <h1>Descomplica Celular</h1>
+                <p>A ponte inteligente entre as especificações e o seu estilo de vida.</p>
+            </div>
+        </div>
     </header>
 
     <main>
-        <section id="assistente">
-            <h2>Encontrar seu celular ideal: Ficou Simples.</h2>
-            <p>Padrões profissionais de curadoria tecnológica.</p>
+        <section class="box-interativa">
+            <div class="hero-section">
+                <span class="hero-badge">● CONSULTOR DIGITAL INTELIGENTE</span>
+                <h2 class="cinematic-headline">
+                    Encontrar seu celular ideal: <br>
+                    <span class="highlight-orange">Ficou Simples.</span>
+                </h2>
+                <p class="hero-subtitle">Padrões profissionais de curadoria tecnológica. Revelando o verdadeiro poder de cada dispositivo para o seu perfil de uso.</p>
+            </div>
             
-            <form action="#" method="POST">
+            <form id="form-assistente">
                 <fieldset>
                     <legend>Orçamento</legend>
-                    <label for="valor">Até quanto deseja investir?</label>
-                    <input type="range" id="valor" name="valor" min="1000" max="6000" step="100">
+                    <label for="valor">Até quanto deseja investir? (R$ 1.000 a R$ 6.000)</label>
+                    <div class="range-container">
+                        <input type="range" id="valor" name="valor" min="1000" max="6000" step="100" value="2500">
+                    </div>
                 </fieldset>
 
-                <fieldset>
+                <fieldset class="opcoes-radio">
                     <legend>Prioridade Principal</legend>
-                    <input type="radio" id="foco-camera" name="foco" value="camera" required>
-                    <label for="foco-camera">Foco total em Fotografias e Vídeos</label><br>
-                    
-                    <input type="radio" id="foco-jogos" name="foco" value="jogos">
-                    <label for="foco-jogos">Alta Performance (Games pesados)</label><br>
-                    
-                    <input type="radio" id="foco-bateria" name="foco" value="bateria">
-                    <label for="foco-bateria">Bateria de Longa Duração</label>
+                    <label><input type="radio" name="foco" value="camera" required> 📷 Foco total em Fotografias e Vídeos</label>
+                    <label><input type="radio" name="foco" value="jogos"> 🎮 Alta Performance (Games pesados sem travar)</label>
+                    <label><input type="radio" name="foco" value="bateria"> 🔋 Bateria de Longa Duração (Trabalho o dia todo)</label>
                 </fieldset>
 
-                <button type="submit">Encontrar Meu Match Perfeito</button>
+                <button type="submit" class="btn-principal">Encontrar Meu Match Perfeito</button>
             </form>
         </section>
-
-        <section id="resultados">
-            <h2>Match Encontrado para Você</h2>
-            <article>
-                <h3>Samsung Galaxy S23 FE</h3>
-                <p>Processamento neural de imagem para fotos noturnas cinematográficas.</p>
-                <ul>
-                    <li>Câmera Profissional</li>
-                    <li>Otimizado para o seu orçamento</li>
-                </ul>
-                <p><strong>Preço: R$ 2.499,00</strong></p>
-                <a href="#">Adquirir Tecnologia</a>
-            </article>
-        </section>
     </main>
-
-    <footer>
-        <p>&copy; 2026 Sistema Descomplica Celular. Estrutura HTML5 Semântica.</p>
-    </footer>
 
 </body>
 </html>

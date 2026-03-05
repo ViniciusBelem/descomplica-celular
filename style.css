@@ -1,0 +1,470 @@
+/* ==========================================================================
+   DESCOMPLICA CELULAR - PREMIUM DESIGN SYSTEM v2.0
+   Arquitetura: Dark-First / Escalável / GPU-Accelerated / Antutu Style
+   ========================================================================== */
+
+/* --- 1. DESIGN TOKENS (A Fonte da Verdade) --- */
+:root {
+    /* Superfícies & Profundidade */
+    --bg-void: #030407;
+    --bg-surface: rgba(10, 15, 26, 0.6);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    
+    /* Cores de Marca & Neon */
+    --brand-cyan: #00E5FF;
+    --brand-magenta: #8A2BE2;
+    --brand-cta: #FF5A00;
+    
+    /* Tipografia */
+    --text-primary: #F8F9FA;
+    --text-secondary: #8B9BB4;
+    
+    /* Curvas de Animação (Física da Interface) */
+    --ease-fluid: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-slow: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Escala de Z-Index */
+    --z-background: -1;
+    --z-content: 10;
+}
+
+/* --- 2. RESET E TIPOGRAFIA MODERNA --- */
+*, 
+*::before, 
+*::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar customizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-glass);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-cyan);
+}
+
+/* --- 3. FUNDO DINÂMICO (ACELERAÇÃO DE GPU) --- */
+.ambient-background {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    z-index: var(--z-background); 
+    pointer-events: none;
+}
+
+.ambient-background::before, 
+.ambient-background::after {
+    content: ''; 
+    position: absolute; 
+    border-radius: 50%;
+    filter: blur(120px); 
+    opacity: 0.4;
+    will-change: transform;
+    animation: float-glow 20s infinite alternate var(--ease-slow);
+}
+
+.ambient-background::before {
+    width: 60vw; 
+    height: 60vw;
+    background: radial-gradient(circle, var(--brand-magenta) 0%, transparent 60%);
+    top: -20%; 
+    left: -10%;
+}
+
+.ambient-background::after {
+    width: 50vw; 
+    height: 50vw;
+    background: radial-gradient(circle, var(--brand-cyan) 0%, transparent 60%);
+    bottom: -10%; 
+    right: -10%; 
+    animation-delay: -5s;
+}
+
+@keyframes float-glow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(8%, 12%) scale(1.1); }
+}
+
+/* --- 4. CABEÇALHO INVISÍVEL E ELEGANTE --- */
+header, main, footer { 
+    position: relative; 
+    z-index: var(--z-content); 
+}
+
+header {
+    width: 100%; 
+    padding: 24px 0;
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.header-container {
+    max-width: 900px; 
+    margin: 0 auto;
+    display: flex; 
+    justify-content: center;
+}
+
+.header-logo {
+    height: 60px;
+    width: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 229, 255, 0.1);
+}
+/* --- Devolvendo os estilos perdidos do Cabeçalho --- */
+.title-container {
+    text-align: left;
+}
+
+.title-container h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #FFFFFF, #B0C4DE);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Texto com gradiente metálico */
+    margin: 0;
+}
+
+.title-container p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin: 5px 0 0 0;
+}
+.card-produto p { margin-bottom: 20px; color: var(--text-secondary); }
+
+main { 
+    max-width: 800px; 
+    margin: 40px auto; 
+    display: grid; 
+    gap: 40px; 
+    padding: 0 20px; 
+}
+
+/* --- 5. TIPOGRAFIA CINEMÁTICA (ANTUTU STYLE) --- */
+.hero-section { 
+    text-align: left; 
+    margin-bottom: 40px; 
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+    padding-bottom: 32px; 
+}
+
+.hero-badge {
+    display: inline-block; 
+    color: var(--brand-cta); 
+    background: rgba(255, 90, 0, 0.1);
+    border: 1px solid rgba(255, 90, 0, 0.2); 
+    padding: 6px 16px; 
+    border-radius: 50px;
+    font-size: 11px; 
+    font-weight: 800; 
+    letter-spacing: 1.5px; 
+    margin-bottom: 24px; 
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(255, 90, 0, 0.1);
+}
+
+.cinematic-headline {
+    font-size: 64px; 
+    font-weight: 900; 
+    line-height: 1.05; 
+    letter-spacing: -2.5px;
+    color: #FFFFFF; 
+    margin: 0 0 20px 0;
+}
+
+.cinematic-headline .highlight-orange { 
+    color: var(--brand-cta); 
+    text-shadow: 0 0 30px rgba(255, 90, 0, 0.3); 
+}
+
+.hero-subtitle { 
+    font-size: 18px; 
+    color: var(--text-secondary); 
+    max-width: 600px; 
+    font-weight: 400; 
+    margin: 0; 
+}
+
+/* Responsividade do Título */
+@media (max-width: 768px) { 
+    .cinematic-headline { 
+        font-size: 42px; 
+        letter-spacing: -1.5px;
+    } 
+}
+
+/* --- 6. GLASSMORPHISM E CONTAINERS --- */
+.box-interativa, 
+.area-resultados {
+    background: var(--bg-surface); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass); 
+    border-radius: 24px; 
+    padding: 40px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+fieldset { 
+    border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 16px; 
+    padding: 24px; 
+    margin-bottom: 30px; 
+    background: rgba(0,0,0,0.2); 
+}
+
+legend { 
+    background: var(--bg-void); 
+    color: var(--brand-cyan); 
+    padding: 4px 16px; 
+    border-radius: 20px; 
+    font-size: 12px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    border: 1px solid var(--brand-cyan); 
+}
+
+label { 
+    font-weight: 500; 
+    cursor: pointer; 
+}
+
+/* --- 7. BARRA DE ORÇAMENTO (RANGE) E TOOLTIP --- */
+.range-container { 
+    position: relative; 
+    padding-top: 40px; 
+}
+
+input[type="range"] { 
+    -webkit-appearance: none; 
+    width: 100%; 
+    background: transparent; 
+    cursor: pointer; 
+}
+
+input[type="range"]::-webkit-slider-runnable-track { 
+    width: 100%; 
+    height: 6px; 
+    background: rgba(255,255,255,0.1); 
+    border-radius: 10px; 
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    height: 24px; 
+    width: 24px; 
+    border-radius: 50%;
+    background: var(--brand-cyan); 
+    margin-top: -9px; 
+    box-shadow: 0 0 15px var(--brand-cyan); 
+    transition: transform 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover { 
+    transform: scale(1.2); 
+}
+
+.bubble {
+    background: var(--brand-cyan); 
+    color: #000; 
+    padding: 6px 16px; 
+    border-radius: 20px;
+    font-size: 14px; 
+    font-weight: 700; 
+    position: absolute; 
+    bottom: 100%;
+    transform: translateX(-50%) translateY(-10px); 
+    left: 50%; 
+    opacity: 0; 
+    pointer-events: none;
+    transition: opacity 0.3s, left 0.1s linear, transform 0.3s var(--ease-fluid);
+}
+
+.bubble::after {
+    content: ''; 
+    position: absolute; 
+    top: 100%; 
+    left: 50%; 
+    transform: translateX(-50%);
+    border-width: 6px; 
+    border-style: solid; 
+    border-color: var(--brand-cyan) transparent transparent transparent;
+}
+
+.range-container:hover .bubble, 
+.range-container:focus-within .bubble {
+    opacity: 1; 
+    transform: translateX(-50%) translateY(-2px);
+}
+
+/* --- 8. BOTÕES DE SELEÇÃO (RADIO) --- */
+.opcoes-radio { 
+    display: grid; 
+    gap: 12px; 
+}
+
+.opcoes-radio input[type="radio"] { 
+    display: none; 
+}
+
+.opcoes-radio label {
+    display: block; 
+    padding: 16px 20px; 
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-glass); 
+    border-radius: 12px; 
+    transition: all 0.3s var(--ease-fluid);
+}
+
+.opcoes-radio label:hover { 
+    background: rgba(255,255,255,0.08); 
+    transform: translateX(4px); 
+}
+
+/* Quando o input escondido estiver 'checked', o label pai acende */
+.opcoes-radio label:has(input[type="radio"]:checked) {
+    background: rgba(0, 229, 255, 0.1); 
+    border-color: var(--brand-cyan); 
+    /* Esta é a "lateral de vidro" ciano que indica a seleção */
+    box-shadow: inset 4px 0 0 var(--brand-cyan); 
+}
+
+/* --- 9. BOTÃO DE AÇÃO PRINCIPAL (CTA) --- */
+.btn-principal {
+    width: 100%; 
+    padding: 20px; 
+    background: linear-gradient(135deg, #FF5A00, #FF3300);
+    color: white; 
+    border: none; 
+    border-radius: 12px; 
+    font-size: 16px; 
+    font-weight: 700;
+    cursor: pointer; 
+    transition: all 0.3s var(--ease-fluid); 
+    box-shadow: 0 8px 24px rgba(255, 90, 0, 0.3);
+}
+
+.btn-principal:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 12px 32px rgba(255, 90, 0, 0.5); 
+}
+
+/* --- 10. CARTÃO DE RESULTADOS (FÍSICA 3D) --- */
+.card-produto {
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    border: 1px solid var(--border-glass); 
+    border-radius: 16px; 
+    padding: 32px;
+    transform-style: preserve-3d; 
+    will-change: transform;
+}
+
+.card-info h3 { 
+    font-size: 28px; 
+    margin-bottom: 12px; 
+}
+
+.preco { 
+    font-size: 32px; 
+    font-weight: 800; 
+    color: var(--brand-cyan); 
+    margin: 24px 0; 
+}
+
+.area-selos { 
+    display: flex; 
+    gap: 12px; 
+    flex-wrap: wrap; 
+    margin: 20px 0; 
+}
+
+.selo {
+    background: rgba(255, 255, 255, 0.1); 
+    padding: 8px 16px; 
+    border-radius: 30px;
+    font-size: 12px; 
+    font-weight: 600; 
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.selo.bateria { 
+    background: rgba(138, 43, 226, 0.2); 
+    border-color: rgba(138, 43, 226, 0.4); 
+}
+
+/* --- 11. ANIMAÇÕES SENSORIAIS E SKELETONS --- */
+@keyframes shimmer { 
+    0% { background-position: -1000px 0; } 
+    100% { background-position: 1000px 0; } 
+}
+
+.skeleton-box {
+    background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.02) 75%);
+    background-size: 1000px 100%; 
+    animation: shimmer 2.5s infinite linear; 
+    border-radius: 8px; 
+    height: 20px; 
+    margin-bottom: 12px;
+}
+
+.skeleton-title { 
+    height: 40px; 
+    width: 60%; 
+    margin-bottom: 20px; 
+}
+
+.skeleton-desc { 
+    height: 80px; 
+    width: 100%; 
+}
+
+.skeleton-price { 
+    height: 50px; 
+    width: 40%; 
+    margin-top: 20px; 
+}
+
+.stagger-item { 
+    opacity: 0; 
+    transform: translateY(20px); 
+    transition: opacity 0.6s var(--ease-fluid), transform 0.6s var(--ease-fluid); 
+}
+
+.stagger-item.visible { 
+    opacity: 1; 
+    transform: translateY(0); 
+}
+
+/* --- 12. RODAPÉ --- */
+footer { 
+    text-align: center; 
+    padding: 40px 20px; 
+    color: var(--text-secondary); 
+    font-size: 14px; 
+    border-top: 1px solid var(--border-glass); 
+    margin-top: 40px; 
+}
