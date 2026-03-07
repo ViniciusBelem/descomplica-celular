@@ -38,6 +38,7 @@
                     <label for="valor">Até quanto deseja investir? (R$ 1.000 a R$ 6.000)</label>
                     <div class="range-container">
                         <input type="range" id="valor" name="valor" min="1000" max="6000" step="100" value="2500">
+                        <span class="bubble" id="valor-bubble"></span>
                     </div>
                 </fieldset>
 
@@ -51,7 +52,12 @@
                 <button type="submit" class="btn-principal">Encontrar Meu Match Perfeito</button>
             </form>
         </section>
+
+        <section class="area-resultados" style="display: none;"></section>
+
     </main>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
