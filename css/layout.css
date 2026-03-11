@@ -1,0 +1,186 @@
+/* ==========================================================================
+   ARQUITETURA PREMIUM v4.0 - LAYOUT MESTRE
+   Projeto: Descomplica Celular
+   Camada: Grid Estrutural, Cabeçalho Fixo (Navbar) e Rodapé
+   ========================================================================== */
+
+/* --- 1. GRID MESTRE E CONTAINERS --- */
+/* O container principal garante limite de largura em telas 4K e margens seguras no Mobile */
+.container-mestre {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Proteção para o conteúdo não ser engolido pelo Header Fixo */
+.main-content {
+    padding-top: 120px; /* Altura do header + respiro */
+    padding-bottom: 5rem;
+    min-height: calc(100vh - 100px); /* Altura total menos o footer */
+    display: flex;
+    flex-direction: column;
+    gap: 4rem; /* Espaçamento vertical padrão entre seções */
+}
+
+/* --- 2. CABEÇALHO FIXO (STICKY GLASS HEADER) --- */
+.header-global {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: var(--z-header);
+    background: rgba(3, 4, 7, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-glass);
+    transition: var(--transition-base);
+    /* Prevenção de Repaint durante o scroll: */
+    will-change: transform, background-color, padding;
+}
+
+/* Estado ativado via JS quando o usuário rola a página (Shrink effect) */
+.header-global.scrolled {
+    background: rgba(3, 4, 7, 0.9);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;
+    transition: var(--transition-base);
+}
+
+.header-global.scrolled .header-container {
+    height: 70px; /* Encolhe suavemente ao rolar */
+}
+
+/* --- 3. IDENTIDADE VISUAL (LOGO) --- */
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    z-index: calc(var(--z-header) + 1);
+}
+
+.brand-logo {
+    height: 48px;
+    width: auto;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-base);
+}
+
+.brand-name {
+    font-size: var(--fs-h3);
+    font-weight: 900;
+    color: #FFF;
+    letter-spacing: -0.05em;
+}
+
+/* --- 4. NAVEGAÇÃO PRINCIPAL --- */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+/* Sublinhado animado de alta performance (Escala X) */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--brand-cyan);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease-fluid);
+}
+
+.nav-link:hover {
+    color: #FFF;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* --- 5. RODAPÉ (FOOTER) --- */
+.footer-global {
+    border-top: 1px solid var(--border-glass);
+    padding: 2rem 0;
+    margin-top: auto; /* Empurra o footer pro final da página sempre */
+    background: rgba(10, 15, 26, 0.2);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-texto {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+}
+
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    font-size: var(--fs-xs);
+}
+
+.footer-links a:hover {
+    color: var(--brand-cyan);
+}
+
+/* --- 6. RESPONSIVIDADE (MOBILE FIRST ADAPTADO) --- */
+@media (max-width: 768px) {
+    .main-content {
+        padding-top: 100px;
+    }
+
+    .nav-menu {
+        display: none; /* Em um cenário real, aqui entraria um Menu Hambúrguer via JS */
+    }
+
+    /* O CTA do header permanece visível no mobile */
+    .nav-menu.mobile-active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(3, 4, 7, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        border-bottom: 1px solid var(--border-glass);
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+    }
+}

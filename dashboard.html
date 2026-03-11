@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel de controle e análise de métricas de hardware em tempo real.">
+    <title>Dashboard Analítico | Descomplica Celular</title>
+    
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <header class="header-global" role="banner">
+        <div class="container-mestre header-container" style="justify-content: space-between;">
+            <a href="index.html" class="brand-area" aria-label="Ir para a página inicial">
+                <img src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png" alt="Logo Descomplica Celular" class="brand-logo" width="48" height="48">
+                <span class="brand-name">Descomplica</span>
+            </a>
+            
+            <div class="user-controls" style="display: flex; align-items: center; gap: 1.5rem; position: relative;">
+                <a href="index.html#assistente" class="btn-secundario" style="padding: 0.5rem 1rem; font-size: var(--fs-xs);">Nova Análise</a>
+                
+                <button id="profile-menu-trigger" class="profile-btn" aria-haspopup="true" aria-expanded="false">
+                    <div class="avatar-circle" id="user-avatar-initial">...</div>
+                    <div class="profile-info text-left">
+                        <span id="user-name-display" class="profile-name">Carregando...</span>
+                        <span class="profile-role text-muted">Usuário Premium</span>
+                    </div>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem; color: var(--text-secondary);"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+
+                <div id="profile-dropdown" class="profile-dropdown glass-card" role="menu" aria-hidden="true">
+                    <div class="dropdown-header">
+                        <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Sessão Ativa</p>
+                        <p id="user-email-display" class="text-primary" style="font-weight: 600; font-size: var(--fs-sm); margin-top: 0.25rem;">...</p>
+                    </div>
+                    <hr class="dropdown-divider">
+                    <a href="#" class="dropdown-item" role="menuitem">
+                        <span style="margin-right: 8px;">⚙️</span> Configurações
+                    </a>
+                    <a href="#" class="dropdown-item" role="menuitem">
+                        <span style="margin-right: 8px;">🛡️</span> Segurança e Dados
+                    </a>
+                    <hr class="dropdown-divider">
+                    <button id="btn-Logout" class="dropdown-item text-brand-error" role="menuitem" style="width: 100%; text-align: left; cursor: pointer; background: none; border: none; font-family: inherit; font-size: inherit;">
+                        <span style="margin-right: 8px;">🚪</span> Desconectar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container-mestre dashboard-layout" role="main">
+        
+        <header class="dashboard-header mb-4">
+            <h1 class="dashboard-headline">Monitoramento de Hardware</h1>
+            <p class="text-secondary">Conectando aos nós de benchmark globais. Aguardando sincronização da API...</p>
+        </header>
+
+        <section class="metrics-grid" aria-label="Métricas principais" aria-live="polite">
+            
+            <article class="glass-card metric-widget">
+                <div class="metric-header">
+                    <h3 class="metric-title">Status da API</h3>
+                    <span class="badge" id="api-status-badge">Conectando...</span>
+                </div>
+                <div class="metric-content" id="api-latency-container">
+                    <div class="skeleton skeleton-title" style="width: 40%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                </div>
+            </article>
+
+            <article class="glass-card metric-widget">
+                <div class="metric-header">
+                    <h3 class="metric-title">Matrizes Processadas</h3>
+                </div>
+                <div class="metric-content" id="devices-analyzed-container">
+                    <div class="skeleton skeleton-title" style="width: 50%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                </div>
+            </article>
+
+            <article class="glass-card metric-widget">
+                <div class="metric-header">
+                    <h3 class="metric-title">Investimento Médio</h3>
+                </div>
+                <div class="metric-content" id="avg-budget-container">
+                    <div class="skeleton skeleton-title" style="width: 60%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 40%;"></div>
+                </div>
+            </article>
+
+        </section>
+
+        <section class="analytics-core mt-4">
+            <div class="analytics-grid">
+                
+                <div class="glass-card analytics-panel main-panel">
+                    <div class="panel-header">
+                        <h2>Tendências de Performance (Tempo Real)</h2>
+                        <button class="btn-secundario btn-small" id="btn-refresh-data" aria-label="Atualizar dados">↻ Atualizar</button>
+                    </div>
+                    <div class="panel-body" id="chart-container" aria-live="polite">
+                        <div class="skeleton skeleton-block chart-skeleton" style="height: 300px; border-radius: var(--radius-sm);"></div>
+                    </div>
+                </div>
+
+                <div class="glass-card analytics-panel sidebar-panel">
+                    <div class="panel-header">
+                        <h2>Últimos Matches</h2>
+                    </div>
+                    <div class="panel-body list-container" id="recent-matches-container" aria-live="polite">
+                        <div class="skeleton skeleton-text" style="height: 3rem; margin-bottom: 1rem;"></div>
+                        <div class="skeleton skeleton-text" style="height: 3rem; margin-bottom: 1rem;"></div>
+                        <div class="skeleton skeleton-text" style="height: 3rem; margin-bottom: 1rem;"></div>
+                        <div class="skeleton skeleton-text" style="height: 3rem;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module" src="js/api-services.js"></script>
+</body>
+</html>
