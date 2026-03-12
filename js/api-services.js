@@ -1,11 +1,12 @@
 /* ==========================================================================
    ARQUITETURA PREMIUM v4.0 - API SERVICES & DASHBOARD ENGINE
    Projeto: Descomplica Celular
-   Camada: Consumo de Dados, Manipulação de DOM e Segurança de Rota (Guards)
+   Camada: Consumo de Dados Reais (Firestore), DOM e Segurança (Guards)
    ========================================================================== */
 
-import { auth } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { collection, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 class DashboardEngine {
     constructor() {
@@ -33,143 +34,163 @@ class DashboardEngine {
 
     init() {
         this.bindEvents();
-        this.verifySecurityClearance(); // O Segurança da Porta
+        this.verifySecurityClearance(); 
     }
 
     /* --- 1. CONTROLE DE SESSÃO REAL (FIREBASE GUARD) --- */
     verifySecurityClearance() {
-        // O Firebase fica "escutando" o estado do usuário na aba
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // USUÁRIO AUTENTICADO
                 const nomeExibicao = user.displayName || user.email.split('@')[0];
                 this.userNameDisplay.textContent = nomeExibicao;
-                
-                // --- NOVOS DADOS DO PERFIL ---
-                this.userEmailDisplay.textContent = user.email; // Puxa o e-mail real do Google
-                this.userEmailDisplay.title = user.email; // (Cria o hover do e-mail completo)
-                this.userAvatarInitial.textContent = nomeExibicao.charAt(0).toUpperCase(); // Pega a primeira letra do nome
+                this.userEmailDisplay.textContent = user.email; 
+                this.userEmailDisplay.title = user.email; 
+                this.userAvatarInitial.textContent = nomeExibicao.charAt(0).toUpperCase();
 
+                // Dispara a busca de dados assim que confirma quem é o utilizador
                 this.fetchDashboardData(); 
             } else {
-                // INVASOR: Não tem token. Redireciona imediatamente.
                 console.warn("%c[Security] Acesso negado. Redirecionando para login...", "color: #FF3333; font-weight: bold;");
-                window.location.replace('login.html'); // replace() impede que o usuário use o botão "Voltar" do navegador
+                window.location.replace('login.html'); 
             }
         });
     }
 
     bindEvents() {
-        // Logout seguro e definitivo do Firebase
-        // Toggle do Menu de Perfil
-        this.profileTrigger.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que o clique feche imediatamente
-            const isExpanded = this.profileDropdown.classList.toggle('active');
-            this.profileTrigger.setAttribute('aria-expanded', isExpanded);
-        });
+        if (this.profileTrigger && this.profileDropdown) {
+            this.profileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isExpanded = this.profileDropdown.classList.toggle('active');
+                this.profileTrigger.setAttribute('aria-expanded', isExpanded);
+            });
 
-        // Fechar o menu ao clicar fora dele
-        document.addEventListener('click', (e) => {
-            if (!this.profileDropdown.contains(e.target) && !this.profileTrigger.contains(e.target)) {
-                this.profileDropdown.classList.remove('active');
-                this.profileTrigger.setAttribute('aria-expanded', 'false');
-            }
-        });
-        this.btnLogout.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                await signOut(auth);
-                sessionStorage.removeItem('descomplica_user'); // Limpeza por garantia
-                window.location.replace('login.html');
-            } catch (error) {
-                console.error("[Auth API] Erro ao deslogar:", error);
-            }
-        });
-
-        this.btnRefresh.addEventListener('click', () => {
-            this.fetchDashboardData(true); 
-        });
-    }
-
-    /* --- 2. COMUNICAÇÃO ASSÍNCRONA (SIMULAÇÃO DE API) --- */
-    async fetchDashboardData(isRefresh = false) {
-        if (isRefresh) {
-            this.setLoadingState();
+            document.addEventListener('click', (e) => {
+                if (!this.profileDropdown.contains(e.target) && !this.profileTrigger.contains(e.target)) {
+                    this.profileDropdown.classList.remove('active');
+                    this.profileTrigger.setAttribute('aria-expanded', 'false');
+                }
+            });
         }
 
-        try {
-            const data = await this.simulateServerDelay(1500);
-            
-            this.renderMetrics(data.metrics);
-            this.renderChart(data.chartData);
-            this.renderMatchesList(data.recentMatches);
+        if (this.btnLogout) {
+            this.btnLogout.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    await signOut(auth);
+                    sessionStorage.removeItem('descomplica_user'); 
+                    window.location.replace('login.html');
+                } catch (error) {
+                    console.error("[Auth API] Erro ao deslogar:", error);
+                }
+            });
+        }
 
-            this.apiBadge.textContent = "Conectado";
+        if (this.btnRefresh) {
+            this.btnRefresh.addEventListener('click', () => {
+                this.fetchDashboardData(true); 
+            });
+        }
+    }
+
+    /* --- 2. LEITURA DE DADOS REAIS NO FIRESTORE --- */
+    async fetchDashboardData(isRefresh = false) {
+        if (isRefresh) this.setLoadingState();
+
+        try {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            // Cria uma consulta (Query) pedindo APENAS os matches deste utilizador
+            const q = query(
+                collection(db, "historico_matches"),
+                where("uid", "==", user.uid),
+                orderBy("data_pesquisa", "desc"),
+                limit(10) // Traz apenas as 10 últimas análises para não pesar a rede
+            );
+
+            const querySnapshot = await getDocs(q);
+            
+            let totalOrcamento = 0;
+            let matches = [];
+            let counts = { camera: 0, performance: 0, bateria: 0 };
+
+            // Varre os documentos reais que vieram do Google
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                matches.push({
+                    model: `${data.marca} ${data.modelo}`,
+                    profile: `Foco: ${data.perfil.toUpperCase()}`,
+                    price: `R$ ${data.preco.toLocaleString('pt-BR')}`
+                });
+                
+                totalOrcamento += data.preco;
+                
+                if (data.perfil === 'camera') counts.camera++;
+                else if (data.perfil === 'performance') counts.performance++;
+                else if (data.perfil === 'bateria') counts.bateria++;
+            });
+
+            const totalMatches = matches.length;
+            const avgBudget = totalMatches > 0 ? (totalOrcamento / totalMatches) : 0;
+
+            // Calcula porcentagens para o gráfico baseadas nas pesquisas reais
+            const chartData = [
+                { label: 'Câmera', value: totalMatches ? Math.round((counts.camera / totalMatches) * 100) : 0 },
+                { label: 'Performance', value: totalMatches ? Math.round((counts.performance / totalMatches) * 100) : 0 },
+                { label: 'Bateria', value: totalMatches ? Math.round((counts.bateria / totalMatches) * 100) : 0 }
+            ];
+
+            // Embala os dados matemáticos
+            const metrics = {
+                latency: Math.floor(Math.random() * (20 - 5 + 1)) + 5 + "ms", // Ping apenas decorativo
+                devicesScanned: totalMatches, // Mostra o número real de pesquisas do utilizador
+                avgBudget: avgBudget
+            };
+
+            // Entrega os dados reais para a interface desenhar
+            this.renderMetrics(metrics);
+            this.renderChart(chartData);
+            this.renderMatchesList(matches);
+
+            this.apiBadge.textContent = "Sincronizado";
             this.apiBadge.classList.add('success');
             this.apiBadge.classList.remove('badge'); 
             this.apiBadge.classList.add('badge'); 
 
         } catch (error) {
-            console.error("[Dashboard Engine] Falha ao carregar dados:", error);
-            this.apiBadge.textContent = "Erro de Conexão";
+            console.error("[Dashboard Engine] Falha ao carregar dados do Firestore:", error);
+            this.apiBadge.textContent = "Erro de Sincronização";
             this.apiBadge.style.backgroundColor = "rgba(255, 51, 51, 0.1)";
             this.apiBadge.style.color = "var(--brand-error)";
         }
-    }
-
-    simulateServerDelay(ms) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve({
-                    metrics: {
-                        latency: "14ms",
-                        devicesScanned: 145892,
-                        avgBudget: 2850.00
-                    },
-                    chartData: [
-                        { label: 'Câmera', value: 85 },
-                        { label: 'Jogos', value: 62 },
-                        { label: 'Bateria', value: 94 },
-                        { label: 'Multitarefa', value: 78 },
-                        { label: 'Custo-Benefício', value: 88 }
-                    ],
-                    recentMatches: [
-                        { model: "Samsung Galaxy A54", profile: "Foco em Custo-Benefício", price: "R$ 1.799" },
-                        { model: "iPhone 13", profile: "Foco em Câmera e Redes Sociais", price: "R$ 3.599" },
-                        { model: "Poco X5 Pro", profile: "Alta Performance / Jogos", price: "R$ 1.950" },
-                        { model: "Motorola Edge 40", profile: "Design e Multitarefa", price: "R$ 2.399" }
-                    ]
-                });
-            }, ms);
-        });
     }
 
     /* --- 3. MOTORES DE RENDERIZAÇÃO DE UI --- */
     renderMetrics(metrics) {
         this.latencyContainer.innerHTML = `
             <div class="metric-value">${metrics.latency}</div>
-            <div class="metric-subtitle">Ping Servidor SP-01</div>
+            <div class="metric-subtitle">Ping Servidor Google Cloud</div>
         `;
 
         this.devicesContainer.innerHTML = `
-            <div class="metric-value">${metrics.devicesScanned.toLocaleString('pt-BR')}</div>
-            <div class="metric-subtitle">Aparelhos no Banco de Dados</div>
+            <div class="metric-value">${metrics.devicesScanned}</div>
+            <div class="metric-subtitle">Suas Análises Salvas</div>
         `;
 
         this.budgetContainer.innerHTML = `
             <div class="metric-value">${metrics.avgBudget.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
-            <div class="metric-subtitle">Orçamento médio dos usuários</div>
+            <div class="metric-subtitle">Seu investimento médio</div>
         `;
     }
 
     renderChart(data) {
-        let chartHTML = `<div style="display: flex; height: 100%; align-items: flex-end; gap: 1rem; padding-top: 2rem;">`;
+        let chartHTML = `<div style="display: flex; height: 100%; align-items: flex-end; justify-content: space-around; gap: 1rem; padding-top: 2rem;">`;
         
         data.forEach(item => {
             chartHTML += `
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; group">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <span style="font-size: var(--fs-xs); color: var(--brand-cyan); font-weight: 700;">${item.value}%</span>
-                    <div style="width: 100%; background: rgba(0, 229, 255, 0.1); border-radius: var(--radius-sm) var(--radius-sm) 0 0; position: relative; height: 200px; overflow: hidden;">
+                    <div style="width: 100%; max-width: 60px; background: rgba(0, 229, 255, 0.1); border-radius: var(--radius-sm) var(--radius-sm) 0 0; position: relative; height: 200px; overflow: hidden;">
                         <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: ${item.value}%; background: linear-gradient(0deg, var(--brand-cyan), #00b3cc); transition: height 1s var(--ease-bounce);"></div>
                     </div>
                     <span style="font-size: var(--fs-xs); color: var(--text-secondary); text-align: center;">${item.label}</span>
@@ -180,6 +201,7 @@ class DashboardEngine {
         chartHTML += `</div>`;
         this.chartContainer.innerHTML = chartHTML;
 
+        // Gatilho de animação fluída
         const bars = this.chartContainer.querySelectorAll('div > div > div');
         bars.forEach(bar => {
             const finalHeight = bar.style.height;
@@ -189,6 +211,16 @@ class DashboardEngine {
     }
 
     renderMatchesList(matches) {
+        if (matches.length === 0) {
+            this.matchesContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    <p>Nenhuma análise encontrada no banco de dados.</p>
+                    <a href="index.html#assistente" style="color: var(--brand-cyan); font-size: var(--fs-xs); display: block; margin-top: 0.5rem;">Faça seu primeiro Match</a>
+                </div>
+            `;
+            return;
+        }
+
         let listHTML = '';
         matches.forEach(match => {
             listHTML += `
@@ -205,7 +237,7 @@ class DashboardEngine {
     }
 
     setLoadingState() {
-        this.apiBadge.textContent = "Atualizando...";
+        this.apiBadge.textContent = "Sincronizando...";
         this.apiBadge.className = "badge"; 
 
         const skeletonHtmlText = '<div class="skeleton skeleton-title" style="width: 50%;"></div><div class="skeleton skeleton-text" style="width: 80%;"></div>';
@@ -227,6 +259,6 @@ class DashboardEngine {
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('api-status-badge')) {
         window.DashboardUI = new DashboardEngine();
-        console.log('%c[Descomplica Celular] Dashboard Seguro Iniciado', 'color: #00FA9A; font-weight: bold;');
+        console.log('%c[Descomplica Celular] Dashboard Conectado ao Firestore', 'color: #00FA9A; font-weight: bold;');
     }
 });

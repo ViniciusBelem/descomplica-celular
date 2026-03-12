@@ -10,11 +10,11 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebas
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZeOCLEPWiKwc7AnsnFGFIkK3cjhg48XE",
-    authDomain: "descomplica-celular.firebaseapp.com",
-    projectId: "descomplica-celular",
-    storageBucket: "descomplica-celular.firebasestorage.app",
-    messagingSenderId: "1016566752922",
-    appId: "1:1016566752922:web:8e07b5f4184720705e6123"
+  authDomain: "descomplica-celular.firebaseapp.com",
+  projectId: "descomplica-celular",
+  storageBucket: "descomplica-celular.firebasestorage.app",
+  messagingSenderId: "1016566752922",
+  appId: "1:1016566752922:web:8e07b5f4184720705e6123"
 };
 
 const app = initializeApp(firebaseConfig);

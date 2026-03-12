@@ -1,8 +1,12 @@
 /* ==========================================================================
    ARQUITETURA PREMIUM v4.0 - MATCH ENGINE (CÉREBRO DO CONSULTOR)
    Projeto: Descomplica Celular
-   Camada: Lógica de Negócio, Filtros Algorítmicos e Renderização
+   Camada: Lógica de Negócio, Filtros Algorítmicos e Firestore (addDoc)
    ========================================================================== */
+
+// 1. IMPORTAÇÕES DA NUVEM (FIREBASE FIRESTORE)
+import { db, auth } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 class MatchEngine {
     constructor() {
@@ -10,7 +14,7 @@ class MatchEngine {
         this.orcamentoInput = document.getElementById('orcamento');
         this.resultadoContainer = document.getElementById('resultado-container');
         
-        // O nosso "Banco de Dados" embutido (Em produção, isso viria de uma API real)
+        // Banco de Dados Embutido (Catálogo)
         this.database = [
             // --- CÂMERA ---
             { marca: "Samsung", modelo: "Galaxy A54", preco: 1799, foco: "camera", specs: ["50MP OIS", "Selfie 32MP", "Exynos 1380"], selo: "📷 Custo-Benefício" },
@@ -41,36 +45,47 @@ class MatchEngine {
     processarAnalise(e) {
         e.preventDefault();
 
-        // 1. Captura as variáveis do utilizador
         const orcamentoMax = parseInt(this.orcamentoInput.value);
         const focoSelecionado = document.querySelector('input[name="foco"]:checked').value;
 
-        // 2. Aciona o estado visual de carregamento (Skeletons)
         this.renderLoading();
 
-        // 3. Simula o processamento do Servidor (1.5 segundos de "tensão")
         setTimeout(() => {
             const matchPerfeito = this.calcularAlgoritmo(orcamentoMax, focoSelecionado);
             this.renderResultado(matchPerfeito, orcamentoMax);
+
+            // 2. A MÁGICA DA NUVEM: Envia para o Firestore se houver usuário logado
+            if (matchPerfeito && auth.currentUser) {
+                this.salvarMatchNaNuvem(matchPerfeito, focoSelecionado);
+            }
+
         }, 1500);
+    }
+
+    /* --- 3. MOTOR DE ESCRITA NO FIRESTORE (addDoc) --- */
+    async salvarMatchNaNuvem(aparelho, foco) {
+        try {
+            const docRef = await addDoc(collection(db, "historico_matches"), {
+                uid: auth.currentUser.uid, 
+                email: auth.currentUser.email,
+                marca: aparelho.marca,
+                modelo: aparelho.modelo,
+                preco: aparelho.preco,
+                perfil: foco,
+                data_pesquisa: serverTimestamp() 
+            });
+            console.log("%c[Firestore] Match guardado na nuvem! ID: " + docRef.id, "color: #00FA9A; font-weight: bold;");
+        } catch (error) {
+            console.error("[Firestore] Erro grave ao guardar dados: ", error);
+        }
     }
 
     /* --- O CÉREBRO MATEMÁTICO --- */
     calcularAlgoritmo(orcamento, foco) {
-        // Filtro Primário: Isola apenas os aparelhos da categoria que o utilizador pediu
         let aparelhosNoFoco = this.database.filter(cel => cel.foco === foco);
-
-        // Filtro Secundário: Corta tudo que seja mais caro que o limite do utilizador
         let aparelhosNoOrcamento = aparelhosNoFoco.filter(cel => cel.preco <= orcamento);
-
-        // Se não sobrar nada, retorna nulo (orçamento muito baixo para o foco)
         if (aparelhosNoOrcamento.length === 0) return null;
-
-        // A Mágica: Ordena os aparelhos que sobraram do MAIS CARO para o MAIS BARATO
-        // Isso garante que vamos entregar o MELHOR hardware possível dentro do limite de dinheiro dele.
         aparelhosNoOrcamento.sort((a, b) => b.preco - a.preco);
-
-        // O vencedor é o primeiro da lista!
         return aparelhosNoOrcamento[0];
     }
 
@@ -85,12 +100,10 @@ class MatchEngine {
                 <div class="skeleton skeleton-block" style="margin-top: 2rem;"></div>
             </div>
         `;
-        // Rola a tela suavemente até a área de resultado
         this.resultadoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     renderResultado(aparelho, orcamento) {
-        // Cenário 1: Orçamento insuficiente
         if (!aparelho) {
             this.resultadoContainer.innerHTML = `
                 <div class="glass-card" style="max-width: 700px; margin: 0 auto; border-top: 4px solid var(--brand-error); text-align: center;">
@@ -103,27 +116,20 @@ class MatchEngine {
             return;
         }
 
-        // Cenário 2: Match Perfeito Encontrado!
         const economia = orcamento - aparelho.preco;
         const seloEconomia = economia > 0 ? `<span class="badge success" style="margin-left: 10px;">Economia de R$ ${economia}</span>` : '';
-
-        // Gera as tags de especificações dinamicamente
         const specsHtml = aparelho.specs.map(spec => `<span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-secondary); border-color: var(--border-glass); font-weight: 500;">${spec}</span>`).join('');
 
         this.resultadoContainer.innerHTML = `
             <div class="glass-card reveal-on-scroll ativo" style="max-width: 800px; margin: 0 auto; border-top: 4px solid var(--brand-cyan);">
                 <span class="badge" style="margin-bottom: 1.5rem;">${aparelho.selo}</span>
-                
                 <h2 style="font-size: var(--fs-h2); color: #FFF; margin-bottom: 0.5rem;">
                     ${aparelho.marca} <span style="color: var(--brand-cyan);">${aparelho.modelo}</span>
                 </h2>
-                
                 <p class="text-secondary mb-4" style="font-size: var(--fs-base);">O algoritmo determinou que este é o hardware mais poderoso disponível para a sua prioridade, respeitando o limite do seu capital.</p>
-                
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2.5rem;">
                     ${specsHtml}
                 </div>
-
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-glass);">
                     <div>
                         <p class="text-muted" style="font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1px;">Investimento Recomendado</p>
@@ -132,7 +138,6 @@ class MatchEngine {
                         </div>
                         <div style="margin-top: 0.5rem;">${seloEconomia}</div>
                     </div>
-                    
                     <button class="btn-principal" style="width: auto; padding: 1rem 2.5rem;" onclick="alert('Funcionalidade de compra simulada com sucesso!')">
                         Adquirir Hardware
                     </button>
@@ -142,8 +147,7 @@ class MatchEngine {
     }
 }
 
-// Inicializa o motor
 document.addEventListener('DOMContentLoaded', () => {
     window.MatchSystem = new MatchEngine();
-    console.log('%c[Descomplica Celular] Algoritmo de Match Ativado', 'color: #FF5A00; font-weight: bold;');
+    console.log('%c[Descomplica Celular] Algoritmo de Match Ativado (Com Firebase)', 'color: #FF5A00; font-weight: bold;');
 });
