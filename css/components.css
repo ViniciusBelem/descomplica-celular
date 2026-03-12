@@ -279,7 +279,14 @@
     visibility: hidden;
     transform: translateY(-10px);
     transition: var(--transition-fast);
+    
+    /* Textura de Vidro Injetada Diretamente */
+    background: var(--bg-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass);
 }
 
 /* Classe ativada via JavaScript */
@@ -308,3 +315,12 @@
 
 .text-brand-error { color: var(--brand-error); }
 .text-brand-error:hover { background: rgba(255, 51, 51, 0.1); }
+
+/* --- TRATAMENTO DE TEXTOS LONGOS NO MENU --- */
+#user-email-display {
+    white-space: nowrap;      /* Impede que o texto quebre para a linha de baixo */
+    overflow: hidden;         /* Esconde tudo o que tentar vazar da caixa */
+    text-overflow: ellipsis;  /* Coloca os "..." automaticamente no exato pixel do corte */
+    width: 100%;              /* Garante que ele obedeça aos limites do dropdown */
+    display: block;
+}

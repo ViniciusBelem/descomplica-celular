@@ -47,8 +47,9 @@ class DashboardEngine {
                 
                 // --- NOVOS DADOS DO PERFIL ---
                 this.userEmailDisplay.textContent = user.email; // Puxa o e-mail real do Google
+                this.userEmailDisplay.title = user.email; // (Cria o hover do e-mail completo)
                 this.userAvatarInitial.textContent = nomeExibicao.charAt(0).toUpperCase(); // Pega a primeira letra do nome
-                
+
                 this.fetchDashboardData(); 
             } else {
                 // INVASOR: Não tem token. Redireciona imediatamente.

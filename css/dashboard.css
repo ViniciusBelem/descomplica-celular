@@ -60,11 +60,14 @@
 
 /* Tipografia injetada pelo JS para os números da API */
 .metric-value {
-    font-size: var(--fs-h1);
+    font-size: clamp(2rem, 3.5vw, 3.5rem); /* Diminui a escala máxima para não estourar */
     font-weight: 900;
     color: var(--brand-cyan);
     line-height: 1;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Coloca "..." se a tela for muito pequena */
 }
 
 .metric-subtitle {
