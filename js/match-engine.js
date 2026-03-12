@@ -1,8 +1,12 @@
 /* ==========================================================================
    ARQUITETURA PREMIUM v4.0 - MATCH ENGINE (CÉREBRO DO CONSULTOR)
    Projeto: Descomplica Celular
-   Camada: Lógica de Negócio, Filtros Algorítmicos e Renderização
+   Camada: Lógica de Negócio, Filtros Algorítmicos, Firestore e Renderização
    ========================================================================== */
+
+// 1. IMPORTAÇÕES DA NUVEM (FIREBASE)
+import { db, auth } from './firebase-config.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 class MatchEngine {
     constructor() {
@@ -10,7 +14,7 @@ class MatchEngine {
         this.orcamentoInput = document.getElementById('orcamento');
         this.resultadoContainer = document.getElementById('resultado-container');
         
-        // O nosso "Banco de Dados" embutido (Em produção, isso viria de uma API real)
+        // O nosso "Banco de Dados" embutido
         this.database = [
             // --- CÂMERA ---
             { marca: "Samsung", modelo: "Galaxy A54", preco: 1799, foco: "camera", specs: ["50MP OIS", "Selfie 32MP", "Exynos 1380"], selo: "📷 Custo-Benefício" },
@@ -41,36 +45,48 @@ class MatchEngine {
     processarAnalise(e) {
         e.preventDefault();
 
-        // 1. Captura as variáveis do utilizador
         const orcamentoMax = parseInt(this.orcamentoInput.value);
         const focoSelecionado = document.querySelector('input[name="foco"]:checked').value;
 
-        // 2. Aciona o estado visual de carregamento (Skeletons)
         this.renderLoading();
 
-        // 3. Simula o processamento do Servidor (1.5 segundos de "tensão")
         setTimeout(() => {
             const matchPerfeito = this.calcularAlgoritmo(orcamentoMax, focoSelecionado);
             this.renderResultado(matchPerfeito, orcamentoMax);
+
+            // 2. A MÁGICA DA NUVEM: Se achou um telemóvel E o utilizador está logado
+            if (matchPerfeito && auth.currentUser) {
+                this.salvarMatchNaNuvem(matchPerfeito, focoSelecionado);
+            }
+
         }, 1500);
+    }
+
+    /* --- 3. MOTOR DE ESCRITA NO FIRESTORE --- */
+    async salvarMatchNaNuvem(aparelho, foco) {
+        try {
+            // Cria um "Documento" dentro da "Coleção" historico_matches
+            const docRef = await addDoc(collection(db, "historico_matches"), {
+                uid: auth.currentUser.uid, // O código secreto do utilizador no Google
+                email: auth.currentUser.email,
+                marca: aparelho.marca,
+                modelo: aparelho.modelo,
+                preco: aparelho.preco,
+                perfil: foco,
+                data_pesquisa: serverTimestamp() // Pega a hora exata dos servidores do Google
+            });
+            console.log("%c[Firestore] Match guardado na nuvem! ID: " + docRef.id, "color: #00FA9A; font-weight: bold;");
+        } catch (error) {
+            console.error("[Firestore] Erro grave ao guardar dados: ", error);
+        }
     }
 
     /* --- O CÉREBRO MATEMÁTICO --- */
     calcularAlgoritmo(orcamento, foco) {
-        // Filtro Primário: Isola apenas os aparelhos da categoria que o utilizador pediu
         let aparelhosNoFoco = this.database.filter(cel => cel.foco === foco);
-
-        // Filtro Secundário: Corta tudo que seja mais caro que o limite do utilizador
         let aparelhosNoOrcamento = aparelhosNoFoco.filter(cel => cel.preco <= orcamento);
-
-        // Se não sobrar nada, retorna nulo (orçamento muito baixo para o foco)
         if (aparelhosNoOrcamento.length === 0) return null;
-
-        // A Mágica: Ordena os aparelhos que sobraram do MAIS CARO para o MAIS BARATO
-        // Isso garante que vamos entregar o MELHOR hardware possível dentro do limite de dinheiro dele.
         aparelhosNoOrcamento.sort((a, b) => b.preco - a.preco);
-
-        // O vencedor é o primeiro da lista!
         return aparelhosNoOrcamento[0];
     }
 
@@ -85,29 +101,24 @@ class MatchEngine {
                 <div class="skeleton skeleton-block" style="margin-top: 2rem;"></div>
             </div>
         `;
-        // Rola a tela suavemente até a área de resultado
         this.resultadoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     renderResultado(aparelho, orcamento) {
-        // Cenário 1: Orçamento insuficiente
         if (!aparelho) {
             this.resultadoContainer.innerHTML = `
                 <div class="glass-card" style="max-width: 700px; margin: 0 auto; border-top: 4px solid var(--brand-error); text-align: center;">
                     <div class="success-icon" style="background: rgba(255,51,51,0.1); color: var(--brand-error); border-color: rgba(255,51,51,0.3); margin: 0 auto 1.5rem auto;">!</div>
                     <h2 style="font-size: var(--fs-h3); margin-bottom: 1rem;">Nenhum Match Encontrado</h2>
                     <p class="text-secondary">Não encontramos nenhum aparelho focado na sua prioridade atual que custe até <strong>R$ ${orcamento.toLocaleString('pt-BR')}</strong>.</p>
-                    <p style="margin-top: 1.5rem; color: var(--brand-cyan); font-weight: 600;">Dica de Arquitetura: Aumente o orçamento no painel acima ou altere a prioridade.</p>
+                    <p style="margin-top: 1.5rem; color: var(--brand-cyan); font-weight: 600;">Dica de Arquitetura: Aumente o orçamento no painel ou altere a prioridade.</p>
                 </div>
             `;
             return;
         }
 
-        // Cenário 2: Match Perfeito Encontrado!
         const economia = orcamento - aparelho.preco;
         const seloEconomia = economia > 0 ? `<span class="badge success" style="margin-left: 10px;">Economia de R$ ${economia}</span>` : '';
-
-        // Gera as tags de especificações dinamicamente
         const specsHtml = aparelho.specs.map(spec => `<span class="badge" style="background: rgba(255,255,255,0.05); color: var(--text-secondary); border-color: var(--border-glass); font-weight: 500;">${spec}</span>`).join('');
 
         this.resultadoContainer.innerHTML = `
@@ -142,8 +153,7 @@ class MatchEngine {
     }
 }
 
-// Inicializa o motor
 document.addEventListener('DOMContentLoaded', () => {
     window.MatchSystem = new MatchEngine();
-    console.log('%c[Descomplica Celular] Algoritmo de Match Ativado', 'color: #FF5A00; font-weight: bold;');
+    console.log('%c[Descomplica Celular] Algoritmo de Match Ativado (Com Firestore)', 'color: #FF5A00; font-weight: bold;');
 });
