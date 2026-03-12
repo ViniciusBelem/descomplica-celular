@@ -324,3 +324,44 @@
     width: 100%;              /* Garante que ele obedeça aos limites do dropdown */
     display: block;
 }
+
+/* --- BOTÃO TEMA CLARO/ESCURO --- */
+.theme-switcher {
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    color: var(--text-primary);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 1.2rem;
+    margin-left: 0.5rem; /* Espaço entre o perfil e o botão */
+}
+.theme-switcher:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+body.light-theme .theme-switcher:hover { background: rgba(0, 0, 0, 0.05); }
+
+/* --- SISTEMA DE MODAIS --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: var(--transition-base);
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+
+.modal-content-box {
+    width: 100%; max-width: 500px;
+    transform: translateY(30px) scale(0.95); transition: var(--transition-base);
+}
+.modal-overlay.active .modal-content-box { transform: translateY(0) scale(1); }
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.btn-close-modal { background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: var(--transition-fast); }
+.btn-close-modal:hover { color: var(--brand-error); transform: rotate(90deg); }

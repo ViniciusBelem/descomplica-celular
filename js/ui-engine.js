@@ -29,6 +29,8 @@ class UIEngine {
     init() {
         this.initScrollReveal();
         this.initRangeSlider();
+        this.initThemeManager();
+        this.initModals();
         
         // Só inicializa física pesada se o utilizador permitir animações
         if (!this.prefersReducedMotion) {
@@ -177,6 +179,109 @@ class UIEngine {
 
             card.addEventListener('mousemove', handleMouseMove);
             card.addEventListener('mouseleave', handleMouseLeave);
+        });
+    }
+
+    /* --- 5. GESTOR DE TEMA (CLARO/ESCURO) --- */
+    initThemeManager() {
+        // Aplica o tema salvo assim que a página carrega
+        const savedTheme = localStorage.getItem('descomplica_theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+        }
+
+        // Procura por todos os botões de tema na tela
+        const themeBtns = document.querySelectorAll('#theme-switcher, #theme-switcher-global');
+        
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                const isLight = document.body.classList.contains('light-theme');
+                
+                // Grava a preferência
+                localStorage.setItem('descomplica_theme', isLight ? 'light' : 'dark');
+            });
+        });
+    }
+
+    /* --- 6. SISTEMA DE MODAIS DINÂMICOS --- */
+    initModals() {
+        // Encontra os links no menu de perfil
+        const btnConfig = document.querySelectorAll('#btn-menu-config');
+        const btnSecurity = document.querySelectorAll('#btn-menu-security');
+
+        btnConfig.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.buildAndShowModal('⚙️ Configurações da Conta', `
+                    <div class="input-group">
+                        <label class="input-label">Alterar Nome de Exibição</label>
+                        <input type="text" class="input-text" placeholder="Seu nome atual" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Notificações por Email</label>
+                        <select class="input-text">
+                            <option>Receber relatórios semanais</option>
+                            <option>Apenas alertas de segurança</option>
+                            <option>Desativar tudo</option>
+                        </select>
+                    </div>
+                    <button class="btn-principal" onclick="alert('Configurações atualizadas!')" style="padding: 0.75rem;">Salvar Preferências</button>
+                `);
+            });
+        });
+
+        btnSecurity.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.buildAndShowModal('🛡️ Segurança e Privacidade', `
+                    <p class="text-secondary mb-4" style="font-size: 0.9rem;">Gerencie o tratamento dos seus dados de acordo com a LGPD e GDPR.</p>
+                    <div style="background: rgba(255,51,51,0.05); border: 1px solid var(--brand-error); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--brand-error); font-size: 0.9rem; margin-bottom: 0.5rem;">Zona de Perigo</h4>
+                        <p class="text-secondary mb-2" style="font-size: 0.8rem;">Ao apagar o seu histórico, o algoritmo perderá as métricas de calibração do seu perfil.</p>
+                        <button class="btn-secundario" style="color: var(--brand-error); border-color: var(--brand-error); width: 100%;" onclick="alert('Funcionalidade protegida por autenticação dupla na versão final.')">Apagar todo o Histórico</button>
+                    </div>
+                `);
+            });
+        });
+    }
+
+    // Fábrica de Modais Injetados
+    buildAndShowModal(title, contentHTML) {
+        // Se já houver um modal na tela, remove-o
+        const existingModal = document.getElementById('dynamic-modal');
+        if (existingModal) existingModal.remove();
+
+        const modalHTML = `
+            <div id="dynamic-modal" class="modal-overlay">
+                <div class="glass-card modal-content-box">
+                    <div class="modal-header">
+                        <h3 style="font-size: var(--fs-h3); color: var(--text-primary); margin: 0;">${title}</h3>
+                        <button class="btn-close-modal" aria-label="Fechar">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${contentHTML}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        const modal = document.getElementById('dynamic-modal');
+        const closeBtn = modal.querySelector('.btn-close-modal');
+
+        // Animação de entrada
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        // Funções para fechar
+        const closeModal = () => {
+            modal.classList.remove('active');
+            setTimeout(() => modal.remove(), 400); // Espera a animação terminar para deletar do DOM
+        };
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal(); // Fecha se clicar fora da caixa
         });
     }
 }
