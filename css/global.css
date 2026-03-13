@@ -98,7 +98,7 @@ a {
 }
 
 a:hover, a:focus-visible {
-    color: #FFF;
+    color: #ffffff;
     text-shadow: var(--glow-cyan);
     outline: none;
 }
@@ -217,4 +217,17 @@ body.light-theme .skeleton {
         rgba(0, 0, 0, 0.08) 50%, 
         rgba(0, 0, 0, 0.03) 75%);
     background-size: 200% 100%;
+}
+
+/* APAGUE A REGRA ANTIGA DE HOVER E COLE ESTA: */
+/* Correção do Hover para links normais, ignorando botões secundários/principais */
+body.light-theme a:hover:not(.btn-principal):not(.btn-secundario), 
+body.light-theme .nav-link:hover {
+    color: var(--brand-cyan) !important;
+    text-shadow: none !important; 
+}
+
+/* Garante que o texto do botão secundário fica branco no hover */
+body.light-theme .btn-secundario:hover {
+    color: #FFFFFF !important;
 }

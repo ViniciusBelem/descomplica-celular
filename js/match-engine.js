@@ -123,7 +123,7 @@ class MatchEngine {
         this.resultadoContainer.innerHTML = `
             <div class="glass-card reveal-on-scroll ativo" style="max-width: 800px; margin: 0 auto; border-top: 4px solid var(--brand-cyan);">
                 <span class="badge" style="margin-bottom: 1.5rem;">${aparelho.selo}</span>
-                <h2 style="font-size: var(--fs-h2); color: #FFF; margin-bottom: 0.5rem;">
+                <h2 style="font-size: var(--fs-h2); color: var(--text-primary); margin-bottom: 0.5rem;">
                     ${aparelho.marca} <span style="color: var(--brand-cyan);">${aparelho.modelo}</span>
                 </h2>
                 <p class="text-secondary mb-4" style="font-size: var(--fs-base);">O algoritmo determinou que este é o hardware mais poderoso disponível para a sua prioridade, respeitando o limite do seu capital.</p>
@@ -133,7 +133,7 @@ class MatchEngine {
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-glass);">
                     <div>
                         <p class="text-muted" style="font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1px;">Investimento Recomendado</p>
-                        <div style="font-size: var(--fs-h1); font-weight: 900; color: #FFF; line-height: 1;">
+                        <div style="font-size: var(--fs-h1); font-weight: 900; color:var(--text-primary); line-height: 1;">
                             ${aparelho.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                         </div>
                         <div style="margin-top: 0.5rem;">${seloEconomia}</div>
