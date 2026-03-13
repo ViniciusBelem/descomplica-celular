@@ -187,16 +187,21 @@ class UIEngine {
         });
     }
 
-    /* --- 5. GESTOR DE TEMA COM INTEGRAÇÃO FIRESTORE --- */
+    /* --- 5. GESTOR DE TEMA COM INTEGRAÇÃO FIRESTORE (À PROVA DE BALAS) --- */
     initThemeManager() {
-        const themeToggles = document.querySelectorAll('.theme-toggle-input');
-        if (themeToggles.length === 0) return;
-
-        // 1. CARREGAMENTO INSTANTÂNEO: Lê o cache local primeiro para não piscar a tela de branco/preto
+        // 1. APLICAÇÃO OBRIGATÓRIA: Lê a memória e pinta a tela, independentemente de haver botão
         const localTheme = localStorage.getItem('descomplica_theme') || 'dark';
-        this.aplicarTema(localTheme, themeToggles);
+        if (localTheme === 'light') {
+            document.body.classList.add('light-theme');
+        } else {
+            document.body.classList.remove('light-theme');
+        }
 
-        // 2. SINCRONIZAÇÃO COM A NUVEM: Quando descobre quem é o utilizador, vai buscar a preferência dele
+        // 2. Procura os botões na tela e acerta a posição deles (Sol ou Lua)
+        const themeToggles = document.querySelectorAll('.theme-toggle-input');
+        themeToggles.forEach(t => t.checked = (localTheme !== 'light'));
+
+        // 3. SINCRONIZAÇÃO COM A NUVEM DO GOOGLE
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -205,16 +210,53 @@ class UIEngine {
 
                     if (docSnap.exists()) {
                         const cloudTheme = docSnap.data().theme;
-                        // Se o tema da nuvem for diferente do que está no PC agora, ele corrige
                         if (cloudTheme && cloudTheme !== localTheme) {
-                            this.aplicarTema(cloudTheme, themeToggles);
+                            if (cloudTheme === 'light') {
+                                document.body.classList.add('light-theme');
+                                themeToggles.forEach(t => t.checked = false);
+                            } else {
+                                document.body.classList.remove('light-theme');
+                                themeToggles.forEach(t => t.checked = true);
+                            }
+                            localStorage.setItem('descomplica_theme', cloudTheme);
                         }
                     }
                 } catch (error) {
-                    console.error("[Tema] Falha ao ler preferência da nuvem:", error);
+                    console.error("[Tema] Falha ao ler nuvem:", error);
                 }
             }
         });
+
+        // 4. Se esta página específica não tiver o botão, paramos a função aqui em paz.
+        if (themeToggles.length === 0) return;
+
+        // 5. O QUE ACONTECE QUANDO O UTILIZADOR CLICA NO BOTÃO
+        themeToggles.forEach(toggle => {
+            toggle.addEventListener('change', async (e) => {
+                const novoTema = e.target.checked ? 'dark' : 'light';
+                
+                if (novoTema === 'light') {
+                    document.body.classList.add('light-theme');
+                    themeToggles.forEach(t => t.checked = false);
+                } else {
+                    document.body.classList.remove('light-theme');
+                    themeToggles.forEach(t => t.checked = true);
+                }
+                
+                localStorage.setItem('descomplica_theme', novoTema);
+
+                if (auth.currentUser) {
+                    try {
+                        const docRef = doc(db, "user_preferences", auth.currentUser.uid);
+                        await setDoc(docRef, { theme: novoTema }, { merge: true });
+                        console.log(`%c[Firestore] Preferência '${novoTema}' salva!`, 'color: #0CF2E7;');
+                    } catch (error) {
+                        console.error("[Tema] Erro ao gravar:", error);
+                    }
+                }
+            });
+        });
+    
 
         // 3. GATILHO DE MUDANÇA (QUANDO O UTILIZADOR CLICA NO SWITCH)
         themeToggles.forEach(toggle => {
