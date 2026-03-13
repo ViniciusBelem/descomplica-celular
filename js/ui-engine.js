@@ -5,6 +5,11 @@
    ========================================================================== */
 
 // Utilitário de Performance: Throttle (Garante que eventos rápidos não travem a thread principal)
+
+import { auth, db } from './firebase-config.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
 const throttle = (func, limit) => {
     let inThrottle;
     return function() {
@@ -182,26 +187,70 @@ class UIEngine {
         });
     }
 
-    /* --- 5. GESTOR DE TEMA (CLARO/ESCURO) --- */
+    /* --- 5. GESTOR DE TEMA COM INTEGRAÇÃO FIRESTORE --- */
     initThemeManager() {
-        // Aplica o tema salvo assim que a página carrega
-        const savedTheme = localStorage.getItem('descomplica_theme') || 'dark';
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-theme');
-        }
+        const themeToggles = document.querySelectorAll('.theme-toggle-input');
+        if (themeToggles.length === 0) return;
 
-        // Procura por todos os botões de tema na tela
-        const themeBtns = document.querySelectorAll('#theme-switcher, #theme-switcher-global');
-        
-        themeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.body.classList.toggle('light-theme');
-                const isLight = document.body.classList.contains('light-theme');
+        // 1. CARREGAMENTO INSTANTÂNEO: Lê o cache local primeiro para não piscar a tela de branco/preto
+        const localTheme = localStorage.getItem('descomplica_theme') || 'dark';
+        this.aplicarTema(localTheme, themeToggles);
+
+        // 2. SINCRONIZAÇÃO COM A NUVEM: Quando descobre quem é o utilizador, vai buscar a preferência dele
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    const docRef = doc(db, "user_preferences", user.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const cloudTheme = docSnap.data().theme;
+                        // Se o tema da nuvem for diferente do que está no PC agora, ele corrige
+                        if (cloudTheme && cloudTheme !== localTheme) {
+                            this.aplicarTema(cloudTheme, themeToggles);
+                        }
+                    }
+                } catch (error) {
+                    console.error("[Tema] Falha ao ler preferência da nuvem:", error);
+                }
+            }
+        });
+
+        // 3. GATILHO DE MUDANÇA (QUANDO O UTILIZADOR CLICA NO SWITCH)
+        themeToggles.forEach(toggle => {
+            toggle.addEventListener('change', async (e) => {
+                // Se a caixa estiver marcada = dark (Lua). Desmarcada = light (Sol).
+                const novoTema = e.target.checked ? 'dark' : 'light';
                 
-                // Grava a preferência
-                localStorage.setItem('descomplica_theme', isLight ? 'light' : 'dark');
+                // Aplica visualmente na hora
+                this.aplicarTema(novoTema, themeToggles);
+
+                // Grava na nuvem em background (se estiver logado)
+                if (auth.currentUser) {
+                    try {
+                        const docRef = doc(db, "user_preferences", auth.currentUser.uid);
+                        // O { merge: true } garante que não apaga outras configurações que possamos criar no futuro
+                        await setDoc(docRef, { theme: novoTema }, { merge: true });
+                        console.log(`%c[Firestore] Preferência '${novoTema}' guardada na nuvem!`, 'color: #0CF2E7; font-weight: bold;');
+                    } catch (error) {
+                        console.error("[Tema] Erro ao gravar na nuvem:", error);
+                    }
+                }
             });
         });
+    }
+
+    // Função auxiliar para mudar as cores e o estado do botão
+    aplicarTema(tema, toggles) {
+        if (tema === 'light') {
+            document.body.classList.add('light-theme');
+            toggles.forEach(t => t.checked = false); // Mostra o Sol
+        } else {
+            document.body.classList.remove('light-theme');
+            toggles.forEach(t => t.checked = true);  // Mostra a Lua
+        }
+        // Guarda sempre no cache local como backup
+        localStorage.setItem('descomplica_theme', tema);
     }
 
     /* --- 6. SISTEMA DE MODAIS DINÂMICOS --- */
