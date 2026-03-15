@@ -383,3 +383,9 @@ body.light-theme .theme-switcher:hover { background: rgba(0, 0, 0, 0.05); }
 .slider:before { position: absolute; content: ""; height: var(--size-of-icon,1.4em); width: var(--size-of-icon,1.4em); border-radius: 20px; left: var(--slider-offset,0.3em); top: 50%; transform: translateY(-50%); background: linear-gradient(40deg,#FFFFFF,#0CF2E7,#ECF21B 300%); transition: .4s; }
 input:checked + .slider { background-color: #303136; }
 input:checked + .slider:before { left: calc(100% - (var(--size-of-icon,1.4em) + var(--slider-offset,0.3em))); background: #303136; box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb; }
+
+/* --- CORREÇÃO DO DROPDOWN (SELECT/OPTIONS) --- */
+select.input-text option {
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+}

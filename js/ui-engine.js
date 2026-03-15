@@ -307,7 +307,7 @@ class UIEngine {
                 this.buildAndShowModal('⚙️ Configurações da Conta', `
                     <div class="input-group">
                         <label class="input-label">Alterar Nome de Exibição</label>
-                        <input type="text" class="input-text" placeholder="Seu nome atual" disabled>
+                        <input type="text" class="input-text" placeholder="Seu nome atual">
                     </div>
                     <div class="input-group">
                         <label class="input-label">Notificações por Email</label>
