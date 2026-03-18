@@ -1,0 +1,362 @@
+[
+  {
+    "id": "samsung-galaxy-a55-5g",
+    "brand": "Samsung",
+    "model": "Galaxy A55 5G",
+    "slug": "samsung-galaxy-a55-5g",
+    "price": 1899,
+    "segment": "intermediario-premium",
+    "focusTags": ["camera", "bateria", "equilibrio"],
+    "profileTags": ["intermediario", "premium"],
+    "image": "https://images.samsung.com/is/image/samsung/p6pim/br/2402/gallery/br-galaxy-a55-5g-a556-sm-a556elbbzto-thumb-540721507",
+    "badge": "Equilíbrio premium",
+    "summary": "Excelente equilíbrio entre tela, construção, câmeras e autonomia.",
+    "specs": {
+      "screen": "Super AMOLED 120Hz",
+      "chipset": "Exynos 1480",
+      "battery": "5000mAh",
+      "memory": "8GB RAM",
+      "storage": "128GB",
+      "cameraMain": "50MP com OIS"
+    },
+    "scores": {
+      "camera": 87,
+      "performance": 82,
+      "battery": 86,
+      "display": 90,
+      "durability": 85,
+      "longevity": 84,
+      "costBenefit": 88
+    }
+  },
+  {
+    "id": "motorola-edge-50-fusion",
+    "brand": "Motorola",
+    "model": "Edge 50 Fusion",
+    "slug": "motorola-edge-50-fusion",
+    "price": 2099,
+    "segment": "intermediario-premium",
+    "focusTags": ["camera", "equilibrio", "design"],
+    "profileTags": ["intermediario", "premium"],
+    "image": "https://motorolaus.vtexassets.com/arquivos/ids/168473-1200-auto",
+    "badge": "Design e fluidez",
+    "summary": "Boa experiência geral com tela forte, design premium e software fluido.",
+    "specs": {
+      "screen": "pOLED 144Hz",
+      "chipset": "Snapdragon 6 Gen 1",
+      "battery": "5000mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "50MP com OIS"
+    },
+    "scores": {
+      "camera": 84,
+      "performance": 80,
+      "battery": 85,
+      "display": 91,
+      "durability": 80,
+      "longevity": 78,
+      "costBenefit": 84
+    }
+  },
+  {
+    "id": "samsung-galaxy-a54",
+    "brand": "Samsung",
+    "model": "Galaxy A54",
+    "slug": "samsung-galaxy-a54",
+    "price": 1799,
+    "segment": "intermediario",
+    "focusTags": ["camera", "equilibrio"],
+    "profileTags": ["intermediario"],
+    "image": "https://images.samsung.com/is/image/samsung/p6pim/br/sm-a546ezkvzto/gallery/br-galaxy-a54-5g-sm-a546-sm-a546ezkvzto-thumb-535658975",
+    "badge": "Câmera consistente",
+    "summary": "Uma das opções mais seguras para quem quer boas fotos e uso diário sólido.",
+    "specs": {
+      "screen": "Super AMOLED 120Hz",
+      "chipset": "Exynos 1380",
+      "battery": "5000mAh",
+      "memory": "8GB RAM",
+      "storage": "128GB",
+      "cameraMain": "50MP com OIS"
+    },
+    "scores": {
+      "camera": 85,
+      "performance": 77,
+      "battery": 83,
+      "display": 88,
+      "durability": 84,
+      "longevity": 83,
+      "costBenefit": 86
+    }
+  },
+  {
+    "id": "poco-x6-pro",
+    "brand": "POCO",
+    "model": "X6 Pro",
+    "slug": "poco-x6-pro",
+    "price": 1950,
+    "segment": "intermediario-premium",
+    "focusTags": ["performance", "jogos", "custo-beneficio"],
+    "profileTags": ["intermediario", "premium"],
+    "image": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-x6-pro/global/pc/15f0e4df4f2fc0d9f9350b2d4b0fd963.png",
+    "badge": "Monstro em desempenho",
+    "summary": "Excelente para jogos, multitarefa pesada e uso intenso pelo valor cobrado.",
+    "specs": {
+      "screen": "AMOLED 120Hz",
+      "chipset": "Dimensity 8300 Ultra",
+      "battery": "5000mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "64MP"
+    },
+    "scores": {
+      "camera": 72,
+      "performance": 94,
+      "battery": 84,
+      "display": 89,
+      "durability": 76,
+      "longevity": 79,
+      "costBenefit": 93
+    }
+  },
+  {
+    "id": "motorola-edge-40-neo",
+    "brand": "Motorola",
+    "model": "Edge 40 Neo",
+    "slug": "motorola-edge-40-neo",
+    "price": 2200,
+    "segment": "intermediario-premium",
+    "focusTags": ["performance", "equilibrio", "display"],
+    "profileTags": ["intermediario", "premium"],
+    "image": "https://motorolaus.vtexassets.com/arquivos/ids/167808-1200-auto",
+    "badge": "Fluidez máxima",
+    "summary": "Opção bem equilibrada para quem quer fluidez, boa tela e visual premium.",
+    "specs": {
+      "screen": "pOLED 144Hz",
+      "chipset": "Dimensity 7030",
+      "battery": "5000mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "50MP com OIS"
+    },
+    "scores": {
+      "camera": 79,
+      "performance": 84,
+      "battery": 84,
+      "display": 90,
+      "durability": 79,
+      "longevity": 77,
+      "costBenefit": 82
+    }
+  },
+  {
+    "id": "motorola-moto-g84",
+    "brand": "Motorola",
+    "model": "Moto G84",
+    "slug": "motorola-moto-g84",
+    "price": 1399,
+    "segment": "intermediario",
+    "focusTags": ["bateria", "custo-beneficio", "equilibrio"],
+    "profileTags": ["intermediario"],
+    "image": "https://motorolaus.vtexassets.com/arquivos/ids/167456-1200-auto",
+    "badge": "Autonomia confiável",
+    "summary": "Boa bateria, tela agradável e ótimo custo-benefício para o uso diário.",
+    "specs": {
+      "screen": "pOLED 120Hz",
+      "chipset": "Snapdragon 695",
+      "battery": "5000mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "50MP"
+    },
+    "scores": {
+      "camera": 73,
+      "performance": 72,
+      "battery": 88,
+      "display": 84,
+      "durability": 77,
+      "longevity": 74,
+      "costBenefit": 90
+    }
+  },
+  {
+    "id": "samsung-galaxy-m54",
+    "brand": "Samsung",
+    "model": "Galaxy M54",
+    "slug": "samsung-galaxy-m54",
+    "price": 1599,
+    "segment": "intermediario",
+    "focusTags": ["bateria", "autonomia", "equilibrio"],
+    "profileTags": ["intermediario"],
+    "image": "https://images.samsung.com/is/image/samsung/p6pim/br/sm-m546bzktzto/gallery/br-galaxy-m54-5g-sm-m546-sm-m546bzktzto-thumb-536031922",
+    "badge": "Bateria extrema",
+    "summary": "Indicado para quem quer passar o dia longe da tomada sem abrir mão da tela.",
+    "specs": {
+      "screen": "Super AMOLED Plus 120Hz",
+      "chipset": "Exynos 1380",
+      "battery": "6000mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "108MP"
+    },
+    "scores": {
+      "camera": 80,
+      "performance": 77,
+      "battery": 95,
+      "display": 88,
+      "durability": 79,
+      "longevity": 81,
+      "costBenefit": 89
+    }
+  },
+  {
+    "id": "samsung-galaxy-s23-fe",
+    "brand": "Samsung",
+    "model": "Galaxy S23 FE",
+    "slug": "samsung-galaxy-s23-fe",
+    "price": 2799,
+    "segment": "premium",
+    "focusTags": ["camera", "performance", "premium"],
+    "profileTags": ["premium"],
+    "image": "https://images.samsung.com/is/image/samsung/p6pim/br/2309/gallery/br-galaxy-s23-fe-s711-sm-s711blgczto-thumb-537366122",
+    "badge": "Câmera e potência",
+    "summary": "Entrega experiência mais próxima da linha premium com câmera e performance fortes.",
+    "specs": {
+      "screen": "Dynamic AMOLED 2X 120Hz",
+      "chipset": "Exynos 2200",
+      "battery": "4500mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "50MP com OIS"
+    },
+    "scores": {
+      "camera": 90,
+      "performance": 88,
+      "battery": 76,
+      "display": 91,
+      "durability": 87,
+      "longevity": 88,
+      "costBenefit": 82
+    }
+  },
+  {
+    "id": "apple-iphone-13",
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "slug": "apple-iphone-13",
+    "price": 3499,
+    "segment": "premium",
+    "focusTags": ["camera", "performance", "longevidade", "premium"],
+    "profileTags": ["premium"],
+    "image": "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-13-midnight-select-2021",
+    "badge": "Premium seguro",
+    "summary": "Excelente consistência geral, ótima câmera, alto desempenho e vida útil prolongada.",
+    "specs": {
+      "screen": "Super Retina XDR",
+      "chipset": "Apple A15 Bionic",
+      "battery": "3240mAh",
+      "memory": "4GB RAM",
+      "storage": "128GB",
+      "cameraMain": "12MP dual"
+    },
+    "scores": {
+      "camera": 89,
+      "performance": 91,
+      "battery": 79,
+      "display": 88,
+      "durability": 90,
+      "longevity": 95,
+      "costBenefit": 80
+    }
+  },
+  {
+    "id": "apple-iphone-15-plus",
+    "brand": "Apple",
+    "model": "iPhone 15 Plus",
+    "slug": "apple-iphone-15-plus",
+    "price": 5999,
+    "segment": "ultra-premium",
+    "focusTags": ["bateria", "premium", "longevidade"],
+    "profileTags": ["premium"],
+    "image": "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-plus-pink-select-2023",
+    "badge": "Autonomia premium",
+    "summary": "Ideal para quem quer bateria muito forte dentro do ecossistema Apple.",
+    "specs": {
+      "screen": "Super Retina XDR",
+      "chipset": "Apple A16 Bionic",
+      "battery": "4383mAh",
+      "memory": "6GB RAM",
+      "storage": "128GB",
+      "cameraMain": "48MP"
+    },
+    "scores": {
+      "camera": 91,
+      "performance": 92,
+      "battery": 92,
+      "display": 90,
+      "durability": 91,
+      "longevity": 96,
+      "costBenefit": 70
+    }
+  },
+  {
+    "id": "apple-iphone-15-pro",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro",
+    "slug": "apple-iphone-15-pro",
+    "price": 6800,
+    "segment": "ultra-premium",
+    "focusTags": ["camera", "performance", "premium", "longevidade"],
+    "profileTags": ["premium"],
+    "image": "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-pro-natural-select-2023",
+    "badge": "Qualidade extrema",
+    "summary": "Uma referência para quem busca câmera avançada, muito desempenho e longevidade.",
+    "specs": {
+      "screen": "Super Retina XDR ProMotion",
+      "chipset": "Apple A17 Pro",
+      "battery": "3274mAh",
+      "memory": "8GB RAM",
+      "storage": "256GB",
+      "cameraMain": "48MP Pro"
+    },
+    "scores": {
+      "camera": 96,
+      "performance": 95,
+      "battery": 78,
+      "display": 95,
+      "durability": 92,
+      "longevity": 97,
+      "costBenefit": 65
+    }
+  },
+  {
+    "id": "asus-rog-phone-7",
+    "brand": "Asus",
+    "model": "ROG Phone 7",
+    "slug": "asus-rog-phone-7",
+    "price": 6500,
+    "segment": "ultra-premium",
+    "focusTags": ["performance", "jogos", "premium"],
+    "profileTags": ["premium"],
+    "image": "https://dlcdnwebimgs.asus.com/gain/7ec94a43-0c12-4d50-8f01-71e5f863bf3f",
+    "badge": "Hardcore gamer",
+    "summary": "Feito para desempenho extremo, sessões longas de jogo e refrigeração superior.",
+    "specs": {
+      "screen": "AMOLED 165Hz",
+      "chipset": "Snapdragon 8 Gen 2",
+      "battery": "6000mAh",
+      "memory": "16GB RAM",
+      "storage": "512GB",
+      "cameraMain": "50MP"
+    },
+    "scores": {
+      "camera": 74,
+      "performance": 98,
+      "battery": 94,
+      "display": 96,
+      "durability": 87,
+      "longevity": 86,
+      "costBenefit": 72
+    }
+  }
+]
