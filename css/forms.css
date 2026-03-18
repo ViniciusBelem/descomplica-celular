@@ -1,0 +1,181 @@
+/* ==========================================================================
+   ARQUITETURA PREMIUM v4.0 - FORMS & AUTH STYLES
+   Projeto: Descomplica Celular
+   Camada: Estilização de Formulários e Telas de Autenticação
+   ========================================================================== */
+
+/* --- 1. LAYOUT DA PÁGINA DE REGISTRO --- */
+.registro-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px); /* Ocupa a altura da tela descontando header/footer */
+}
+
+.registro-section {
+    width: 100%;
+    max-width: 550px; /* Largura ideal para leitura de formulários */
+    position: relative;
+    z-index: var(--z-base);
+}
+
+/* O form-wrapper estende o .glass-card criado no components.css */
+.form-wrapper {
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* --- 2. CABEÇALHO DO FORMULÁRIO --- */
+.form-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-headline {
+    font-size: var(--fs-h2);
+    color: #FFF;
+    margin-bottom: 0.5rem;
+}
+
+/* --- 3. ESTRUTURA DOS INPUTS --- */
+.form-core {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.input-row {
+    width: 100%;
+}
+
+/* Permite colocar 2 inputs lado a lado (ex: Senha e Confirmar Senha) */
+.split-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* --- 4. TRATAMENTO DE ERROS E VALIDAÇÃO --- */
+.error-message {
+    color: var(--brand-error);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+    min-height: 1.2rem; /* Evita pulos de layout (Reflow) quando o erro aparece */
+    display: block;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: var(--transition-fast);
+}
+
+/* Classe ativada via JavaScript quando a validação falha */
+.input-group.has-error .input-text {
+    border-color: var(--brand-error);
+    background: rgba(255, 51, 51, 0.05);
+    box-shadow: inset 4px 0 0 var(--brand-error);
+}
+
+.input-group.has-error .error-message {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- 5. TEXTOS AUXILIARES --- */
+.terms-text {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1.5rem;
+    line-height: 1.5;
+}
+
+.terms-text a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--border-glass);
+    text-underline-offset: 3px;
+}
+
+.terms-text a:hover {
+    color: var(--brand-cyan);
+    text-decoration-color: var(--brand-cyan);
+}
+
+/* --- 6. ESTADOS DE CARREGAMENTO E SUCESSO --- */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 0;
+    animation: fadeIn 0.4s var(--ease-fluid) forwards;
+}
+
+.text-brand {
+    color: var(--brand-cyan);
+}
+
+.success-state {
+    padding: 2rem 0;
+    animation: fadeInScale 0.6s var(--ease-bounce) forwards;
+}
+
+.success-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(0, 250, 154, 0.1);
+    color: var(--brand-success);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid rgba(0, 250, 154, 0.3);
+    box-shadow: 0 0 30px rgba(0, 250, 154, 0.2);
+}
+
+/* --- 7. ANIMAÇÕES --- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInScale {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+/* --- 8. RESPONSIVIDADE (Mobile) --- */
+@media (max-width: 768px) {
+    .form-wrapper {
+        padding: 2.5rem 2rem;
+    }
+
+    /* Quebra as colunas duplas no mobile */
+    .split-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-wrapper {
+        padding: 2rem 1.5rem;
+    }
+    .registro-section {
+        max-width: 100%;
+    }
+}

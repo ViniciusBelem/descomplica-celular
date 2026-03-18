@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consultor digital inteligente que analisa milhares de dados para recomendar o smartphone ideal para sua rotina.">
+    <title>Descomplica Celular | O seu Match Perfeito</title>
+    
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/home.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <header class="header-global" id="main-header" role="banner">
+        <div class="container-mestre header-container">
+            <a href="index.html" class="brand-area" aria-label="Ir para a página inicial">
+                <img src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png" alt="Logo Descomplica Celular" class="brand-logo" width="48" height="48">
+                <span class="brand-name">Descomplica </span>
+            </a>
+            
+            <nav class="nav-menu" role="navigation" aria-label="Menu principal">
+                <a href="#sobre" class="nav-link">Como Funciona</a>
+                <a href="dashboard.html" class="nav-link">Análise em Tempo Real</a>
+                <a href="#assistente" class="btn-secundario">Consultor Digital</a>
+                
+                <div id="auth-guest-controls" style="display: flex; gap: 1.5rem; align-items: center;">
+                    <a href="login.html" class="nav-link" style="font-weight: 600;">Entrar</a>
+                    <a href="registro.html" class="btn-principal" style="padding: 0.5rem 1.5rem; width: auto; font-size: var(--fs-xs);">Criar Conta</a>
+                </div>
+
+                <div id="auth-user-controls" class="user-controls" style="display: none; align-items: center; position: relative;">
+                    <button id="profile-menu-trigger-global" class="profile-btn" aria-haspopup="true" aria-expanded="false">
+                        <div class="avatar-circle" id="user-avatar-initial-global">...</div>
+                        <div class="profile-info text-left">
+                            <span id="user-name-display-global" class="profile-name">Carregando...</span>
+                        </div>
+                    </button>
+
+                    <div id="profile-dropdown-global" class="profile-dropdown" role="menu" aria-hidden="true" style="top: 130%;">
+                        <div class="dropdown-header">
+                            <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Sessão Ativa</p>
+                            <p id="user-email-display-global" class="text-primary" style="font-weight: 600; font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block;">...</p>
+                        </div>
+                        <hr class="dropdown-divider">
+                        
+                        <a id="btn-menu-config" class="dropdown-item" role="menuitem">
+                            <span style="margin-right: 8px;">⚙️</span> Configurações
+                        </a>
+                        <a id="btn-menu-security" class="dropdown-item" role="menuitem">
+                            <span style="margin-right: 8px;">🛡️</span> Segurança e Dados
+                        </a>
+                        
+                        <a href="dashboard.html" class="dropdown-item" role="menuitem">
+                            <span style="margin-right: 8px;">📊</span> Ir para o Dashboard
+                        </a>
+                        
+                        <hr class="dropdown-divider">
+                        <button id="btn-logout-global" class="dropdown-item text-brand-error" role="menuitem" style="width: 100%; text-align: left; cursor: pointer; background: none; border: none; font-family: inherit; font-size: inherit;">
+                            <span style="margin-right: 8px;">🚪</span> Desconectar
+                        </button>
+                    </div>
+
+                    <label class="switch" title="Alternar Tema">
+                        <input type="checkbox" class="theme-toggle-input" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content container-mestre" role="main">
+        
+        <section id="inicio" class="hero-section reveal-on-scroll">
+            <span class="badge">● Inteligência de Curadoria</span>
+            <h1 class="hero-headline">
+                Não compre especificações.<br>
+                <span class="text-highlight">Compre a experiência ideal.</span>
+            </h1>
+            <p class="hero-subtitle">
+                A ponte inteligente entre o hardware avançado e o seu estilo de vida. Deixe a engenharia complexa com o nosso algoritmo.
+            </p>
+            <div class="hero-ctas">
+                <a href="#assistente" class="btn-principal">Iniciar Análise Gratuita</a>
+            </div>
+        </section>
+
+        <section id="sobre" class="sobre-section reveal-on-scroll" aria-labelledby="sobre-title">
+            <div class="sobre-grid-local">
+                <div class="sobre-texto">
+                    <h2 id="sobre-title">Engenharia de Decisão</h2>
+                    <p>Milhares de smartphones são lançados anualmente. Comparar processadores, RAM e sensores é exaustivo para quem não respira tecnologia.</p>
+                    <p>O <strong>Descomplica Celular</strong> cruza milhares de dados de benchmark em milissegundos. Sem viés de marca. Apenas a matemática a favor da sua rotina.</p>
+                </div>
+                
+                <div class="sobre-visual" aria-label="Vantagens do sistema">
+                    <div class="carousel-3d-wrapper">
+                        <article class="glass-card carousel-item">
+                            <h3>100% Imparcial</h3>
+                            <p>Nossa inteligência não favorece marcas, favorece a sua necessidade.</p>
+                        </article>
+                        <article class="glass-card carousel-item">
+                            <h3>Foco no Usuário</h3>
+                            <p>Esqueça o jargão técnico. Focamos no que você realmente faz.</p>
+                        </article>
+                        <article class="glass-card carousel-item">
+                            <h3>Economia Real</h3>
+                            <p>O ponto perfeito entre performance extrema e o seu orçamento.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="assistente" class="assistente-section reveal-on-scroll" aria-labelledby="assistente-title">
+            <div class="glass-card assistente-container">
+                <header class="assistente-header text-center">
+                    <h2 id="assistente-title">Consultor de Hardware</h2>
+                    <p class="text-muted">Ajuste os parâmetros abaixo para gerar seu Match.</p>
+                </header>
+
+                <form id="form-consultor" class="form-analise" aria-live="polite">
+                    <fieldset class="input-group">
+                        <legend class="input-label mb-2">Orçamento Máximo (R$)</legend>
+                        <div class="range-wrapper">
+                            <input type="range" id="orcamento" class="range-slider" min="1000" max="8000" step="100" value="2500" aria-valuemin="1000" aria-valuemax="8000" aria-valuenow="2500">
+                            <output for="orcamento" class="range-bubble" id="orcamento-output">R$ 2.500</output>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="input-group mt-4">
+                        <legend class="input-label mb-2">Prioridade Arquitetural</legend>
+                        <div class="radio-card-group">
+                            <label class="radio-card-label">
+                                <input type="radio" name="foco" value="camera" required>
+                                <span>📷 Processamento Computacional de Imagem (Câmera)</span>
+                            </label>
+                            <label class="radio-card-label">
+                                <input type="radio" name="foco" value="performance">
+                                <span>🎮 Alta Performance e Resfriamento (Jogos/Edição)</span>
+                            </label>
+                            <label class="radio-card-label">
+                                <input type="radio" name="foco" value="bateria">
+                                <span>🔋 Eficiência Energética Máxima (Bateria)</span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="btn-principal mt-4">Processar Matriz de Dados</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="resultado-container" class="resultado-section" aria-live="assertive"></section>
+
+    </main>
+
+    <footer class="footer-global" role="contentinfo">
+        <div class="container-mestre footer-content">
+            <div class="footer-texto">
+                &copy; 2026 Descomplica Celular. Arquitetura Premium Sênior.
+            </div>
+            <div class="footer-links">
+                <a href="termos.html">Termos de Uso</a>
+                <a href="#">Privacidade</a>
+                <a href="#">API Documentation</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/ui-engine.js"></script>
+    <script type="module" src="js/global-auth.js"></script> 
+    <script type="module" src="js/match-engine.js"></script>
+    <link rel="stylesheet" href="css/forms.css"> 
+    <link rel="stylesheet" href="css/home.css">
+</body>
+</html>

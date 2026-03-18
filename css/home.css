@@ -1,0 +1,166 @@
+/* ==========================================================================
+   ARQUITETURA PREMIUM v4.0 - HOME PAGE STYLES
+   Projeto: Descomplica Celular
+   Camada: Especificidades da Landing Page
+   ========================================================================== */
+
+/* --- 1. AMBIENT GLOW (Background Animado via GPU) --- */
+.ambient-glow {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: var(--z-background);
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.ambient-glow::before, .ambient-glow::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.35;
+    /* Aceleração de hardware ativada (will-change) */
+    will-change: transform;
+    animation: floatGlow 20s infinite alternate var(--ease-fluid);
+}
+
+.ambient-glow::before {
+    width: 60vw; height: 60vw;
+    background: radial-gradient(circle, var(--brand-magenta) 0%, transparent 60%);
+    top: -20%; left: -10%;
+}
+
+.ambient-glow::after {
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, var(--brand-cyan) 0%, transparent 60%);
+    bottom: -10%; right: -10%;
+    animation-delay: -5s;
+}
+
+@keyframes floatGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(8%, 12%) scale(1.1); }
+}
+
+/* --- 2. HERO SECTION --- */
+.hero-section {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 900px; /* Aumentamos a área útil do container */
+}
+
+.hero-headline {
+    font-size: var(--fs-h1);
+    line-height: 1.05; /* Deixa as linhas imensas mais próximas e unidas */
+    letter-spacing: -0.04em; /* Aperta levemente as letras para um tom mais sério */
+    margin-top: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.text-highlight {
+    /* Gradiente mais suave e elegante */
+    background: linear-gradient(135deg, var(--brand-cta) 0%, #FF8C00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Reduzimos o brilho exagerado para uma sombra mais contida */
+    filter: drop-shadow(0 4px 12px rgba(255, 90, 0, 0.2)); 
+    display: inline-block; /* Previne quebras de texto esquisitas no meio do gradiente */
+}
+
+.hero-subtitle {
+    font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.35rem); /* Tamanho ligeiramente maior */
+    color: var(--text-secondary);
+    max-width: 52ch; /* Limita os caracteres por linha para leitura de revista */
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.hero-ctas {
+    margin-top: 2.5rem; /* Dá mais respiro antes do botão */
+    max-width: max-content; 
+}
+
+/* --- 3. SOBRE SECTION (Grid Específico) --- */
+.sobre-grid-local {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.sobre-texto h2 { font-size: var(--fs-h2); margin-bottom: 1.5rem; }
+.sobre-texto p { color: var(--text-secondary); margin-bottom: 1rem; font-size: var(--fs-base); }
+
+/* Motor de Carrossel 3D Coverflow (Apenas estilos, JS fará a rotação) */
+.carousel-3d-wrapper {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    perspective: 1200px; /* Profundidade */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item {
+    position: absolute;
+    width: 280px;
+    height: auto;
+    /* As classes ativas, direita e esquerda serão injetadas pelo ui-engine.js usando transform 3D */
+    opacity: 0; 
+    transform: translateZ(-300px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.carousel-item h3 { color: #FFF; font-size: var(--fs-h3); margin-bottom: 0.5rem; }
+
+/* --- 4. ASSISTENTE SECTION --- */
+.assistente-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.assistente-container {
+    width: 100%;
+    max-width: 700px;
+}
+
+.text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
+.mb-2 { margin-bottom: 0.5rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+/* Bolha do Range (Posicionamento inicial, JS calcula a dinâmica) */
+.range-wrapper {
+    position: relative;
+    padding-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.range-bubble {
+    position: absolute;
+    top: 0;
+    left: 50%; /* JS sobrescreve */
+    transform: translateX(-50%);
+    background: var(--brand-cyan);
+    color: var(--text-inverse);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    pointer-events: none;
+    transition: left 0.1s linear;
+}
+
+/* --- 5. RESPONSIVO ESPECÍFICO HOME --- */
+@media (max-width: 992px) {
+    .sobre-grid-local {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    .carousel-3d-wrapper { height: 300px; }
+}

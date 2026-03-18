@@ -1,0 +1,233 @@
+/* ==========================================================================
+   ARQUITETURA PREMIUM v4.0 - GLOBAL TOKENS & RESET
+   Projeto: Descomplica Celular
+   Camada: Fundação (Tokens, Tipografia e Reset)
+   ========================================================================== */
+
+:root {
+    /* --- DESIGN TOKENS (Paleta Dark-First) --- */
+    --bg-void:          #030407; 
+    --bg-surface:       rgba(10, 15, 26, 0.65); 
+    --border-glass:     rgba(255, 255, 255, 0.08); 
+    
+    /* Cores de Ação e Destaque */
+    --brand-cyan:       #00E5FF;
+    --brand-magenta:    #8A2BE2;
+    --brand-cta:        #FF5A00; 
+    --brand-success:    #00FA9A; 
+    --brand-error:      #FF3333; 
+
+    /* Tipografia e Cores de Texto */
+    --text-primary:     #F8F9FA;
+    --text-secondary:   #8B9BB4;
+    --text-inverse:     #050505;
+
+    /* Escala Tipográfica Fluida (Responsiva via clamp) */
+    --fs-xs:            clamp(0.75rem, 0.7vw + 0.5rem, 0.875rem);
+    --fs-sm:            clamp(0.875rem, 0.8vw + 0.5rem, 1rem);
+    --fs-base:          clamp(1rem, 1vw + 0.5rem, 1.125rem);
+    --fs-h3:            clamp(1.25rem, 1.5vw + 1rem, 1.75rem);
+    --fs-h2:            clamp(1.75rem, 2vw + 1rem, 2.5rem);
+    --fs-h1:            clamp(2.5rem, 5vw + 1rem, 4.5rem);
+
+    /* Espaçamento e Bordas (Radius) */
+    --radius-sm:        8px;
+    --radius-md:        16px;
+    --radius-lg:        24px;
+    --radius-pill:      9999px;
+
+    /* Sombras e Efeitos Visuais (Glassmorphism) */
+    --shadow-glass:     0 24px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+    --glow-cyan:        0 0 30px rgba(0, 229, 255, 0.2);
+    
+    /* Curvas de Animação (Física da Interface GPU-Accelerated) */
+    --ease-fluid:       cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-bounce:      cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-fast:  all 0.2s var(--ease-fluid);
+    --transition-base:  all 0.4s var(--ease-fluid);
+
+    /* Z-Index Hierarchy Control */
+    --z-background:     -10;
+    --z-base:           1;
+    --z-glass:          10;
+    --z-header:         100;
+    --z-modal:          1000;
+}
+
+/* --- RESET UNIVERSAL CORPORATIVO & ACESSIBILIDADE --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px; 
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* --- TIPOGRAFIA BASE --- */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+a {
+    color: var(--brand-cyan);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+a:hover, a:focus-visible {
+    color: #ffffff;
+    text-shadow: var(--glow-cyan);
+    outline: none;
+}
+
+/* Foco acessível universal (Navegação por teclado - A11y) */
+:focus-visible {
+    outline: 2px solid var(--brand-cyan);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* --- SCROLLBAR CUSTOMIZADA --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-cyan); }
+
+::selection { 
+    background: var(--brand-cyan); 
+    color: var(--text-inverse); 
+}
+
+/* --- ACESSIBILIDADE: REDUÇÃO DE MOVIMENTO (Prefers Reduced Motion) --- */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --- TEMA CLARO (LIGHT MODE OVERRIDE) --- */
+body.light-theme {
+    --bg-void:          #F4F4F5; 
+    --bg-surface:       rgba(255, 255, 255, 0.85); 
+    --border-glass:     rgba(0, 0, 0, 0.1); 
+    --brand-cyan:       #0097A7;
+    --text-primary:     #12141D;
+    --text-secondary:   #4A5568;
+    --text-inverse:     #FFFFFF;
+    --shadow-glass:     0 24px 48px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,1);
+}
+
+body.light-theme .header-global { background: rgba(244, 244, 245, 0.8); }
+body.light-theme .header-global.scrolled { background: rgba(244, 244, 245, 0.95); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+body.light-theme .brand-name { color: var(--text-primary); }
+body.light-theme .glass-card { background: var(--bg-surface); border: 1px solid var(--border-glass); box-shadow: var(--shadow-glass); }
+
+/* ==========================================================================
+   CORREÇÕES DE CONTRASTE E DESIGN PRATEADO FLUIDO (MODO CLARO)
+   ========================================================================== */
+
+/* 1. RESGATE DOS TEXTOS INVISÍVEIS */
+body.light-theme h1, 
+body.light-theme h2, 
+body.light-theme h3, 
+body.light-theme h4, 
+body.light-theme h5, 
+body.light-theme h6 {
+    color: var(--text-primary) !important;
+}
+
+body.light-theme p, 
+body.light-theme span,
+body.light-theme .radio-card-label span {
+    color: var(--text-secondary);
+}
+
+/* Proteção: Textos que DEVEM continuar brancos ou coloridos na marca */
+body.light-theme .btn-principal { color: #FFF !important; }
+body.light-theme .text-highlight { color: var(--brand-cyan) !important; }
+body.light-theme .badge { color: var(--brand-cta) !important; }
+body.light-theme .badge.success { color: var(--brand-success) !important; }
+
+/* 2. DESIGN PRATEADO FLUIDO (NEUMORPHISM) */
+
+/* Cartões de Seleção (Câmera, Bateria, etc) */
+body.light-theme .radio-card-label {
+    background: linear-gradient(145deg, #FFFFFF, #F0F4F8);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.03), -4px -4px 12px #FFFFFF;
+}
+
+/* Efeito ao passar o rato (Prata mais polido) */
+body.light-theme .radio-card-label:hover {
+    background: linear-gradient(145deg, #F4F7FA, #E2E8F0); 
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Efeito ao Clicar (Selecionado) */
+body.light-theme .radio-card-label:has(input[type="radio"]:checked) {
+    background: linear-gradient(145deg, #FFFFFF, #E0F7FA);
+    border-color: var(--brand-cyan);
+    box-shadow: inset 4px 0 0 var(--brand-cyan), 4px 4px 15px rgba(0, 151, 167, 0.1);
+}
+
+/* Caixa de Inputs de Texto */
+body.light-theme .input-text {
+    background: #F4F7FA;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.03);
+}
+
+/* Barra de Orçamento (Range Slider) */
+body.light-theme .range-slider {
+    background: rgba(0, 0, 0, 0.1); /* Escurece a calha em vez de usar branco transparente */
+}
+
+/* Skeletons (Animação de Carregamento Prateada) */
+body.light-theme .skeleton {
+    background: linear-gradient(90deg, 
+        rgba(0, 0, 0, 0.03) 25%, 
+        rgba(0, 0, 0, 0.08) 50%, 
+        rgba(0, 0, 0, 0.03) 75%);
+    background-size: 200% 100%;
+}
+
+/* APAGUE A REGRA ANTIGA DE HOVER E COLE ESTA: */
+/* Correção do Hover para links normais, ignorando botões secundários/principais */
+body.light-theme a:hover:not(.btn-principal):not(.btn-secundario), 
+body.light-theme .nav-link:hover {
+    color: var(--brand-cyan) !important;
+    text-shadow: none !important; 
+}
+
+/* Garante que o texto do botão secundário fica branco no hover */
+body.light-theme .btn-secundario:hover {
+    color: #FFFFFF !important;
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Crie sua conta no Descomplica Celular para salvar suas análises de hardware e acessar o dashboard em tempo real.">
+    <title>Criar Conta | Descomplica Celular</title>
+    
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/forms.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <header class="header-global" role="banner">
+        <div class="container-mestre header-container">
+            <a href="index.html" class="brand-area" aria-label="Voltar para a página inicial">
+                <img src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png" alt="Logo Descomplica Celular" class="brand-logo" width="48" height="48">
+                <span class="brand-name">Descomplica</span>
+            </a>
+            
+            <nav class="nav-menu" role="navigation" aria-label="Menu de autenticação">
+                <a href="index.html" class="nav-link">Voltar ao Início</a>
+                <span class="text-muted" aria-hidden="true">|</span>
+                <span class="text-secondary" style="font-size: var(--fs-sm);">Já tem conta? <a href="login.html" style="font-weight: 700;">Entrar</a></span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content container-mestre registro-layout" role="main">
+        
+        <section class="registro-section" aria-labelledby="registro-title">
+            <div class="glass-card form-wrapper interactive">
+                
+                <header class="form-header">
+                    <span class="badge">● Acesso Antecipado</span>
+                    <h1 id="registro-title" class="form-headline">Inicie sua jornada.</h1>
+                    <p class="text-secondary">Crie sua credencial para acessar o painel de análise algorítmica de hardwares.</p>
+                </header>
+
+                <form id="form-registro" class="form-core" novalidate aria-live="polite">
+                    
+                    <div class="input-row">
+                        <fieldset class="input-group">
+                            <label for="nome" class="input-label">Nome Completo</label>
+                            <input type="text" id="nome" name="nome" class="input-text" placeholder="Ex: João da Silva" required aria-required="true">
+                            <span class="error-message" id="error-nome" role="alert"></span>
+                        </fieldset>
+                    </div>
+
+                    <div class="input-row">
+                        <fieldset class="input-group">
+                            <label for="email" class="input-label">E-mail Profissional</label>
+                            <input type="email" id="email" name="email" class="input-text" placeholder="voce@empresa.com" required aria-required="true">
+                            <span class="error-message" id="error-email" role="alert"></span>
+                        </fieldset>
+                    </div>
+
+                    <div class="input-row split-row">
+                        <fieldset class="input-group">
+                            <label for="senha" class="input-label">Senha</label>
+                            <input type="password" id="senha" name="senha" class="input-text" placeholder="Mínimo 8 caracteres" required aria-required="true">
+                            <span class="error-message" id="error-senha" role="alert"></span>
+                        </fieldset>
+
+                        <fieldset class="input-group">
+                            <label for="senha-confirma" class="input-label">Confirmar Senha</label>
+                            <input type="password" id="senha-confirma" name="senha-confirma" class="input-text" placeholder="Repita a senha" required aria-required="true">
+                            <span class="error-message" id="error-confirma" role="alert"></span>
+                        </fieldset>
+                    </div>
+
+                    <div id="loading-state" class="loading-state" aria-hidden="true" style="display: none;">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="width: 70%;"></div>
+                        <p class="text-brand text-center mt-2" style="font-size: var(--fs-xs);">Estabelecendo conexão segura...</p>
+                    </div>
+
+                    <button type="submit" id="btn-submit-registro" class="btn-principal mt-4">Criar Credencial Premium</button>
+                    
+                    <p class="terms-text">
+                        Ao se registrar, você concorda com nossos <a href="termos.html">Termos de Arquitetura</a> e <a href="PoliticadeDados.html">Política de Dados</a>.
+                    </p>
+                </form>
+
+                <div id="success-state" class="success-state" aria-hidden="true" style="display: none; text-align: center;">
+                    <div class="success-icon">✓</div>
+                    <h3>Autenticação Concluída</h3>
+                    <p class="text-secondary">Seu ambiente de trabalho está sendo gerado.</p>
+                    <div class="skeleton skeleton-block mt-4" style="height: 4px; border-radius: 2px;"></div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer-global" role="contentinfo">
+        <div class="container-mestre footer-content">
+            <div class="footer-texto">
+                &copy; 2026 Descomplica Celular. Arquitetura Premium Sênior.
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>

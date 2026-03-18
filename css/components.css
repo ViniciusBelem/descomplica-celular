@@ -1,0 +1,392 @@
+/* ==========================================================================
+   ARQUITETURA PREMIUM v4.0 - COMPONENTS
+   Projeto: Descomplica Celular
+   Camada: Design System (Botões, Inputs, Cards de Vidro e Skeletons)
+   ========================================================================== */
+
+/* --- 1. SUPERFÍCIES DE VIDRO (GLASSMORPHISM) --- */
+.glass-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glass);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de destaque no vidro (Hover state para cards interativos) */
+.glass-card.interactive {
+    transition: var(--transition-base);
+    cursor: pointer;
+    will-change: transform, box-shadow;
+}
+
+.glass-card.interactive:hover,
+.glass-card.interactive:focus-within {
+    transform: translateY(-4px);
+    border-color: rgba(0, 229, 255, 0.3);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* --- 2. BOTÕES DE AÇÃO (CTAs) --- */
+.btn-principal {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem 2rem;
+    background: linear-gradient(135deg, var(--brand-cta), #D94A00);
+    color: #FFF;
+    font-size: var(--fs-base);
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-base);
+    box-shadow: 0 8px 24px rgba(255, 90, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-principal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255, 90, 0, 0.5);
+}
+
+.btn-principal:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(255, 90, 0, 0.3);
+}
+
+/* Botão Secundário (Ghost) */
+.btn-secundario {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: rgba(0, 229, 255, 0.05);
+    color: var(--brand-cyan);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-secundario:hover {
+    background: var(--brand-cyan);
+    color: var(--text-inverse);
+    box-shadow: var(--glow-cyan);
+}
+
+/* --- 3. FORMULÁRIOS E INPUTS DE ALTA PERFORMANCE --- */
+.input-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Inputs de Texto e Email (Para a página de Registro) */
+.input-text {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: var(--fs-base);
+    font-family: inherit;
+    transition: var(--transition-fast);
+}
+
+.input-text:focus {
+    outline: none;
+    border-color: var(--brand-cyan);
+    background: rgba(0, 229, 255, 0.02);
+    box-shadow: inset 4px 0 0 var(--brand-cyan);
+}
+
+/* Radio Buttons Estilizados em Cards (Para o Assistente) */
+.radio-card-group {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.radio-card-label {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-base);
+    font-weight: 500;
+}
+
+/* Esconde o radio nativo sem perder a acessibilidade */
+.radio-card-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.radio-card-label:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(4px);
+}
+
+/* Estado Ativo do Radio Card */
+.radio-card-label:has(input[type="radio"]:checked) {
+    background: rgba(0, 229, 255, 0.08);
+    border-color: var(--brand-cyan);
+    box-shadow: inset 4px 0 0 var(--brand-cyan);
+}
+
+/* Range Slider Premium (Deslizador de Orçamento) */
+.range-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-pill);
+    outline: none;
+    cursor: pointer;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: var(--brand-cyan);
+    border-radius: 50%;
+    box-shadow: var(--glow-cyan);
+    cursor: grab;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.range-slider::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.2);
+}
+
+/* --- 4. FALLBACKS E FEEDBACKS VISUAIS --- */
+/* Badges e Selos */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 90, 0, 0.1);
+    color: var(--brand-cta);
+    border: 1px solid rgba(255, 90, 0, 0.2);
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.badge.success {
+    background: rgba(0, 250, 154, 0.1);
+    color: var(--brand-success);
+    border-color: rgba(0, 250, 154, 0.2);
+}
+
+/* Skeletons Loaders (Obrigatório pelo Checklist de Qualidade) */
+.skeleton {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.02) 25%, 
+        rgba(255, 255, 255, 0.06) 50%, 
+        rgba(255, 255, 255, 0.02) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+    
+}
+
+.skeleton-text { height: 1rem; width: 100%; margin-bottom: 0.5rem; }
+.skeleton-title { height: 2rem; width: 60%; margin-bottom: 1rem; }
+.skeleton-block { height: 8rem; width: 100%; }
+
+/* --- MENU DE PERFIL (DROPDOWN) --- */
+.profile-btn {
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-pill);
+    padding: 0.25rem 1rem 0.25rem 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: var(--transition-fast);
+    font-family: inherit;
+}
+
+.profile-btn:hover, .profile-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-cyan), var(--brand-magenta));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-inverse);
+    box-shadow: var(--shadow-glass);
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.profile-name { font-weight: 600; font-size: var(--fs-sm); }
+.profile-role { font-size: 0.7rem; }
+
+.profile-dropdown {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    width: 260px;
+    padding: 0.5rem 0;
+    z-index: var(--z-modal);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: var(--transition-fast);
+    
+    /* Textura de Vidro Injetada Diretamente */
+    background: var(--bg-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass);
+}
+
+/* Classe ativada via JavaScript */
+.profile-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-header { padding: 1rem 1.25rem; }
+.dropdown-divider { border: 0; border-top: 1px solid var(--border-glass); margin: 0.25rem 0; }
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.text-brand-error { color: var(--brand-error); }
+.text-brand-error:hover { background: rgba(255, 51, 51, 0.1); }
+
+/* --- TRATAMENTO DE TEXTOS LONGOS NO MENU --- */
+#user-email-display {
+    white-space: nowrap;      /* Impede que o texto quebre para a linha de baixo */
+    overflow: hidden;         /* Esconde tudo o que tentar vazar da caixa */
+    text-overflow: ellipsis;  /* Coloca os "..." automaticamente no exato pixel do corte */
+    width: 100%;              /* Garante que ele obedeça aos limites do dropdown */
+    display: block;
+}
+
+/* --- BOTÃO TEMA CLARO/ESCURO --- */
+.theme-switcher {
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    color: var(--text-primary);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: 1.2rem;
+    margin-left: 0.5rem; /* Espaço entre o perfil e o botão */
+}
+.theme-switcher:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+body.light-theme .theme-switcher:hover { background: rgba(0, 0, 0, 0.05); }
+
+/* --- SISTEMA DE MODAIS --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: var(--transition-base);
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+
+.modal-content-box {
+    width: 100%; max-width: 500px;
+    transform: translateY(30px) scale(0.95); transition: var(--transition-base);
+}
+.modal-overlay.active .modal-content-box { transform: translateY(0) scale(1); }
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.btn-close-modal { background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: var(--transition-fast); }
+.btn-close-modal:hover { color: var(--brand-error); transform: rotate(90deg); }
+
+.switch {
+  display: block;
+  --width-of-switch: 3.5em;
+  --height-of-switch: 2em;
+  --size-of-icon: 1.4em;
+  --slider-offset: 0.3em;
+  position: relative;
+  width: var(--width-of-switch);
+  height: var(--height-of-switch);
+  margin-left: 1.5rem; 
+  transform: scale(0.85); 
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #f4f4f5; transition: .4s; border-radius: 30px; border: 1px solid var(--border-glass); }
+.slider:before { position: absolute; content: ""; height: var(--size-of-icon,1.4em); width: var(--size-of-icon,1.4em); border-radius: 20px; left: var(--slider-offset,0.3em); top: 50%; transform: translateY(-50%); background: linear-gradient(40deg,#FFFFFF,#0CF2E7,#ECF21B 300%); transition: .4s; }
+input:checked + .slider { background-color: #303136; }
+input:checked + .slider:before { left: calc(100% - (var(--size-of-icon,1.4em) + var(--slider-offset,0.3em))); background: #303136; box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb; }
+
+/* --- CORREÇÃO DO DROPDOWN (SELECT/OPTIONS) --- */
+select.input-text option {
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+}

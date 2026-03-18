@@ -1,0 +1,186 @@
+/* ==========================================================================
+   ARQUITETURA PREMIUM v4.0 - DASHBOARD STYLES
+   Projeto: Descomplica Celular
+   Camada: Estilização do Painel de Análise em Tempo Real
+   ========================================================================== */
+
+/* --- 1. LAYOUT DO DASHBOARD --- */
+.dashboard-layout {
+    padding-top: 140px; /* Um pouco mais de espaço para o header logado */
+    max-width: 1400px; /* O Dashboard usa uma área útil de tela maior */
+}
+
+.dashboard-header {
+    margin-bottom: 3rem;
+}
+
+.dashboard-headline {
+    font-size: var(--fs-h2);
+    color: #FFF;
+    margin-bottom: 0.5rem;
+}
+
+/* --- 2. GRID DE MÉTRICAS (KPIs) --- */
+.metrics-grid {
+    display: grid;
+    /* Adapta automaticamente o número de colunas baseado no tamanho da tela */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.metric-widget {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metric-title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.metric-content {
+    min-height: 4.5rem; /* Evita "pulos" de layout (Reflow) quando os dados substituírem os skeletons */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+/* Tipografia injetada pelo JS para os números da API */
+.metric-value {
+    font-size: clamp(2rem, 3.5vw, 3.5rem); /* Diminui a escala máxima para não estourar */
+    font-weight: 900;
+    color: var(--brand-cyan);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Coloca "..." se a tela for muito pequena */
+}
+
+.metric-subtitle {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+}
+
+/* --- 3. ÁREA DE GRÁFICOS E TABELAS (ANALYTICS) --- */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 66% de tela para o gráfico, 33% para a lista lateral */
+    gap: 2rem;
+}
+
+/* Modifica o .glass-card padrão para ter controle granular no header/body */
+.analytics-panel {
+    padding: 0; 
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-glass);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-header h2 {
+    font-size: var(--fs-base);
+    color: #FFF;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: var(--fs-xs);
+}
+
+.panel-body {
+    padding: 2rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 4. LISTA DE RECOMENDAÇÕES RECENTES (INJETADA VIA JS) --- */
+.list-container {
+    gap: 1rem;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+/* Customização da scrollbar interna exclusiva da lista */
+.list-container::-webkit-scrollbar { width: 4px; }
+.list-container::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 4px; }
+.list-container::-webkit-scrollbar-thumb:hover { background: var(--brand-cyan); }
+
+.match-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+    cursor: default;
+    will-change: transform, background;
+}
+
+.match-item:hover {
+    background: rgba(0, 229, 255, 0.05);
+    border-color: rgba(0, 229, 255, 0.3);
+    transform: translateX(6px);
+}
+
+.match-info h4 {
+    color: #FFF;
+    font-size: var(--fs-sm);
+    margin-bottom: 0.25rem;
+}
+
+.match-info p {
+    color: var(--text-secondary);
+    font-size: var(--fs-xs);
+}
+
+.match-price {
+    font-weight: 700;
+    color: var(--brand-cyan);
+    font-size: var(--fs-sm);
+}
+
+/* --- 5. RESPONSIVIDADE EXTREMA (MOBILE FIRST ADAPTADO) --- */
+@media (max-width: 1024px) {
+    .analytics-grid {
+        grid-template-columns: 1fr; /* Empilha o gráfico e a lista em tablets */
+    }
+    
+    .list-container {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-layout {
+        padding-top: 120px;
+    }
+    
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
