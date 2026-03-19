@@ -1,0 +1,42 @@
+[
+  {
+    "id": "como-funciona-recomendacao",
+    "question": "Como o Descomplica Celular escolhe a melhor opção para mim?",
+    "answer": "O sistema cruza seu orçamento, seu perfil de uso e sua principal prioridade para comparar os aparelhos do catálogo e montar uma recomendação personalizada."
+  },
+  {
+    "id": "recomendacao-e-automatizada",
+    "question": "A recomendação é automática ou feita por uma pessoa?",
+    "answer": "A análise é feita automaticamente com base em critérios técnicos definidos no sistema, buscando indicar opções coerentes com o seu tipo de uso."
+  },
+  {
+    "id": "posso-confiar-no-resultado",
+    "question": "Posso confiar no resultado apresentado?",
+    "answer": "A recomendação foi pensada para ser transparente e explicável, mostrando pontos fortes, alternativas e o motivo pelo qual cada aparelho apareceu no ranking."
+  },
+  {
+    "id": "site-vende-celulares",
+    "question": "O site vende celulares diretamente?",
+    "answer": "Neste momento, o foco principal do projeto é ajudar na decisão de compra, orientando o usuário sobre quais modelos fazem mais sentido para cada perfil."
+  },
+  {
+    "id": "qual-diferenca-perfil-prioridade",
+    "question": "Qual a diferença entre perfil de uso e prioridade?",
+    "answer": "O perfil de uso descreve como você utiliza o celular no dia a dia, enquanto a prioridade indica o ponto que mais pesa na sua decisão, como câmera, bateria ou desempenho."
+  },
+  {
+    "id": "o-que-acontece-se-nao-encontrar",
+    "question": "O que acontece se nenhum aparelho combinar com meu orçamento?",
+    "answer": "Se não houver uma opção compatível com os filtros informados, o sistema avisa e permite que você ajuste o orçamento ou altere o perfil para tentar uma nova análise."
+  },
+  {
+    "id": "posso-comparar-alternativas",
+    "question": "O sistema mostra apenas uma recomendação?",
+    "answer": "Não. Além da melhor escolha, o consultor também apresenta alternativas para que você compare propostas, preços e pontos fortes antes da decisão final."
+  },
+  {
+    "id": "preciso-criar-conta",
+    "question": "Preciso criar conta para usar o consultor?",
+    "answer": "A experiência pode oferecer recursos extras para usuários autenticados, mas a recomendação principal pode ser estruturada para funcionar mesmo antes do login."
+  }
+]

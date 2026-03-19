@@ -1,160 +1,236 @@
-/* ==========================================================================
-   ARQUITETURA PREMIUM v4.0 - AUTHENTICATION SERVICE (FIREBASE)
-   Projeto: Descomplica Celular
-   Camada: Criação de Usuários Reais no Banco de Dados
-   ========================================================================== */
+import { auth, db } from './firebase-config.js';
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
+import {
+  doc,
+  setDoc,
+  serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js';
 
-// 1. Importações do motor do Firebase e da nossa conexão
-import { auth } from './firebase-config.js';
-import { 
-    createUserWithEmailAndPassword, 
-    updateProfile 
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { qs, setText, setDisabled, getValue } from './utils/dom.js';
+import { validateRegisterForm } from './utils/validators.js';
+import {
+  setSessionItem,
+  getSessionItem,
+  removeSessionItem
+} from './utils/storage.js';
 
-class AuthService {
-    constructor() {
-        this.form = document.getElementById('form-registro');
-        this.loadingState = document.getElementById('loading-state');
-        this.successState = document.getElementById('success-state');
-        this.btnSubmit = document.getElementById('btn-submit-registro');
-        
-        this.fields = {
-            nome: { input: document.getElementById('nome'), error: document.getElementById('error-nome') },
-            email: { input: document.getElementById('email'), error: document.getElementById('error-email') },
-            senha: { input: document.getElementById('senha'), error: document.getElementById('error-senha') },
-            confirma: { input: document.getElementById('senha-confirma'), error: document.getElementById('error-confirma') }
-        };
+const REDIRECT_SESSION_KEY = 'postRegisterRedirect';
+const FLASH_MESSAGE_SESSION_KEY = 'authFlashMessage';
 
-        if (this.form) {
-            this.initListeners();
-        }
-    }
-
-    initListeners() {
-        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-        
-        Object.values(this.fields).forEach(field => {
-            field.input.addEventListener('input', () => this.clearError(field));
-        });
-    }
-
-    /* --- VALIDAÇÃO DE INTERFACE (Mantida do modelo anterior) --- */
-    validateForm() {
-        let isValid = true;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (this.fields.nome.input.value.trim().length < 3) {
-            this.showError(this.fields.nome, "O nome deve ter pelo menos 3 caracteres.");
-            isValid = false;
-        }
-
-        if (!emailRegex.test(this.fields.email.input.value.trim())) {
-            this.showError(this.fields.email, "Insira um e-mail válido.");
-            isValid = false;
-        }
-
-        if (this.fields.senha.input.value.length < 8) {
-            this.showError(this.fields.senha, "A arquitetura exige no mínimo 8 caracteres.");
-            isValid = false;
-        }
-
-        if (this.fields.senha.input.value !== this.fields.confirma.input.value) {
-            this.showError(this.fields.confirma, "As credenciais de segurança não coincidem.");
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    showError(field, message) {
-        field.error.textContent = message;
-        field.input.closest('.input-group').classList.add('has-error');
-        field.input.setAttribute('aria-invalid', 'true'); 
-    }
-
-    clearError(field) {
-        field.error.textContent = "";
-        field.input.closest('.input-group').classList.remove('has-error');
-        field.input.removeAttribute('aria-invalid');
-    }
-
-    /* --- INTEGRAÇÃO COM FIREBASE (O Motor Real) --- */
-    async handleSubmit(e) {
-        e.preventDefault();
-
-        if (!this.validateForm()) return;
-
-        const nome = this.fields.nome.input.value.trim();
-        const email = this.fields.email.input.value.trim();
-        const senha = this.fields.senha.input.value;
-
-        // UI State: Entra em modo de carregamento
-        this.btnSubmit.style.display = 'none';
-        this.loadingState.style.display = 'flex';
-        this.form.querySelectorAll('input').forEach(input => input.disabled = true);
-
-        try {
-            // 1. Tenta criar o usuário no Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-            const user = userCredential.user;
-
-            // 2. Atualiza o perfil do usuário recém-criado com o Nome dele
-            await updateProfile(user, {
-                displayName: nome
-            });
-
-            // 3. Sucesso! Mantém o nome no sessionStorage para o Dashboard ler imediatamente
-            sessionStorage.setItem('descomplica_user', nome);
-            
-            this.handleSuccess();
-
-        } catch (error) {
-            // Se falhar, restaura a interface e trata o erro do Google
-            console.error("[Auth API] Erro do Firebase: ", error.code, error.message);
-            
-            this.loadingState.style.display = 'none';
-            this.btnSubmit.style.display = 'flex';
-            this.form.querySelectorAll('input').forEach(input => input.disabled = false);
-
-            this.handleFirebaseError(error.code);
-        }
-    }
-
-    /* --- TRATAMENTO DE ERROS DO SERVIDOR --- */
-    handleFirebaseError(errorCode) {
-        switch (errorCode) {
-            case 'auth/email-already-in-use':
-                this.showError(this.fields.email, "Esta credencial já está em uso por outro usuário.");
-                break;
-            case 'auth/invalid-email':
-                this.showError(this.fields.email, "Formato de e-mail inválido para o servidor.");
-                break;
-            case 'auth/weak-password':
-                this.showError(this.fields.senha, "A senha fornecida é muito fraca (mínimo exigido pelo Google: 6).");
-                break;
-            case 'auth/network-request-failed':
-                this.showError(this.fields.email, "Falha de rede. Verifique sua conexão com a internet.");
-                break;
-            default:
-                this.showError(this.fields.email, "Erro interno na autenticação. Tente novamente mais tarde.");
-        }
-    }
-
-    /* --- TRANSIÇÃO DE ESTADO (Sucesso) --- */
-    handleSuccess() {
-        this.form.style.display = 'none';
-        this.successState.style.display = 'block';
-
-        // Redireciona o utilizador para o Dashboard após 2 segundos
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 2000);
-    }
+function getRegisterElements() {
+  return {
+    form: qs('#register-form') || qs('[data-register-form]'),
+    nameInput: qs('#register-name') || qs('[data-register-name]'),
+    emailInput: qs('#register-email') || qs('[data-register-email]'),
+    passwordInput: qs('#register-password') || qs('[data-register-password]'),
+    confirmPasswordInput:
+      qs('#register-confirm-password') || qs('[data-register-confirm-password]'),
+    submitButton: qs('#register-submit') || qs('[data-register-submit]'),
+    feedbackBox: qs('#register-feedback') || qs('[data-register-feedback]')
+  };
 }
 
-// Inicializa o módulo quando a página carregar
-document.addEventListener('DOMContentLoaded', () => {
-    // Instancia a classe e deixa disponível globalmente se necessário
-    window.DescomplicaAuth = new AuthService();
-    console.log('%c[Descomplica Celular] Auth Service (Firebase) Conectado', 'color: #8A2BE2; font-weight: bold;');
-});
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function getSafeRedirectPath() {
+  const storedRedirect = getSessionItem(REDIRECT_SESSION_KEY, '');
+  const fallbackPath = 'dashboard.html';
+
+  if (!storedRedirect || typeof storedRedirect !== 'string') {
+    return fallbackPath;
+  }
+
+  const normalized = storedRedirect.trim();
+  const blockedPrefixes = ['http:', 'https:', 'javascript:', '//'];
+
+  const isBlocked = blockedPrefixes.some((prefix) =>
+    normalized.toLowerCase().startsWith(prefix)
+  );
+
+  if (isBlocked) {
+    return fallbackPath;
+  }
+
+  return normalized || fallbackPath;
+}
+
+function setFeedback(message = '', type = 'default') {
+  const { feedbackBox } = getRegisterElements();
+  if (!feedbackBox) return;
+
+  if (!message) {
+    feedbackBox.innerHTML = '';
+    return;
+  }
+
+  feedbackBox.innerHTML = `
+    <div class="feedback-box feedback-box--${escapeHtml(type)}">
+      <h3 class="feedback-box-title">${
+        type === 'error' ? 'Falha no cadastro' : type === 'success' ? 'Tudo certo' : 'Status'
+      }</h3>
+      <p class="feedback-box-description">${escapeHtml(message)}</p>
+    </div>
+  `;
+}
+
+function setFormLoading(isLoading) {
+  const {
+    nameInput,
+    emailInput,
+    passwordInput,
+    confirmPasswordInput,
+    submitButton
+  } = getRegisterElements();
+
+  setDisabled(nameInput, isLoading);
+  setDisabled(emailInput, isLoading);
+  setDisabled(passwordInput, isLoading);
+  setDisabled(confirmPasswordInput, isLoading);
+  setDisabled(submitButton, isLoading);
+
+  if (submitButton) {
+    setText(submitButton, isLoading ? 'Criando conta...' : 'Criar conta');
+    submitButton.dataset.loading = String(Boolean(isLoading));
+  }
+}
+
+function mapFirebaseRegisterError(error) {
+  const code = String(error?.code || '');
+
+  const errorMap = {
+    'auth/email-already-in-use': 'Já existe uma conta cadastrada com este e-mail.',
+    'auth/invalid-email': 'O e-mail informado é inválido.',
+    'auth/weak-password': 'A senha é muito fraca. Use pelo menos 6 caracteres.',
+    'auth/missing-password': 'Informe uma senha para continuar.',
+    'auth/network-request-failed':
+      'Falha de conexão. Verifique sua internet e tente novamente.',
+    'auth/too-many-requests':
+      'Muitas tentativas em pouco tempo. Aguarde um pouco e tente novamente.',
+    'auth/internal-error': 'Ocorreu um erro interno no cadastro. Tente novamente.'
+  };
+
+  return errorMap[code] || 'Não foi possível concluir o cadastro agora.';
+}
+
+function buildPayload() {
+  const {
+    nameInput,
+    emailInput,
+    passwordInput,
+    confirmPasswordInput
+  } = getRegisterElements();
+
+  return {
+    name: getValue(nameInput).trim(),
+    email: getValue(emailInput).trim(),
+    password: getValue(passwordInput),
+    confirmPassword: getValue(confirmPasswordInput)
+  };
+}
+
+async function createUserProfileDocument(user, payload) {
+  const userRef = doc(db, 'usuarios', user.uid);
+
+  const profileData = {
+    uid: user.uid,
+    nome: payload.name,
+    email: payload.email,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    preferences: {
+      favoriteFocus: '',
+      preferredBudgetRange: '',
+      favoriteBrands: []
+    },
+    metadata: {
+      onboardingCompleted: false,
+      role: 'user',
+      status: 'active'
+    }
+  };
+
+  await setDoc(userRef, profileData, { merge: true });
+}
+
+async function handleRegisterSubmit(event) {
+  event.preventDefault();
+
+  const payload = buildPayload();
+  const validation = validateRegisterForm(payload);
+
+  if (!validation.valid) {
+    setFeedback(validation.message, 'error');
+    return;
+  }
+
+  try {
+    setFeedback('', 'default');
+    setFormLoading(true);
+
+    const credential = await createUserWithEmailAndPassword(
+      auth,
+      payload.email,
+      payload.password
+    );
+
+    await updateProfile(credential.user, {
+      displayName: payload.name
+    });
+
+    await createUserProfileDocument(credential.user, payload);
+
+    setSessionItem(FLASH_MESSAGE_SESSION_KEY, {
+      type: 'success',
+      message: 'Conta criada com sucesso.'
+    });
+
+    const redirectPath = getSafeRedirectPath();
+    removeSessionItem(REDIRECT_SESSION_KEY);
+
+    window.location.replace(redirectPath);
+  } catch (error) {
+    console.error('[Registro] Erro ao criar conta:', error);
+    setFeedback(mapFirebaseRegisterError(error), 'error');
+  } finally {
+    setFormLoading(false);
+  }
+}
+
+function attachSubmitHandler() {
+  const { form } = getRegisterElements();
+  if (!form) return;
+
+  form.addEventListener('submit', handleRegisterSubmit);
+}
+
+function redirectIfAlreadyAuthenticated() {
+  onAuthStateChanged(auth, (user) => {
+    if (!user) return;
+
+    const redirectPath = getSafeRedirectPath();
+    removeSessionItem(REDIRECT_SESSION_KEY);
+
+    window.location.replace(redirectPath);
+  });
+}
+
+function bootstrapRegister() {
+  const { form } = getRegisterElements();
+  if (!form) return;
+
+  redirectIfAlreadyAuthenticated();
+  attachSubmitHandler();
+}
+
+document.addEventListener('DOMContentLoaded', bootstrapRegister);
