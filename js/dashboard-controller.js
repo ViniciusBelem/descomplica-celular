@@ -1,5 +1,8 @@
 import { auth, db } from './firebase-config.js';
-import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
+import {
+  onAuthStateChanged,
+  signOut
+} from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
 import {
   collection,
   query,
@@ -23,6 +26,8 @@ import {
   renderDashboardMatches,
   renderDashboardError
 } from './ui/dashboard-render.js';
+
+const DASHBOARD_REDIRECT_PATH = 'dashboard.html';
 
 function normalizeText(value) {
   return String(value ?? '')
@@ -67,6 +72,11 @@ function resolveTimestampValue(value) {
     return value;
   }
 
+  if (typeof value === 'string') {
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
   return 0;
 }
 
@@ -76,7 +86,9 @@ function getMatchPrice(data) {
     data?.preco,
     data?.recommendedPrice,
     data?.orcamento,
-    data?.budget
+    data?.budget,
+    data?.bestMatch?.price,
+    data?.recommendedDevice?.price
   ];
 
   const firstValid = candidates.find((value) => Number.isFinite(Number(value)));
@@ -89,6 +101,7 @@ function getMatchFocus(data) {
     data?.perfil ||
     data?.priority ||
     data?.recommendedFocus ||
+    data?.bestMatch?.focusTag ||
     ''
   );
 }
@@ -102,26 +115,38 @@ function getMatchModel(data) {
     return `${data.marca} ${data.modelo}`;
   }
 
+  if (data?.bestMatch?.brand && data?.bestMatch?.model) {
+    return `${data.bestMatch.brand} ${data.bestMatch.model}`;
+  }
+
   if (data?.recommendedDevice?.brand && data?.recommendedDevice?.model) {
     return `${data.recommendedDevice.brand} ${data.recommendedDevice.model}`;
   }
 
-  if (typeof data?.deviceName === 'string') {
-    return data.deviceName;
+  if (typeof data?.deviceName === 'string' && data.deviceName.trim()) {
+    return data.deviceName.trim();
   }
 
   return 'Modelo não identificado';
 }
 
+function getProfileLabel(data) {
+  return (
+    data?.profile?.label ||
+    data?.profileLabel ||
+    data?.perfilLabel ||
+    getFocusLabel(getMatchFocus(data))
+  );
+}
+
 function buildMatchItem(docData = {}) {
   const price = getMatchPrice(docData);
-  const focus = getMatchFocus(docData);
 
   return {
     model: getMatchModel(docData),
-    profileLabel: getFocusLabel(focus),
+    profileLabel: getProfileLabel(docData),
     price,
-    focusTag: normalizeText(focus),
+    focusTag: normalizeText(getMatchFocus(docData)),
     timestamp: resolveTimestampValue(
       docData.data_pesquisa ||
         docData.createdAt ||
@@ -183,33 +208,50 @@ function sortMatchesByDate(matches = []) {
     .sort((a, b) => Number(b.timestamp || 0) - Number(a.timestamp || 0));
 }
 
-async function fetchUserMatches(userId) {
-  const collectionCandidates = [
-    'historico_matches',
-    'match_history'
-  ];
+async function tryFetchFromCollection(collectionName, userId) {
+  const timestampFields = ['data_pesquisa', 'createdAt', 'timestamp', 'updatedAt'];
 
-  let lastError = null;
-
-  for (const collectionName of collectionCandidates) {
+  for (const timestampField of timestampFields) {
     try {
       const matchesQuery = query(
         collection(db, collectionName),
         where('uid', '==', userId),
-        orderBy('data_pesquisa', 'desc'),
+        orderBy(timestampField, 'desc'),
         limit(10)
       );
 
       const snapshot = await getDocs(matchesQuery);
-
       return snapshot.docs.map((doc) => buildMatchItem(doc.data()));
-    } catch (error) {
-      lastError = error;
+    } catch {
+      /* tenta próximo formato */
     }
   }
 
-  if (lastError) {
-    throw lastError;
+  try {
+    const snapshot = await getDocs(
+      query(collection(db, collectionName), where('uid', '==', userId), limit(20))
+    );
+
+    return snapshot.docs.map((doc) => buildMatchItem(doc.data()));
+  } catch {
+    return null;
+  }
+}
+
+async function fetchUserMatches(userId) {
+  const collectionCandidates = [
+    'historico_matches',
+    'match_history',
+    'recommendation_history',
+    'historico_recomendacoes'
+  ];
+
+  for (const collectionName of collectionCandidates) {
+    const result = await tryFetchFromCollection(collectionName, userId);
+
+    if (Array.isArray(result)) {
+      return result;
+    }
   }
 
   return [];
@@ -222,6 +264,15 @@ function getDashboardElements() {
     logoutButton: qs('#btn-logout'),
     refreshButton: qs('#btn-refresh-data')
   };
+}
+
+function closeProfileDropdown() {
+  const { profileTrigger, profileDropdown } = getDashboardElements();
+  if (!profileTrigger || !profileDropdown) return;
+
+  profileDropdown.classList.remove('active');
+  profileTrigger.setAttribute('aria-expanded', 'false');
+  profileDropdown.setAttribute('aria-hidden', 'true');
 }
 
 function bindProfileDropdown() {
@@ -243,9 +294,13 @@ function bindProfileDropdown() {
       !profileTrigger.contains(event.target);
 
     if (clickedOutside) {
-      profileDropdown.classList.remove('active');
-      profileTrigger.setAttribute('aria-expanded', 'false');
-      profileDropdown.setAttribute('aria-hidden', 'true');
+      closeProfileDropdown();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeProfileDropdown();
     }
   });
 }
@@ -314,7 +369,7 @@ function ensureAuthenticatedAccess() {
 
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      window.location.replace('login.html');
+      window.location.replace(`login.html?redirect=${encodeURIComponent(DASHBOARD_REDIRECT_PATH)}`);
       return;
     }
 

@@ -1,5 +1,5 @@
 import { formatBRL } from '../utils/currency.js';
-import { qs, setHTML, setText } from '../utils/dom.js';
+import { qs, qsa, setHTML, setText } from '../utils/dom.js';
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -27,14 +27,14 @@ function createMetricMarkup(value, subtitle) {
 
 function createSkeletonMetricMarkup() {
   return `
-    <div class="skeleton skeleton-title" style="width: 50%;"></div>
-    <div class="skeleton skeleton-text" style="width: 80%;"></div>
+    <div class="skeleton skeleton-title" style="max-width: 140px;"></div>
+    <div class="skeleton skeleton-line skeleton-line--lg"></div>
   `;
 }
 
 function createChartSkeletonMarkup() {
   return `
-    <div class="skeleton skeleton-block chart-skeleton" style="height: 300px; border-radius: var(--radius-sm);"></div>
+    <div class="skeleton skeleton-block chart-skeleton" style="height: 280px; border-radius: var(--radius-sm);"></div>
   `;
 }
 
@@ -74,26 +74,26 @@ function createChartMarkup(items = []) {
   }
 
   return `
-    <div style="display: flex; height: 100%; align-items: flex-end; justify-content: space-around; gap: 1rem; padding-top: 2rem;">
+    <div class="dashboard-chart-wrapper">
       ${items
         .map((item) => {
           const value = Math.max(0, Math.min(100, Number(item.value || 0)));
 
           return `
-            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-              <span style="font-size: var(--fs-xs); color: var(--brand-cyan); font-weight: 700;">
+            <div class="dashboard-chart-column">
+              <span class="dashboard-chart-value">
                 ${escapeHtml(`${value}%`)}
               </span>
 
-              <div style="width: 100%; max-width: 60px; background: rgba(0, 229, 255, 0.1); border-radius: var(--radius-sm) var(--radius-sm) 0 0; position: relative; height: 200px; overflow: hidden;">
+              <div class="dashboard-chart-track">
                 <div
                   class="dashboard-chart-bar"
                   data-final-height="${value}"
-                  style="position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: linear-gradient(0deg, var(--brand-cyan), #00b3cc); transition: height 900ms var(--ease-bounce);"
+                  style="height: 0%;"
                 ></div>
               </div>
 
-              <span style="font-size: var(--fs-xs); color: var(--text-secondary); text-align: center;">
+              <span class="dashboard-chart-label">
                 ${escapeHtml(item.label)}
               </span>
             </div>
@@ -118,24 +118,29 @@ function createMatchItemMarkup(match) {
 
 function createEmptyMatchesMarkup() {
   return `
-    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
-      <p>Nenhuma análise encontrada no histórico.</p>
-      <a href="index.html#assistente" style="color: var(--brand-cyan); font-size: var(--fs-xs); display: block; margin-top: 0.5rem;">
-        Fazer primeira análise
-      </a>
+    <div class="dashboard-empty-state">
+      <h3 class="dashboard-empty-state__title">Nenhuma análise encontrada</h3>
+      <p class="dashboard-empty-state__description">
+        Assim que houver registros, este painel começará a mostrar histórico e sinais de tendência.
+      </p>
+      <a href="./index.html#consultor" class="btn btn-secondary">Fazer primeira análise</a>
     </div>
   `;
 }
 
 export function renderDashboardUser(user = null) {
-  const nameElement = qs('#user-name-display');
-  const emailElement = qs('#user-email-display');
-  const avatarElement = qs('#user-avatar-initial');
+  const nameElements = qsa('#user-name-display');
+  const emailElements = qsa('#user-email-display');
+  const avatarElements = [
+    ...qsa('#user-avatar-initial'),
+    ...qsa('#user-avatar-topbar'),
+    ...qsa('#user-avatar-sidebar')
+  ];
 
   if (!user) {
-    setText(nameElement, 'Visitante');
-    setText(emailElement, 'Sessão indisponível');
-    setText(avatarElement, '?');
+    nameElements.forEach((element) => setText(element, 'Visitante'));
+    emailElements.forEach((element) => setText(element, 'Sessão indisponível'));
+    avatarElements.forEach((element) => setText(element, '?'));
     return;
   }
 
@@ -144,9 +149,13 @@ export function renderDashboardUser(user = null) {
     String(user.email || '').split('@')[0] ||
     'Usuário';
 
-  setText(nameElement, displayName);
-  setText(emailElement, user.email || 'E-mail não disponível');
-  setText(avatarElement, displayName.charAt(0).toUpperCase());
+  nameElements.forEach((element) => setText(element, displayName));
+  emailElements.forEach((element) =>
+    setText(element, user.email || 'E-mail não disponível')
+  );
+  avatarElements.forEach((element) =>
+    setText(element, displayName.charAt(0).toUpperCase())
+  );
 }
 
 export function renderDashboardStatus({

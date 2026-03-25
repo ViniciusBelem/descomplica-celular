@@ -1,3 +1,12 @@
+/**
+ * HOME CONTROLLER - v2 CORRIGIDO
+ * Gerencia a página inicial com integração completa
+ * para persistência de análises em Firestore
+ */
+
+import { auth } from './firebase-config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
+
 import { getFeaturedDevices } from './catalog-service.js';
 import {
   explainRecommendation,
@@ -42,12 +51,19 @@ import {
   removeStorageItem
 } from './utils/storage.js';
 
-import { initTheme } from './ui/theme-manager.js';
+import {
+  normalizeText,
+  escapeHtml
+} from './utils/security.js';
+
 import { initEnhancedSelects } from './ui/enhanced-select.js';
-import { normalizeText } from './utils/security.js';
+
+import { saveRecommendationAnalysis } from './services/firebase-service.js';
 
 const FAQ_DATA_PATH = './data/faq.json';
 const STORAGE_KEY = 'homeRecommendationDraft';
+
+// ===== SELETORES E ELEMENTOS =====
 
 function getHomeElements() {
   return {
@@ -62,6 +78,8 @@ function getHomeElements() {
   };
 }
 
+// ===== OPÇÕES DO FORMULÁRIO =====
+
 function buildFocusOptions() {
   return [
     { value: '', label: 'Selecione sua prioridade' },
@@ -75,6 +93,8 @@ function buildFocusOptions() {
     { value: 'longevidade', label: 'Longevidade' }
   ];
 }
+
+// ===== FETCH E CARREGAMENTO =====
 
 async function fetchFaqItems() {
   const response = await fetch(FAQ_DATA_PATH, {
@@ -100,6 +120,8 @@ async function fetchFaqItems() {
     }));
 }
 
+// ===== FEEDBACK E STATUS =====
+
 function setStatusMessage(message = '', variant = 'default') {
   const { statusBox } = getHomeElements();
   if (!statusBox) return;
@@ -117,39 +139,6 @@ function setStatusMessage(message = '', variant = 'default') {
   });
 }
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-
-async function runPipelineAnimation(target) {
-  if (!target) return;
-
-  const steps = [
-    'Mapeando dispositivos compatíveis...',
-    'Ajustando filtros de orçamento...',
-    'Aplicando pesos do perfil escolhido...',
-    'Cruzando dados com prioridade...',
-    'Gerando raciocínio explicável...'
-  ];
-
-  target.innerHTML = `
-    <div class="pipeline-loader">
-      <div class="pipeline-spinner"></div>
-      <div class="pipeline-text" id="pipeline-text">${steps[0]}</div>
-    </div>
-  `;
-
-  const textEl = target.querySelector('#pipeline-text');
-  if (!textEl) return;
-
-  for (let i = 1; i < steps.length; i++) {
-    await delay(600); // Ritmo fluido que simula processamento complexo
-    textEl.style.opacity = '0';
-    await delay(200);
-    textEl.textContent = steps[i];
-    textEl.style.opacity = '1';
-  }
-  await delay(400); // Pausa final para transição suave
-}
-
 function setFormLoading(isLoading) {
   const { submitButton, resetButton } = getHomeElements();
 
@@ -165,27 +154,41 @@ function setFormLoading(isLoading) {
   }
 }
 
+// ===== DRAFT E PERSISTÊNCIA LOCAL =====
+
+function extractRobustBudget(rawValue) {
+  if (!rawValue) return 0;
+  
+  const cleaned = String(rawValue).replace(/[^\d.,]/g, '');
+  if (!cleaned) return 0;
+
+  if (cleaned.includes(',')) {
+    const parts = cleaned.split(',');
+    const intPart = parts[0].replace(/\./g, ''); 
+    const decPart = parts[1].substring(0, 2); 
+    return Number(`${intPart}.${decPart}`);
+  }
+  
+  if (cleaned.includes('.')) {
+    const parts = cleaned.split('.');
+    const lastPart = parts[parts.length - 1];
+    
+    if (lastPart.length === 3) {
+      return Number(cleaned.replace(/\./g, ''));
+    }
+
+    const intPart = parts.slice(0, -1).join('').replace(/\./g, '');
+    return Number(`${intPart}.${lastPart}`);
+  }
+
+  return Number(cleaned);
+}
+
 function getDraftPayload() {
   const { budgetInput, profileSelect, focusSelect } = getHomeElements();
 
-  const rawBudget = getValue(budgetInput);
-  let safeBudget = parseBRL(rawBudget);
-  
-  if (!safeBudget && rawBudget) {
-    // Prevenção robusta: preserva pontuação correta (Brasil) evitando casas em excesso
-    const cleaned = String(rawBudget).replace(/[^\d.,]/g, '');
-    if (cleaned.includes(',')) {
-      const parts = cleaned.split(',');
-      const intPart = parts[0].replace(/\./g, '');
-      const decPart = parts[1];
-      safeBudget = Number(`${intPart}.${decPart}`);
-    } else {
-      safeBudget = Number(cleaned.replace(/\./g, ''));
-    }
-  }
-
   return {
-    budget: safeBudget || 0,
+    budget: extractRobustBudget(getValue(budgetInput)) || 0,
     profileId: normalizeText(getValue(profileSelect)),
     focusTag: normalizeText(getValue(focusSelect))
   };
@@ -218,12 +221,14 @@ function restoreDraft() {
   }
 }
 
+// ===== POPULAÇÃO DO FORMULÁRIO =====
+
 function populateFocusSelect() {
   const { focusSelect } = getHomeElements();
   if (!focusSelect) return;
 
   focusSelect.innerHTML = buildFocusOptions()
-    .map((item) => `<option value="${item.value}">${item.label}</option>`)
+    .map((item) => `<option value="${item.value}">${escapeHtml(item.label)}</option>`)
     .join('');
 }
 
@@ -231,32 +236,43 @@ async function populateProfileSelect() {
   const { profileSelect } = getHomeElements();
   if (!profileSelect) return;
 
-  const profiles = await getRecommendationProfiles();
+  try {
+    const profiles = await getRecommendationProfiles();
 
-  profileSelect.innerHTML = [
-    '<option value="">Selecione seu perfil</option>',
-    ...profiles.map(
-      (profile) => `<option value="${profile.id}">${profile.label}</option>`
-    )
-  ].join('');
+    profileSelect.innerHTML = [
+      '<option value="">Selecione seu perfil</option>',
+      ...profiles.map(
+        (profile) => `<option value="${profile.id}">${escapeHtml(profile.label)}</option>`
+      )
+    ].join('');
+  } catch (error) {
+    console.error('[Home] Erro ao carregar perfis:', error);
+    profileSelect.innerHTML = '<option value="">Erro ao carregar perfis</option>';
+  }
 }
 
 async function updateProfileHint(profileId) {
   const { profileHint } = getHomeElements();
   if (!profileHint) return;
 
-  const profiles = await getRecommendationProfiles();
+  try {
+    const profiles = await getRecommendationProfiles();
 
-  const selectedProfile =
-    profiles.find((profile) => normalizeText(profile.id) === normalizeText(profileId)) || null;
+    const selectedProfile =
+      profiles.find((profile) => normalizeText(profile.id) === normalizeText(profileId)) || null;
 
-  setText(
-    profileHint,
-    selectedProfile
-      ? selectedProfile.description
-      : 'Escolha um perfil para o consultor entender melhor o seu tipo de uso.'
-  );
+    setText(
+      profileHint,
+      selectedProfile
+        ? selectedProfile.description
+        : 'Escolha um perfil para o consultor entender melhor o seu tipo de uso.'
+    );
+  } catch (error) {
+    console.error('[Home] Erro ao atualizar hint:', error);
+  }
 }
+
+// ===== LISTENERS DO FORMULÁRIO =====
 
 function attachBudgetFormattingListener() {
   const { budgetInput } = getHomeElements();
@@ -267,7 +283,7 @@ function attachBudgetFormattingListener() {
   });
 
   budgetInput.addEventListener('blur', () => {
-    const amount = parseBRL(getValue(budgetInput));
+    const amount = extractRobustBudget(getValue(budgetInput));
     const currentValue = getValue(budgetInput);
     setValue(budgetInput, amount ? formatBudgetInputValue(amount) : currentValue);
     saveDraft();
@@ -296,6 +312,41 @@ function attachDraftListeners() {
   }
 }
 
+// ===== CARREGAMENTO DE SEÇÕES =====
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+async function runPipelineAnimation(target) {
+  if (!target) return;
+
+  const steps = [
+    'Mapeando dispositivos compatíveis...',
+    'Ajustando filtros de orçamento...',
+    'Aplicando pesos do perfil escolhido...',
+    'Cruzando dados com prioridade...',
+    'Gerando raciocínio explicável...'
+  ];
+
+  target.innerHTML = `
+    <div class="pipeline-loader">
+      <div class="pipeline-spinner"></div>
+      <div class="pipeline-text" id="pipeline-text">${steps[0]}</div>
+    </div>
+  `;
+
+  const textEl = target.querySelector('#pipeline-text');
+  if (!textEl) return;
+
+  for (let i = 1; i < steps.length; i++) {
+    await delay(600);
+    textEl.style.opacity = '0';
+    await delay(200);
+    textEl.textContent = steps[i];
+    textEl.style.opacity = '1';
+  }
+  await delay(400);
+}
+
 async function loadFeaturedCatalog() {
   try {
     renderCatalogLoading({
@@ -310,7 +361,7 @@ async function loadFeaturedCatalog() {
       target: '[data-catalog-grid]'
     });
   } catch (error) {
-    console.error(error);
+    console.error('[Home] Erro ao carregar catálogo:', error);
 
     renderCatalogError({
       message: 'Não conseguimos carregar o catálogo agora. Tente novamente em instantes.',
@@ -328,7 +379,7 @@ async function loadFaq() {
       target: '[data-faq-list]'
     });
   } catch (error) {
-    console.error(error);
+    console.error('[Home] Erro ao carregar FAQ:', error);
 
     renderSectionMessage({
       title: 'FAQ indisponível',
@@ -338,6 +389,8 @@ async function loadFaq() {
     });
   }
 }
+
+// ===== SUBMISSÃO DO FORMULÁRIO =====
 
 async function handleRecommendationSubmit(event) {
   event.preventDefault();
@@ -367,22 +420,46 @@ async function handleRecommendationSubmit(event) {
       quantity: 3
     });
 
-    // Roda a UI do Pipeline e a pesquisa de banco de forma simultânea (paralela)
-    const animationPromise = runPipelineAnimation(getHomeElements().statusBox);
-    const backendPromise = explainRecommendation({
-       budget: payload.budget,
-       profileId: payload.profileId,
-       focusTag: payload.focusTag,
-       limit: 3
+    const result = await explainRecommendation({
+      budget: payload.budget,
+      profileId: payload.profileId,
+      focusTag: payload.focusTag,
+      limit: 3
     });
-
-    const [_, result] = await Promise.all([animationPromise, backendPromise]);
 
     renderRecommendationState({
       result,
       resultsTarget: '[data-recommendation-results]',
       explanationTarget: '[data-recommendation-explanation]'
     });
+
+    // Persistir análise se usuário autenticado
+    if (auth.currentUser && result.success && result.bestMatch) {
+      try {
+        await saveRecommendationAnalysis({
+          userId: auth.currentUser.uid,
+          profileId: payload.profileId,
+          focusTag: payload.focusTag,
+          budget: payload.budget,
+          bestMatchId: result.bestMatch.id,
+          bestMatchData: {
+            brand: result.bestMatch.brand,
+            model: result.bestMatch.model,
+            price: result.bestMatch.price
+          },
+          alternatives: (result.alternatives || []).map((alt) => ({
+            id: alt.id,
+            brand: alt.brand,
+            model: alt.model
+          })),
+          explanation: result.explanation || ''
+        });
+        console.log('[Home] Análise salva com sucesso');
+      } catch (error) {
+        console.warn('[Home] Não foi possível salvar análise:', error);
+        // Não quebra a experiência do usuário se o Firestore falhar
+      }
+    }
 
     if (result.success) {
       setStatusMessage('Análise concluída com sucesso.', 'success');
@@ -393,7 +470,7 @@ async function handleRecommendationSubmit(event) {
       );
     }
   } catch (error) {
-    console.error(error);
+    console.error('[Home] Erro na recomendação:', error);
 
     renderRecommendationErrorState({
       message: 'Ocorreu um erro ao analisar seu perfil agora. Tente novamente.',
@@ -428,6 +505,8 @@ async function handleRecommendationReset() {
   });
 }
 
+// ===== INICIALIZAÇÃO =====
+
 function attachFormListeners() {
   const { form, resetButton } = getHomeElements();
 
@@ -441,26 +520,32 @@ function attachFormListeners() {
 }
 
 async function bootstrapHome() {
-  initTheme();
+  // Carregar dados iniciais em paralelo
+  await Promise.all([
+    populateProfileSelect(),
+    loadFeaturedCatalog(),
+    loadFaq()
+  ]);
 
+  // Restaurar draft anterior
+  restoreDraft();
+
+  // Attach listeners
   populateFocusSelect();
   attachBudgetFormattingListener();
   attachProfileHintListener();
   attachDraftListeners();
   attachFormListeners();
-
-  try {
-    await populateProfileSelect();
-    restoreDraft();
-    await updateProfileHint(getHomeElements().profileSelect?.value || '');
-  } catch (error) {
-    console.error(error);
-    setStatusMessage('Não foi possível carregar os perfis do consultor.', 'error');
-  }
-
+  
+  // Inicializa os selects customizados (Vital para o layout funcionar)
   initEnhancedSelects();
 
-  await Promise.allSettled([loadFeaturedCatalog(), loadFaq()]);
+  // Monitorar autenticação
+  onAuthStateChanged(auth, (user) => {
+    console.log('[Home] Usuário:', user ? user.email : 'não autenticado');
+  });
+
+  console.log('[Home] Inicialização concluída');
 }
 
 document.addEventListener('DOMContentLoaded', bootstrapHome);

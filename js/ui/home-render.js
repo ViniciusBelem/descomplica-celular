@@ -10,6 +10,14 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+function resolveElement(targetOrSelector) {
+  if (!targetOrSelector) return null;
+  if (typeof targetOrSelector === 'string') {
+    return qs(targetOrSelector);
+  }
+  return targetOrSelector;
+}
+
 function createFeedbackMarkup({
   title = '',
   description = '',
@@ -103,20 +111,15 @@ function createDeviceCard(device) {
 function createFaqItem(item, index) {
   return `
     <details class="faq-item" ${index === 0 ? 'open' : ''}>
-      <summary class="faq-question">${escapeHtml(item.question)}</summary>
+      <summary class="faq-question">
+        <span>${escapeHtml(item.question)}</span>
+        <span class="accordion-icon"></span>
+      </summary>
       <div class="faq-answer-wrapper">
         <p class="faq-answer">${escapeHtml(item.answer)}</p>
       </div>
     </details>
   `;
-}
-
-function resolveElement(targetOrSelector) {
-  if (!targetOrSelector) return null;
-  if (typeof targetOrSelector === 'string') {
-    return qs(targetOrSelector);
-  }
-  return targetOrSelector;
 }
 
 export function renderCatalogDevices({

@@ -1,3 +1,6 @@
+import { formatBRL } from '../utils/currency.js';
+import { qs, setHTML } from '../utils/dom.js';
+
 function escapeHtml(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -7,13 +10,12 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
-function formatCurrency(value) {
-  const amount = Number(value || 0);
-
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(amount);
+function resolveElement(targetOrSelector) {
+  if (!targetOrSelector) return null;
+  if (typeof targetOrSelector === 'string') {
+    return qs(targetOrSelector);
+  }
+  return targetOrSelector;
 }
 
 function translateCriterion(criterion) {
@@ -35,6 +37,38 @@ function getRecommendationBadge(position) {
   if (position === 2) return 'Alternativa forte';
   if (position === 3) return 'Boa comparação';
   return 'Opção recomendada';
+}
+
+function createFeedbackMarkup({
+  title = '',
+  description = '',
+  variant = 'default'
+} = {}) {
+  return `
+    <div class="feedback-box feedback-box--${escapeHtml(variant)}">
+      ${title ? `<h3 class="feedback-box-title">${escapeHtml(title)}</h3>` : ''}
+      ${
+        description
+          ? `<p class="feedback-box-description">${escapeHtml(description)}</p>`
+          : ''
+      }
+    </div>
+  `;
+}
+
+function createLoadingMarkup(quantity = 3) {
+  return Array.from({ length: quantity }, (_, index) => {
+    return `
+      <div class="skeleton-card skeleton-card--recommendation" aria-hidden="true" data-skeleton-index="${
+        index + 1
+      }">
+        <div class="skeleton skeleton-image"></div>
+        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line skeleton-line--sm"></div>
+      </div>
+    `;
+  }).join('');
 }
 
 function buildSpecsList(device) {
@@ -81,38 +115,6 @@ function buildHighlightsList(highlights = []) {
     .join('');
 }
 
-function createFeedbackMarkup({
-  title = '',
-  description = '',
-  variant = 'default'
-} = {}) {
-  return `
-    <div class="feedback-box feedback-box--${escapeHtml(variant)}">
-      ${title ? `<h3 class="feedback-box-title">${escapeHtml(title)}</h3>` : ''}
-      ${
-        description
-          ? `<p class="feedback-box-description">${escapeHtml(description)}</p>`
-          : ''
-      }
-    </div>
-  `;
-}
-
-function createLoadingMarkup(quantity = 3) {
-  return Array.from({ length: quantity }, (_, index) => {
-    return `
-      <div class="skeleton-card skeleton-card--recommendation" aria-hidden="true" data-skeleton-index="${
-        index + 1
-      }">
-        <div class="skeleton skeleton-image"></div>
-        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-        <div class="skeleton skeleton-line"></div>
-        <div class="skeleton skeleton-line skeleton-line--sm"></div>
-      </div>
-    `;
-  }).join('');
-}
-
 function createExplanationMarkup(result) {
   if (!result?.explanation) return '';
 
@@ -122,8 +124,12 @@ function createExplanationMarkup(result) {
 
   const budgetLabel = result.budget
     ? `<span class="recommendation-budget-chip">Orçamento analisado: ${escapeHtml(
-        formatCurrency(result.budget)
+        formatBRL(result.budget)
       )}</span>`
+    : '';
+
+  const focusLabel = result.focusTag
+    ? `<span class="recommendation-budget-chip">Foco: ${escapeHtml(result.focusTag)}</span>`
     : '';
 
   return `
@@ -131,6 +137,7 @@ function createExplanationMarkup(result) {
       <div class="recommendation-explanation-meta">
         ${profileLabel}
         ${budgetLabel}
+        ${focusLabel}
       </div>
       <h3 class="recommendation-explanation-title">Resumo da análise</h3>
       <p class="recommendation-explanation-text">${escapeHtml(result.explanation)}</p>
@@ -166,7 +173,7 @@ function createRecommendationCard(device) {
         <div class="recommendation-card-content">
           <p class="recommendation-card-brand">${escapeHtml(device.brand)}</p>
           <h3 class="recommendation-card-title">${escapeHtml(device.model)}</h3>
-          <p class="recommendation-card-price">${escapeHtml(formatCurrency(device.price))}</p>
+          <p class="recommendation-card-price">${escapeHtml(formatBRL(device.price))}</p>
           <p class="recommendation-card-summary">${escapeHtml(device.summary)}</p>
           <p class="recommendation-card-reason">${escapeHtml(recommendation.reason || '')}</p>
           ${
@@ -198,14 +205,6 @@ function createRecommendationCard(device) {
   `;
 }
 
-function resolveElement(targetOrSelector) {
-  if (!targetOrSelector) return null;
-  if (typeof targetOrSelector === 'string') {
-    return document.querySelector(targetOrSelector);
-  }
-  return targetOrSelector;
-}
-
 export function renderRecommendationState({
   result = null,
   resultsTarget = '[data-recommendation-results]',
@@ -217,25 +216,28 @@ export function renderRecommendationState({
   if (!resultsElement) return;
 
   if (!result?.success || !Array.isArray(result.ranking) || !result.ranking.length) {
-    resultsElement.innerHTML = createFeedbackMarkup({
-      title: 'Nenhuma recomendação encontrada',
-      description:
-        result?.message ||
-        'Tente ajustar orçamento, perfil ou prioridade para uma nova análise.',
-      variant: 'empty'
-    });
+    setHTML(
+      resultsElement,
+      createFeedbackMarkup({
+        title: 'Nenhuma recomendação encontrada',
+        description:
+          result?.message ||
+          'Tente ajustar orçamento, perfil ou prioridade para uma nova análise.',
+        variant: 'empty'
+      })
+    );
 
     if (explanationElement) {
-      explanationElement.innerHTML = '';
+      setHTML(explanationElement, '');
     }
 
     return;
   }
 
-  resultsElement.innerHTML = result.ranking.map(createRecommendationCard).join('');
+  setHTML(resultsElement, result.ranking.map(createRecommendationCard).join(''));
 
   if (explanationElement) {
-    explanationElement.innerHTML = createExplanationMarkup(result);
+    setHTML(explanationElement, createExplanationMarkup(result));
   }
 }
 
@@ -249,10 +251,10 @@ export function renderRecommendationLoadingState({
 
   if (!resultsElement) return;
 
-  resultsElement.innerHTML = createLoadingMarkup(quantity);
+  setHTML(resultsElement, createLoadingMarkup(quantity));
 
   if (explanationElement) {
-    explanationElement.innerHTML = '';
+    setHTML(explanationElement, '');
   }
 }
 
@@ -266,14 +268,17 @@ export function renderRecommendationErrorState({
 
   if (!resultsElement) return;
 
-  resultsElement.innerHTML = createFeedbackMarkup({
-    title: 'Erro ao gerar recomendação',
-    description: message,
-    variant: 'error'
-  });
+  setHTML(
+    resultsElement,
+    createFeedbackMarkup({
+      title: 'Erro ao gerar recomendação',
+      description: message,
+      variant: 'error'
+    })
+  );
 
   if (explanationElement) {
-    explanationElement.innerHTML = '';
+    setHTML(explanationElement, '');
   }
 }
 
@@ -285,10 +290,10 @@ export function clearRecommendationState({
   const explanationElement = resolveElement(explanationTarget);
 
   if (resultsElement) {
-    resultsElement.innerHTML = '';
+    setHTML(resultsElement, '');
   }
 
   if (explanationElement) {
-    explanationElement.innerHTML = '';
+    setHTML(explanationElement, '');
   }
 }

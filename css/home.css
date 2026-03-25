@@ -1,166 +1,426 @@
-/* ==========================================================================
-   ARQUITETURA PREMIUM v4.0 - HOME PAGE STYLES
-   Projeto: Descomplica Celular
-   Camada: Especificidades da Landing Page
-   ========================================================================== */
+@import url('./tokens.css');
 
-/* --- 1. AMBIENT GLOW (Background Animado via GPU) --- */
-.ambient-glow {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: var(--z-background);
-    pointer-events: none;
-    overflow: hidden;
+.home-page {
+  position: relative;
 }
 
-.ambient-glow::before, .ambient-glow::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(140px);
-    opacity: 0.35;
-    /* Aceleração de hardware ativada (will-change) */
-    will-change: transform;
-    animation: floatGlow 20s infinite alternate var(--ease-fluid);
+.home-hero {
+  position: relative;
+  overflow: clip;
 }
 
-.ambient-glow::before {
-    width: 60vw; height: 60vw;
-    background: radial-gradient(circle, var(--brand-magenta) 0%, transparent 60%);
-    top: -20%; left: -10%;
+.home-hero__inner {
+  position: relative;
 }
 
-.ambient-glow::after {
-    width: 50vw; height: 50vw;
-    background: radial-gradient(circle, var(--brand-cyan) 0%, transparent 60%);
-    bottom: -10%; right: -10%;
-    animation-delay: -5s;
+.home-hero__copy {
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes floatGlow {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(8%, 12%) scale(1.1); }
+.home-hero__description strong {
+  color: var(--text-primary);
 }
 
-/* --- 2. HERO SECTION --- */
-.hero-section {
-    min-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-width: 900px; /* Aumentamos a área útil do container */
+.hero-highlight-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
-.hero-headline {
-    font-size: var(--fs-h1);
-    line-height: 1.05; /* Deixa as linhas imensas mais próximas e unidas */
-    letter-spacing: -0.04em; /* Aperta levemente as letras para um tom mais sério */
-    margin-top: 1.25rem;
-    margin-bottom: 1.5rem;
+.hero-highlight-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.4rem;
+  padding-inline: 0.9rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
 }
 
-.text-highlight {
-    /* Gradiente mais suave e elegante */
-    background: linear-gradient(135deg, var(--brand-cta) 0%, #FF8C00 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    /* Reduzimos o brilho exagerado para uma sombra mais contida */
-    filter: drop-shadow(0 4px 12px rgba(255, 90, 0, 0.2)); 
-    display: inline-block; /* Previne quebras de texto esquisitas no meio do gradiente */
+.hero-consultor-card {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card-elevated);
+  box-shadow: var(--shadow-lg);
 }
 
-.hero-subtitle {
-    font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.35rem); /* Tamanho ligeiramente maior */
-    color: var(--text-secondary);
-    max-width: 52ch; /* Limita os caracteres por linha para leitura de revista */
-    line-height: 1.6;
-    font-weight: 400;
+.hero-consultor-card__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding-inline: 0.8rem;
+  border-radius: var(--radius-pill);
+  background: var(--glass-strong);
+  border: 1px solid var(--border-primary);
+  color: var(--brand-primary);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.hero-ctas {
-    margin-top: 2.5rem; /* Dá mais respiro antes do botão */
-    max-width: max-content; 
+.hero-consultor-card__title {
+  margin-top: var(--space-4);
+  color: var(--text-primary);
+  font-size: clamp(var(--fs-2xl), 4vw, var(--fs-3xl));
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
 }
 
-/* --- 3. SOBRE SECTION (Grid Específico) --- */
-.sobre-grid-local {
+.hero-consultor-card__description {
+  margin-top: var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+}
+
+.hero-consultor-card__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.hero-consultor-card__stat {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.hero-consultor-card__stat strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-extrabold);
+}
+
+.hero-consultor-card__stat span {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--fs-xs);
+}
+
+.home-section--surface {
+  position: relative;
+}
+
+.home-section--surface .container,
+.home-section--surface .container-lg {
+  position: relative;
+  z-index: 1;
+}
+
+.home-section--surface::before {
+  content: '';
+  position: absolute;
+  inset: 2rem 0;
+  border-block: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.015);
+  pointer-events: none;
+}
+
+.consultor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* Area de resultado ganha leve dominância focal */
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.consultor-panel {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-4));
+  /* Proteção responsiva de scroll para o formulário */
+  max-height: calc(100vh - var(--header-height) - var(--space-8));
+  overflow-y: auto;
+}
+
+.consultor-intro-card {
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-md);
+}
+
+.consultor-intro-card__title {
+  color: var(--text-primary);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+}
+
+.consultor-intro-card__description {
+  margin-top: var(--space-4);
+  color: var(--text-secondary);
+}
+
+/* Acordeão Interativo e Visual Pipeline */
+.consultor-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.accordion-item {
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.accordion-item:hover {
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.accordion-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-primary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  user-select: none;
+}
+
+.accordion-trigger::-webkit-details-marker {
+  display: none; /* Esconde seta padrão do Safari/Chrome */
+}
+
+.accordion-icon {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+}
+
+.accordion-icon::before,
+.accordion-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--text-muted);
+  border-radius: 2px;
+  transition: transform var(--transition-base), background var(--transition-base);
+}
+
+.accordion-icon::before {
+  width: 14px;
+  height: 2px;
+}
+
+.accordion-icon::after {
+  width: 2px;
+  height: 14px;
+}
+
+.accordion-item:hover .accordion-icon::before,
+.accordion-item:hover .accordion-icon::after {
+  background: var(--brand-primary);
+}
+
+details[open] .accordion-icon::after {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+
+details[open] .accordion-icon::before {
+  background: var(--brand-primary);
+}
+
+details[open] {
+  border-color: var(--brand-primary);
+  background: var(--glass-strong);
+}
+
+.accordion-content {
+  padding: 0 var(--space-4) var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  animation: fadeIn var(--transition-base);
+}
+
+/* Loader Pipeline */
+.pipeline-loader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--glass-strong);
+  border: 1px solid var(--brand-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.pipeline-spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.pipeline-text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--brand-primary);
+  transition: opacity 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.consultor-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.catalog-section__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+
+.catalog-section__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.faq-section__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.faq-section__aside {
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.faq-section__aside-title {
+  color: var(--text-primary);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+}
+
+.faq-section__aside-description {
+  margin-top: var(--space-4);
+  color: var(--text-secondary);
+}
+
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-10);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card-elevated);
+  box-shadow: var(--shadow-md);
+}
+
+.cta-banner__title {
+  max-width: 14ch;
+  color: var(--text-primary);
+  font-size: clamp(var(--fs-2xl), 4vw, var(--fs-4xl));
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
+}
+
+.cta-banner__description {
+  max-width: 44rem;
+  margin-top: var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--fs-md);
+}
+
+.cta-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.home-auth-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.home-auth-strip__text {
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 1100px) {
+  .consultor-layout,
+  .faq-section__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .consultor-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-highlight-list,
+  .hero-consultor-card__stats,
+  .cta-banner__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-consultor-card,
+  .consultor-intro-card,
+  .faq-section__aside,
+  .cta-banner {
+    padding: var(--space-7);
+  }
+
+  .home-auth-strip {
+    align-items: flex-start;
+  }
+
+  .hero-consultor-card__stats {
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 4rem;
-    align-items: center;
-}
-
-.sobre-texto h2 { font-size: var(--fs-h2); margin-bottom: 1.5rem; }
-.sobre-texto p { color: var(--text-secondary); margin-bottom: 1rem; font-size: var(--fs-base); }
-
-/* Motor de Carrossel 3D Coverflow (Apenas estilos, JS fará a rotação) */
-.carousel-3d-wrapper {
-    position: relative;
-    width: 100%;
-    height: 350px;
-    perspective: 1200px; /* Profundidade */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.carousel-item {
-    position: absolute;
-    width: 280px;
-    height: auto;
-    /* As classes ativas, direita e esquerda serão injetadas pelo ui-engine.js usando transform 3D */
-    opacity: 0; 
-    transform: translateZ(-300px);
-    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    will-change: transform, opacity;
-}
-
-.carousel-item h3 { color: #FFF; font-size: var(--fs-h3); margin-bottom: 0.5rem; }
-
-/* --- 4. ASSISTENTE SECTION --- */
-.assistente-section {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-.assistente-container {
-    width: 100%;
-    max-width: 700px;
-}
-
-.text-center { text-align: center; }
-.text-muted { color: var(--text-muted); }
-.mb-2 { margin-bottom: 0.5rem; }
-.mt-4 { margin-top: 1.5rem; }
-
-/* Bolha do Range (Posicionamento inicial, JS calcula a dinâmica) */
-.range-wrapper {
-    position: relative;
-    padding-top: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.range-bubble {
-    position: absolute;
-    top: 0;
-    left: 50%; /* JS sobrescreve */
-    transform: translateX(-50%);
-    background: var(--brand-cyan);
-    color: var(--text-inverse);
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-pill);
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    pointer-events: none;
-    transition: left 0.1s linear;
-}
-
-/* --- 5. RESPONSIVO ESPECÍFICO HOME --- */
-@media (max-width: 992px) {
-    .sobre-grid-local {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-    .carousel-3d-wrapper { height: 300px; }
+  }
 }

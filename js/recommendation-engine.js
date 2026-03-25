@@ -1,16 +1,9 @@
 import { getAllDevices } from './catalog-service.js';
+import { normalizeText } from './utils/security.js';
 
 const PROFILES_DATA_PATH = './data/profiles.json';
 
 let profilesCache = null;
-
-function normalizeText(value) {
-  return String(value ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-    .toLowerCase();
-}
 
 function isValidProfile(profile) {
   return (
@@ -106,7 +99,7 @@ function buildWeights(profile, focusTag) {
     autonomia: { battery: 0.12, longevity: 0.03, costBenefit: 0.01 },
     performance: { performance: 0.12, display: 0.03, battery: 0.01 },
     jogos: { performance: 0.12, display: 0.04, battery: 0.02 },
-    custo-beneficio: { costBenefit: 0.12, battery: 0.02, performance: 0.01 },
+    'custo-beneficio': { costBenefit: 0.12, battery: 0.02, performance: 0.01 },
     equilibrio: { battery: 0.03, camera: 0.03, performance: 0.03, costBenefit: 0.03 },
     premium: { longevity: 0.04, performance: 0.03, durability: 0.03, camera: 0.02 },
     longevidade: { longevity: 0.12, durability: 0.03, performance: 0.01 },
@@ -226,8 +219,6 @@ function buildAlternativeText(device, position) {
 }
 
 function applyBusinessRules(devices, budget, focusTag, profileId) {
-  const normalizedFocusTag = normalizeText(focusTag);
-  const normalizedProfileId = normalizeText(profileId);
   const numericBudget = Number(budget);
 
   return devices.filter((device) => {
@@ -236,17 +227,9 @@ function applyBusinessRules(devices, budget, focusTag, profileId) {
         ? device.price <= numericBudget
         : true;
 
-    const softFocusMatch =
-      !normalizedFocusTag ||
-      device.focusTags.includes(normalizedFocusTag) ||
-      device.profileTags.includes(normalizedFocusTag);
-
-    const softProfileMatch =
-      !normalizedProfileId ||
-      device.profileTags.includes(normalizedProfileId) ||
-      true;
-
-    return matchesBudget && softFocusMatch && softProfileMatch;
+    // O sistema de pesos (Weighted Score) já cuida de colocar os celulares mais aderentes no topo.
+    // Filtrar rigidamente apenas pelo orçamento garante que nenhuma recomendação venha vazia!
+    return matchesBudget;
   });
 }
 

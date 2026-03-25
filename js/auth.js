@@ -11,6 +11,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js';
 
 import { qs, setText, setDisabled, getValue } from './utils/dom.js';
+import { escapeHtml, sanitizeRedirectPath } from './utils/security.js';
 import { validateRegisterForm } from './utils/validators.js';
 import {
   setSessionItem,
@@ -20,6 +21,7 @@ import {
 
 const REDIRECT_SESSION_KEY = 'postRegisterRedirect';
 const FLASH_MESSAGE_SESSION_KEY = 'authFlashMessage';
+const DEFAULT_REDIRECT = 'dashboard.html';
 
 function getRegisterElements() {
   return {
@@ -34,35 +36,27 @@ function getRegisterElements() {
   };
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+function getRedirectParam() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('redirect');
 }
 
 function getSafeRedirectPath() {
+  const redirectFromQuery = getRedirectParam();
   const storedRedirect = getSessionItem(REDIRECT_SESSION_KEY, '');
-  const fallbackPath = 'dashboard.html';
 
-  if (!storedRedirect || typeof storedRedirect !== 'string') {
-    return fallbackPath;
-  }
-
-  const normalized = storedRedirect.trim();
-  const blockedPrefixes = ['http:', 'https:', 'javascript:', '//'];
-
-  const isBlocked = blockedPrefixes.some((prefix) =>
-    normalized.toLowerCase().startsWith(prefix)
+  return sanitizeRedirectPath(
+    redirectFromQuery || storedRedirect,
+    DEFAULT_REDIRECT
   );
+}
 
-  if (isBlocked) {
-    return fallbackPath;
-  }
+function persistRedirectFromQueryIfNeeded() {
+  const redirectFromQuery = getRedirectParam();
+  if (!redirectFromQuery) return;
 
-  return normalized || fallbackPath;
+  const safeRedirect = sanitizeRedirectPath(redirectFromQuery, DEFAULT_REDIRECT);
+  setSessionItem(REDIRECT_SESSION_KEY, safeRedirect);
 }
 
 function setFeedback(message = '', type = 'default') {
@@ -142,10 +136,13 @@ function buildPayload() {
 async function createUserProfileDocument(user, payload) {
   const userRef = doc(db, 'usuarios', user.uid);
 
+  const cleanEmail = String(payload.email || '').trim().toLowerCase();
+
   const profileData = {
     uid: user.uid,
     nome: payload.name,
     email: payload.email,
+    normalizedEmail: cleanEmail,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     preferences: {
@@ -229,6 +226,7 @@ function bootstrapRegister() {
   const { form } = getRegisterElements();
   if (!form) return;
 
+  persistRedirectFromQueryIfNeeded();
   redirectIfAlreadyAuthenticated();
   attachSubmitHandler();
 }

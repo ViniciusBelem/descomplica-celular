@@ -1,3 +1,6 @@
+import { normalizeText } from './utils/security.js';
+import { CatalogRepository } from './services/catalog-repository.js';
+
 const DEVICES_DATA_PATH = './data/devices.json';
 
 let devicesCache = null;
@@ -12,14 +15,6 @@ function isValidDevice(device) {
     device.scores &&
     typeof device.scores === 'object'
   );
-}
-
-function normalizeText(value) {
-  return String(value ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-    .toLowerCase();
 }
 
 function normalizeArray(values) {
@@ -64,17 +59,9 @@ function normalizeDevice(device) {
 }
 
 async function fetchDevices() {
-  const response = await fetch(DEVICES_DATA_PATH, {
-    headers: {
-      Accept: 'application/json'
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Não foi possível carregar o catálogo de aparelhos.');
-  }
-
-  const data = await response.json();
+  // Garante a inicialização do banco local e puxa apenas os ativos
+  await CatalogRepository.init();
+  const data = await CatalogRepository.getActive();
 
   if (!Array.isArray(data)) {
     throw new Error('O catálogo de aparelhos está em formato inválido.');
@@ -165,7 +152,7 @@ export async function filterDevices(filters = {}) {
 
   return devices.filter((device) => {
     const matchesBudget =
-      maxPrice === null || maxPrice === undefined
+      maxPrice === null || maxPrice === undefined || maxPrice === ''
         ? true
         : device.price <= Number(maxPrice);
 

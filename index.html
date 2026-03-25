@@ -2,322 +2,423 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Descomplica Celular | Descubra o celular ideal para você</title>
   <meta
     name="description"
-    content="Consultor digital inteligente para encontrar o celular ideal com base no seu orçamento, perfil e prioridade."
+    content="Receba recomendações inteligentes de smartphones com base no seu orçamento, perfil e prioridade principal."
   />
-  <title>Descomplica Celular | O seu match perfeito</title>
-
-  <link rel="stylesheet" href="css/tokens.css" />
-  <link rel="stylesheet" href="css/global.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/forms.css" />
-  <link rel="stylesheet" href="css/home.css" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
+
+  <link rel="stylesheet" href="./css/global.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/forms.css" />
+  <link rel="stylesheet" href="./css/home.css" />
+  <link rel="stylesheet" href="./css/enhanced-ui.css" />
+
+  <script>
+    (function() {
+      var theme = localStorage.getItem('descomplica_theme');
+      if (theme === 'light' || (!theme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
 </head>
-<body>
-  <div class="ambient-glow" aria-hidden="true"></div>
+<body class="home-page">
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container-lg site-header__inner">
+        <a href="./index.html" class="site-brand" aria-label="Página inicial do Descomplica Celular">
+          <span class="site-brand__mark">D</span>
+          <span class="site-brand__text">
+            <span class="site-brand__title">Descomplica Celular</span>
+            <span class="site-brand__subtitle">Recomendação inteligente de smartphones</span>
+          </span>
+        </a>
 
-  <header class="header-global" id="main-header" role="banner">
-    <div class="container-mestre header-container">
-      <a href="index.html" class="brand-area" aria-label="Ir para a página inicial">
-        <img
-          src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png"
-          alt="Logo Descomplica Celular"
-          class="brand-logo"
-          width="48"
-          height="48"
-        />
-        <span class="brand-name">Descomplica</span>
-      </a>
+        <nav class="site-nav" aria-label="Navegação principal">
+          <div class="site-nav__links">
+            <a class="nav-link nav-link--active" href="#inicio">Início</a>
+            <a class="nav-link" href="#consultor">Consultor</a>
+            <a class="nav-link" href="#catalogo">Catálogo</a>
+            <a class="nav-link" href="#faq">FAQ</a>
+          </div>
 
-      <nav class="nav-menu" role="navigation" aria-label="Menu principal">
-        <a href="#como-funciona" class="nav-link">Como funciona</a>
-        <a href="#catalogo" class="nav-link">Catálogo</a>
-        <a href="#consultor" class="btn-secundario">Consultor digital</a>
+          <div class="site-nav__actions">
+            <button class="btn btn-ghost" id="theme-toggle" aria-label="Alternar tema" style="padding-inline: 0.6rem;">
+              <!-- O ícone de Sol/Lua é injetado automaticamente via JavaScript -->
+            </button>
+            <a class="btn btn-ghost" href="./login.html" data-auth="guest" data-auth-link="login">Entrar</a>
+            <a class="btn btn-secondary" href="./registro.html" data-auth="guest" data-auth-link="register">Criar conta</a>
 
-        <div
-          id="auth-guest-controls"
-          style="display: flex; gap: 1.5rem; align-items: center;"
-        >
-          <a href="login.html" class="nav-link" style="font-weight: 600;">Entrar</a>
-          <a
-            href="registro.html"
-            class="btn-principal"
-            style="padding: 0.5rem 1.5rem; width: auto; font-size: var(--fs-xs);"
-          >
-            Criar conta
-          </a>
-        </div>
-
-        <div
-          id="auth-user-controls"
-          class="user-controls"
-          style="display: none; align-items: center; position: relative;"
-        >
-          <button
-            id="profile-menu-trigger-global"
-            class="profile-btn"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <div class="avatar-circle" id="user-avatar-initial-global">...</div>
-            <div class="profile-info text-left">
-              <span id="user-name-display-global" class="profile-name">Carregando...</span>
-            </div>
-          </button>
-
-          <div
-            id="profile-dropdown-global"
-            class="profile-dropdown"
-            role="menu"
-            aria-hidden="true"
-            style="top: 130%;"
-          >
-            <div class="dropdown-header">
-              <p
-                class="text-secondary"
-                style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;"
-              >
-                Sessão ativa
-              </p>
-              <p
-                id="user-email-display-global"
-                class="text-primary"
-                style="font-weight: 600; font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block;"
-              >
-                ...
-              </p>
-            </div>
-
-            <hr class="dropdown-divider" />
-
-            <a href="dashboard.html" class="dropdown-item" role="menuitem">
-              <span style="margin-right: 8px;">📊</span> Ir para o dashboard
+            <a class="btn btn-secondary" href="./dashboard.html" data-auth="user" data-auth-link="dashboard">
+              Dashboard
             </a>
-
-            <hr class="dropdown-divider" />
-
-            <button
-              id="btn-logout-global"
-              class="dropdown-item text-brand-error"
-              role="menuitem"
-              style="width: 100%; text-align: left; cursor: pointer; background: none; border: none; font-family: inherit; font-size: inherit;"
-            >
-              <span style="margin-right: 8px;">🚪</span> Desconectar
-            </button>
+            <a class="btn btn-ghost" href="#" data-auth="user" data-auth-action="logout">
+              Sair
+            </a>
           </div>
-
-          <label class="switch" title="Alternar tema">
-            <input type="checkbox" class="theme-toggle-input" checked />
-            <span class="slider"></span>
-          </label>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <main class="main-content container-mestre" role="main">
-    <section id="inicio" class="hero-section reveal-on-scroll">
-      <span class="badge">● Inteligência de curadoria</span>
-
-      <h1 class="hero-headline">
-        Não compre especificações.<br />
-        <span class="text-highlight">Compre a experiência ideal.</span>
-      </h1>
-
-      <p class="hero-subtitle">
-        O Descomplica Celular analisa orçamento, perfil e prioridade para indicar
-        os smartphones que realmente fazem sentido para a sua rotina.
-      </p>
-
-      <div class="hero-ctas">
-        <a href="#consultor" class="btn-principal">Iniciar análise gratuita</a>
-        <a href="#catalogo" class="btn-secundario">Ver catálogo</a>
+        </nav>
       </div>
-    </section>
+    </header>
 
-    <section
-      id="como-funciona"
-      class="sobre-section reveal-on-scroll"
-      aria-labelledby="sobre-title"
-    >
-      <div class="sobre-grid-local">
-        <div class="sobre-texto">
-          <h2 id="sobre-title">Engenharia de decisão</h2>
-          <p>
-            Comparar processadores, bateria, tela e câmera pode ser cansativo para
-            quem só quer fazer uma boa compra.
-          </p>
-          <p>
-            O <strong>Descomplica Celular</strong> transforma critérios técnicos em
-            uma recomendação prática, transparente e mais fácil de entender.
-          </p>
-        </div>
+    <main class="site-main">
+      <section class="hero home-hero" id="inicio">
+        <div class="glow-orb glow-orb--top"></div>
+        <div class="glow-orb glow-orb--left"></div>
 
-        <div class="sobre-visual" aria-label="Vantagens do sistema">
-          <div class="carousel-3d-wrapper">
-            <article class="glass-card carousel-item">
-              <h3>100% orientado ao usuário</h3>
-              <p>A análise parte da sua necessidade, não da propaganda.</p>
-            </article>
+        <div class="container-lg hero__inner home-hero__inner">
+          <div class="hero__content home-hero__copy">
+            <span class="eyebrow">Consultoria digital explicável</span>
 
-            <article class="glass-card carousel-item">
-              <h3>Explicação clara</h3>
-              <p>Você entende o motivo da recomendação e ainda compara alternativas.</p>
-            </article>
+            <h1 class="hero__headline text-balance">
+              Encontre o celular ideal sem cair em dúvida, propaganda ou arrependimento.
+            </h1>
 
-            <article class="glass-card carousel-item">
-              <h3>Decisão com confiança</h3>
-              <p>Menos dúvida, menos exagero técnico e mais direção prática.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
+            <p class="hero__description home-hero__description">
+              O <strong>Descomplica Celular</strong> cruza seu orçamento, perfil de uso e prioridade principal
+              para recomendar os aparelhos que realmente fazem sentido para você.
+            </p>
 
-    <section id="catalogo" class="catalog-section reveal-on-scroll" aria-labelledby="catalog-title">
-      <div class="section-header text-center">
-        <span class="badge">● Curadoria em destaque</span>
-        <h2 id="catalog-title">Modelos em evidência</h2>
-        <p class="text-muted">
-          Uma seleção de aparelhos com propostas fortes para diferentes perfis.
-        </p>
-      </div>
+            <div class="hero__actions">
+              <a href="#consultor" class="btn btn-primary">Começar análise</a>
+              <a href="#catalogo" class="btn btn-secondary">Explorar catálogo</a>
+            </div>
 
-      <div data-catalog-grid class="catalog-grid" aria-live="polite"></div>
-    </section>
+            <div class="hero-highlight-list">
+              <span class="hero-highlight-item">Recomendação com lógica explicável</span>
+              <span class="hero-highlight-item">Comparação orientada por perfil</span>
+              <span class="hero-highlight-item">Foco em decisão prática</span>
+            </div>
 
-    <section
-      id="consultor"
-      class="assistente-section reveal-on-scroll"
-      aria-labelledby="consultor-title"
-    >
-      <div class="glass-card assistente-container">
-        <header class="assistente-header text-center">
-          <span class="badge">● Consultor digital</span>
-          <h2 id="consultor-title">Descubra o celular ideal para o seu perfil</h2>
-          <p class="text-muted">
-            Informe seu orçamento, seu tipo de uso e sua principal prioridade.
-          </p>
-        </header>
+            <div class="hero__meta">
+              <div class="hero-stat-card">
+                <div class="hero-stat-card__value">Top 3</div>
+                <div class="hero-stat-card__label">Opções recomendadas por análise</div>
+              </div>
 
-        <form data-recommendation-form class="form-analise" novalidate>
-          <div class="input-group">
-            <label for="budget" class="input-label">Orçamento máximo</label>
-            <input
-              id="budget"
-              name="budget"
-              type="text"
-              inputmode="decimal"
-              placeholder="Ex.: 2500"
-              data-field-budget
-            />
-          </div>
-
-          <div class="input-group mt-4">
-            <label for="profile" class="input-label">Perfil de uso</label>
-            <select id="profile" name="profile" data-field-profile></select>
-            <div data-profile-hint class="field-hint mt-2">
-              Escolha um perfil para o consultor entender melhor o seu tipo de uso.
+              <div class="hero-stat-card">
+                <div class="hero-stat-card__value">100%</div>
+                <div class="hero-stat-card__label">Baseado em critérios técnicos definidos</div>
+              </div>
             </div>
           </div>
 
-          <div class="input-group mt-4">
-            <label for="focus" class="input-label">Sua principal prioridade</label>
-            <select id="focus" name="focus" data-field-focus></select>
+          <div class="hero__panel">
+            <div class="hero-consultor-card">
+              <span class="hero-consultor-card__label">Motor de recomendação</span>
+
+              <h2 class="hero-consultor-card__title">
+                Receba uma indicação objetiva e coerente com o seu uso.
+              </h2>
+
+              <p class="hero-consultor-card__description">
+                A análise considera prioridade, orçamento e perfil, entregando uma escolha principal
+                e alternativas para comparação.
+              </p>
+
+              <div class="hero-consultor-card__stats">
+                <div class="hero-consultor-card__stat">
+                  <strong>Perfil</strong>
+                  <span>Entende o tipo de uso do usuário</span>
+                </div>
+
+                <div class="hero-consultor-card__stat">
+                  <strong>Foco</strong>
+                  <span>Valoriza câmera, bateria, jogos e mais</span>
+                </div>
+
+                <div class="hero-consultor-card__stat">
+                  <strong>Ranking</strong>
+                  <span>Ordena aparelhos por score ponderado</span>
+                </div>
+
+                <div class="hero-consultor-card__stat">
+                  <strong>Explicação</strong>
+                  <span>Mostra por que o aparelho foi recomendado</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-sm" data-auth-flash-section>
+        <div class="container-lg">
+          <div data-auth-flash></div>
+        </div>
+      </section>
+
+      <section class="section home-section--surface">
+        <div class="container-lg">
+          <div class="grid-3">
+            <article class="feature-card">
+              <div class="feature-card__icon">01</div>
+              <h2 class="feature-card__title">Informe seu contexto</h2>
+              <p class="feature-card__description">
+                Defina seu orçamento, seu perfil e a prioridade que mais pesa na decisão.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">02</div>
+              <h2 class="feature-card__title">Receba análise orientada</h2>
+              <p class="feature-card__description">
+                O sistema compara os aparelhos do catálogo com base em critérios ponderados.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-card__icon">03</div>
+              <h2 class="feature-card__title">Compare com clareza</h2>
+              <p class="feature-card__description">
+                Além da melhor escolha, você vê alternativas e entende os motivos por trás do ranking.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-lg" id="consultor">
+        <div class="container-lg">
+          <div class="section-header">
+            <span class="eyebrow">Consultor inteligente</span>
+            <h2 class="section-title text-balance">Faça sua análise personalizada</h2>
+            <p class="section-description">
+              Preencha os campos abaixo para gerar uma recomendação alinhada ao seu uso.
+            </p>
           </div>
 
-          <div data-form-status class="mt-4" aria-live="polite"></div>
+          <div class="consultor-layout">
+            <aside class="consultor-panel">
+              <div class="consultor-intro-card">
+                <h3 class="consultor-intro-card__title">Como a análise funciona</h3>
 
-          <div class="hero-ctas mt-4">
-            <button type="submit" class="btn-principal" data-submit-recommendation>
-              Encontrar meu celular ideal
-            </button>
+                <p class="consultor-intro-card__description">
+                  O sistema combina regras técnicas e pesos por perfil para indicar os modelos
+                  mais adequados ao seu contexto.
+                </p>
 
-            <button
-              type="button"
-              class="btn-secundario"
-              data-reset-recommendation
-            >
-              Limpar
-            </button>
+              <div class="consultor-accordion">
+                <details class="accordion-item" name="consultor-faq">
+                  <summary class="accordion-trigger">
+                    <span>Orçamento como limite</span>
+                    <div class="accordion-icon"></div>
+                  </summary>
+                  <div class="accordion-content">
+                    <p>O sistema filtra imediatamente as opções que ultrapassam o valor informado, garantindo recomendações que cabem no seu bolso sem sugerir opções impossíveis.</p>
+                  </div>
+                </details>
+                <details class="accordion-item" name="consultor-faq">
+                  <summary class="accordion-trigger">
+                    <span>Pesos por perfil</span>
+                    <div class="accordion-icon"></div>
+                  </summary>
+                  <div class="accordion-content">
+                    <p>O perfil escolhido aplica uma matemática de pesos. Quem prefere "Jogos", por exemplo, terá o peso do processador e tela multiplicados na nota final.</p>
+                  </div>
+                </details>
+                <details class="accordion-item" name="consultor-faq">
+                  <summary class="accordion-trigger">
+                    <span>Filtro de prioridade</span>
+                    <div class="accordion-icon"></div>
+                  </summary>
+                  <div class="accordion-content">
+                    <p>Atua como um desempate avançado. Aparelhos que atendem especificamente à sua maior necessidade ganham um bônus de impulsionamento no ranking.</p>
+                  </div>
+                </details>
+              </div>
+              </div>
+            </aside>
+
+            <div class="consultor-results">
+              <div class="form-shell">
+                <div class="form-header">
+                  <h3 class="form-title">Descobrir meu celular ideal</h3>
+                  <p class="form-description">
+                    Responda em poucos passos e receba uma recomendação com justificativa.
+                  </p>
+                </div>
+
+                <form data-recommendation-form class="form-stack">
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label" for="recommendation-budget">Orçamento</label>
+                      <input
+                        id="recommendation-budget"
+                        class="input"
+                        type="text"
+                        inputmode="decimal"
+                        placeholder="Ex.: 2000"
+                        data-field-budget
+                      />
+                      <p class="form-hint">Informe o valor máximo que pretende investir.</p>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label" for="recommendation-profile">Perfil de uso</label>
+                      <select
+                        id="recommendation-profile"
+                        class="select"
+                        data-field-profile
+                      ></select>
+                      <p class="form-hint">Escolha o perfil que melhor representa seu uso diário.</p>
+                    </div>
+
+                    <div class="form-group form-group--full">
+                      <label class="form-label" for="recommendation-focus">Prioridade principal</label>
+                      <select
+                        id="recommendation-focus"
+                        class="select"
+                        data-field-focus
+                      ></select>
+                      <p class="form-hint">Selecione o critério mais importante para sua compra.</p>
+                    </div>
+
+                    <div class="form-group form-group--full">
+                      <div class="profile-hint-box">
+                        <p class="profile-hint-text" data-profile-hint>
+                          Escolha um perfil para o consultor entender melhor o seu tipo de uso.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-status" data-form-status></div>
+
+                  <div class="form-actions">
+                    <div class="form-actions__left">
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        data-submit-recommendation
+                      >
+                        Encontrar meu celular ideal
+                      </button>
+                    </div>
+
+                    <div class="form-actions__right">
+                      <button
+                        type="button"
+                        class="btn btn-ghost"
+                        data-reset-recommendation
+                      >
+                        Limpar
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="recommendation-stack">
+                <div data-recommendation-explanation></div>
+                <div data-recommendation-results></div>
+              </div>
+            </div>
           </div>
-        </form>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    <section
-      id="resultado"
-      class="resultado-section reveal-on-scroll"
-      aria-labelledby="resultado-title"
-    >
-      <div class="section-header text-center">
-        <span class="badge">● Resultado da análise</span>
-        <h2 id="resultado-title">Sua recomendação personalizada</h2>
-        <p class="text-muted">
-          O sistema mostra a melhor escolha e também alternativas para comparação.
-        </p>
-      </div>
+      <section class="section" id="catalogo">
+        <div class="container-lg">
+          <div class="section-header">
+            <span class="eyebrow">Catálogo em destaque</span>
+            <h2 class="section-title text-balance">Modelos que estão no radar da plataforma</h2>
+            <p class="section-description">
+              Veja alguns aparelhos presentes na base atual de recomendação.
+            </p>
+          </div>
 
-      <div data-recommendation-explanation aria-live="polite"></div>
-      <div data-recommendation-results aria-live="polite"></div>
-    </section>
+          <div class="catalog-section__toolbar">
+            <div class="catalog-section__meta cluster">
+              <span class="chip">Atualizado pela base interna do projeto</span>
+              <span class="chip">Renderização dinâmica via catálogo</span>
+            </div>
+          </div>
 
-    <section id="faq" class="faq-section reveal-on-scroll" aria-labelledby="faq-title">
-      <div class="section-header text-center">
-        <span class="badge">● Perguntas frequentes</span>
-        <h2 id="faq-title">Antes de escolher, entenda como funciona</h2>
-        <p class="text-muted">
-          Respostas rápidas para as dúvidas mais comuns sobre o projeto.
-        </p>
-      </div>
+          <div class="catalog-grid" data-catalog-grid></div>
+        </div>
+      </section>
 
-      <div data-faq-list class="faq-list"></div>
-    </section>
+      <section class="section section-lg" id="faq">
+        <div class="container-lg">
+          <div class="faq-section__grid">
+            <aside class="faq-section__aside">
+              <span class="eyebrow">Perguntas frequentes</span>
+              <h2 class="faq-section__aside-title">Dúvidas comuns antes da compra</h2>
+              <p class="faq-section__aside-description">
+                Esta seção ajuda a deixar a proposta do projeto clara e transparente
+                para quem está analisando um novo smartphone.
+              </p>
+            </aside>
 
-    <section class="cta-section reveal-on-scroll" aria-labelledby="cta-title">
-      <div class="glass-card text-center">
-        <span class="badge">● Próximo passo</span>
-        <h2 id="cta-title">Quer salvar seu histórico e acompanhar suas análises?</h2>
-        <p class="text-muted">
-          Crie sua conta para evoluir sua experiência dentro do projeto.
-        </p>
+            <div class="faq-list" data-faq-list></div>
+          </div>
+        </div>
+      </section>
 
-        <div class="hero-ctas">
-          <a href="registro.html" class="btn-principal">Criar conta grátis</a>
-          <a href="dashboard.html" class="btn-secundario">Ir para o dashboard</a>
+      <section class="section section-sm">
+        <div class="container-lg">
+          <div class="cta-banner">
+            <h2 class="cta-banner__title">Pronto para tomar uma decisão com mais clareza?</h2>
+            <p class="cta-banner__description">
+              Use o consultor para receber sua recomendação agora ou crie sua conta
+              para acompanhar melhor a evolução do projeto.
+            </p>
+
+            <div class="cta-banner__actions">
+              <a href="#consultor" class="btn btn-primary">Gerar recomendação</a>
+              <a href="./registro.html" class="btn btn-secondary" data-auth="guest" data-auth-link="register">
+                Criar conta
+              </a>
+              <a href="./dashboard.html" class="btn btn-secondary" data-auth="user" data-auth-link="dashboard">
+                Ir para o dashboard
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container-lg site-footer__inner">
+        <div class="site-footer__brand">
+          <h2 class="site-footer__title">Descomplica Celular</h2>
+          <p class="site-footer__description">
+            Projeto em evolução com foco em recomendação inteligente, clareza de decisão
+            e profissionalização contínua da plataforma.
+          </p>
+        </div>
+
+        <div class="site-footer__group">
+          <h3 class="site-footer__heading">Navegação</h3>
+          <div class="site-footer__list">
+            <a class="nav-link" href="#consultor">Consultor</a>
+            <a class="nav-link" href="#catalogo">Catálogo</a>
+            <a class="nav-link" href="#faq">FAQ</a>
+          </div>
+        </div>
+
+        <div class="site-footer__group">
+          <h3 class="site-footer__heading">Institucional</h3>
+          <div class="site-footer__list">
+            <a class="nav-link" href="./termos.html">Termos de uso</a>
+            <a class="nav-link" href="./privacidade.html">Privacidade</a>
+          </div>
         </div>
       </div>
-    </section>
-  </main>
-
-  <footer class="footer-global" role="contentinfo">
-    <div class="container-mestre footer-content">
-      <div class="footer-texto">
-        &copy; 2026 Descomplica Celular. Projeto em evolução profissional.
-      </div>
-
-      <div class="footer-links">
-        <a href="termos.html">Termos de uso</a>
-        <a href="privacidade.html">Privacidade</a>
-        <a href="#consultor">Consultor</a>
-      </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 
   <script type="module" src="./js/global-auth.js"></script>
-  <script type="module" src="./js/home-controller.js"></script>
+  <script type="module" src="./js/home-controller-v2.js"></script>
 </body>
 </html>

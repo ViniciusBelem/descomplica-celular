@@ -1,144 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Painel de controle e análise de métricas de hardware em tempo real.">
-    <title>Dashboard Analítico | Descomplica Celular</title>
-    
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Descomplica Celular</title>
+  <meta
+    name="description"
+    content="Painel do usuário no Descomplica Celular com métricas, histórico e visão geral das análises."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./css/global.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/dashboard.css" />
+
+  <script>
+    (function() {
+      var theme = localStorage.getItem('descomplica_theme');
+      if (theme === 'light' || (!theme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
 </head>
-<body class="dashboard-body">
-    <div class="ambient-glow" aria-hidden="true"></div>
+<body class="dashboard-page">
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container-lg site-header__inner">
+        <a href="./index.html" class="site-brand" aria-label="Página inicial do Descomplica Celular">
+          <span class="site-brand__mark">D</span>
+          <span class="site-brand__text">
+            <span class="site-brand__title">Descomplica Celular</span>
+            <span class="site-brand__subtitle">Recomendação inteligente de smartphones</span>
+          </span>
+        </a>
 
-    <header class="header-global" role="banner">
-        <div class="container-mestre header-container" style="justify-content: space-between;">
-            <a href="index.html" class="brand-area" aria-label="Ir para a página inicial">
-                <img src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png" alt="Logo Descomplica Celular" class="brand-logo" width="48" height="48">
-                <span class="brand-name">Descomplica</span>
-            </a>
-            
-            <div class="user-controls" style="display: flex; align-items: center; position: relative;">
-                    
-                    <button id="profile-menu-trigger" class="profile-btn" aria-haspopup="true" aria-expanded="false">
-                        <div class="avatar-circle" id="user-avatar-initial">...</div>
-                        <div class="profile-info text-left">
-                            <span id="user-name-display" class="profile-name">Carregando...</span>
-                        </div>
-                    </button>
+        <nav class="site-nav" aria-label="Navegação principal">
+          <div class="site-nav__links">
+            <a class="nav-link" href="./index.html">Início</a>
+            <a class="nav-link" href="./index.html#consultor">Consultor</a>
+            <a class="nav-link" href="./index.html#catalogo">Catálogo</a>
+          </div>
 
-                    <div id="profile-dropdown" class="profile-dropdown" role="menu" aria-hidden="true" style="top: 130%;">
-                        <div class="dropdown-header">
-                            <p class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Sessão Ativa</p>
-                            <p id="user-email-display" class="text-primary" style="font-weight: 600; font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block;">...</p>
-                        </div>
-                        <hr class="dropdown-divider">
-                        
-                        <a href="#" id="btn-menu-config" class="dropdown-item" role="menuitem">
-                            <span style="margin-right: 8px;">⚙️</span> Configurações
-                        </a>
-                        <a href="#" id="btn-menu-security" class="dropdown-item" role="menuitem">
-                            <span style="margin-right: 8px;">🛡️</span> Segurança e Dados
-                        </a>
-                        
-                        <a href="index.html" class="dropdown-item" role="menuitem">
-                            <span style="margin-right: 8px;">🏠</span> Voltar ao Início
-                        </a>
-                        
-                        <hr class="dropdown-divider">
-                        <button id="btn-logout" class="dropdown-item text-brand-error" role="menuitem" style="width: 100%; text-align: left; cursor: pointer; background: none; border: none; font-family: inherit; font-size: inherit;">
-                            <span style="margin-right: 8px;">🚪</span> Desconectar
-                        </button>
-                    </div>
+          <div class="site-nav__actions">
+            <span class="badge" id="api-status-badge" data-state="loading">Conectando...</span>
 
-                    <label class="switch" title="Alternar Tema">
-                        <input type="checkbox" class="theme-toggle-input" checked>
-                        <span class="slider"></span>
-                    </label>
+            <div class="dashboard-profile-menu profile-menu">
+              <button
+                id="profile-menu-trigger"
+                class="dashboard-profile-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-controls="profile-dropdown"
+              >
+                <span class="dashboard-profile-trigger__avatar" id="user-avatar-topbar">?</span>
+                <span class="dashboard-profile-trigger__text">
+                  <span class="dashboard-profile-trigger__label" id="user-name-display">Visitante</span>
+                  <span class="dashboard-profile-trigger__sub">Conta autenticada</span>
+                </span>
+              </button>
+
+              <div
+                id="profile-dropdown"
+                class="profile-dropdown"
+                aria-hidden="true"
+              >
+                <div class="profile-dropdown__list">
+                  <a class="profile-dropdown__item" href="./index.html">Ir para início</a>
+                  <a class="profile-dropdown__item" href="./privacidade.html">Privacidade</a>
+                  <a class="profile-dropdown__item" href="./termos.html">Termos</a>
+                  <a class="profile-dropdown__item" href="#" id="btn-logout">Sair da conta</a>
                 </div>
-        </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main class="main-content container-mestre dashboard-layout" role="main">
-        
-        <header class="dashboard-header mb-4">
-            <h1 class="dashboard-headline">Monitoramento de Hardware</h1>
-            <p class="text-secondary">Conectando aos nós de benchmark globais. Aguardando sincronização da API...</p>
-        </header>
-
-        <section class="metrics-grid" aria-label="Métricas principais" aria-live="polite">
-            
-            <article class="glass-card metric-widget">
-                <div class="metric-header">
-                    <h3 class="metric-title">Status da API</h3>
-                    <span class="badge" id="api-status-badge">Conectando...</span>
-                </div>
-                <div class="metric-content" id="api-latency-container">
-                    <div class="skeleton skeleton-title" style="width: 40%;"></div>
-                    <div class="skeleton skeleton-text" style="width: 60%;"></div>
-                </div>
-            </article>
-
-            <article class="glass-card metric-widget">
-                <div class="metric-header">
-                    <h3 class="metric-title">Matrizes Processadas</h3>
-                </div>
-                <div class="metric-content" id="devices-analyzed-container">
-                    <div class="skeleton skeleton-title" style="width: 50%;"></div>
-                    <div class="skeleton skeleton-text" style="width: 80%;"></div>
-                </div>
-            </article>
-
-            <article class="glass-card metric-widget">
-                <div class="metric-header">
-                    <h3 class="metric-title">Investimento Médio</h3>
-                </div>
-                <div class="metric-content" id="avg-budget-container">
-                    <div class="skeleton skeleton-title" style="width: 60%;"></div>
-                    <div class="skeleton skeleton-text" style="width: 40%;"></div>
-                </div>
-            </article>
-
-        </section>
-
-        <section class="analytics-core mt-4">
-            <div class="analytics-grid">
-                
-                <div class="glass-card analytics-panel main-panel">
-                    <div class="panel-header">
-                        <h2>Tendências de Performance (Tempo Real)</h2>
-                        <button class="btn-secundario btn-small" id="btn-refresh-data" aria-label="Atualizar dados">↻ Atualizar</button>
-                    </div>
-                    <div class="panel-body" id="chart-container" aria-live="polite">
-                        <div class="skeleton skeleton-block chart-skeleton" style="height: 300px; border-radius: var(--radius-sm);"></div>
-                    </div>
-                </div>
-
-                <div class="glass-card analytics-panel sidebar-panel">
-                    <div class="panel-header">
-                        <h2>Últimos Matches</h2>
-                    </div>
-                    <div class="panel-body list-container" id="recent-matches-container" aria-live="polite">
-                        <div class="skeleton skeleton-text" style="height: 3rem; margin-bottom: 1rem;"></div>
-                        <div class="skeleton skeleton-text" style="height: 3rem; margin-bottom: 1rem;"></div>
-                        <div class="skeleton skeleton-text" style="height: 3rem; margin-bottom: 1rem;"></div>
-                        <div class="skeleton skeleton-text" style="height: 3rem;"></div>
-                    </div>
-                </div>
-
+    <main class="site-main">
+      <section class="section">
+        <div class="container-lg dashboard-layout">
+          <aside class="dashboard-sidebar">
+            <div class="dashboard-user">
+              <div class="dashboard-user__avatar" id="user-avatar-sidebar">?</div>
+              <div class="dashboard-user__content">
+                <div class="dashboard-user__name" id="user-name-display">Visitante</div>
+                <div class="dashboard-user__email" id="user-email-display">Sessão indisponível</div>
+              </div>
             </div>
-        </section>
 
+            <div class="dashboard-sidebar__group">
+              <h2 class="dashboard-sidebar__title">Sobre este painel</h2>
+              <p class="dashboard-sidebar__text">
+                Aqui você acompanha a evolução da sua relação com a plataforma, visualiza
+                métricas e enxerga melhor a proposta do produto em funcionamento.
+              </p>
+            </div>
+
+            <div class="dashboard-sidebar__group">
+              <h2 class="dashboard-sidebar__title">O que você verá</h2>
+              <div class="dashboard-chip-list">
+                <span class="chip">Métricas</span>
+                <span class="chip">Histórico</span>
+                <span class="chip">Tendências</span>
+                <span class="chip">Status</span>
+              </div>
+            </div>
+
+            <div class="dashboard-sidebar__actions">
+              <button id="btn-refresh-data" class="btn btn-primary">Atualizar painel</button>
+              <a class="btn btn-secondary" href="./index.html#consultor">Nova análise</a>
+              <a class="btn btn-ghost" href="./index.html">Voltar ao início</a>
+            </div>
+          </aside>
+
+          <div class="dashboard-main dashboard-stack">
+            <div class="dashboard-topbar">
+              <div class="dashboard-topbar__content">
+                <span class="eyebrow">Painel autenticado</span>
+                <h1 class="dashboard-topbar__title">Visão geral da sua experiência no projeto</h1>
+                <p class="dashboard-topbar__description">
+                  Este painel resume análises registradas, comportamento da base e sinais
+                  de tendência que ajudam a mostrar o valor do Descomplica Celular como produto.
+                </p>
+              </div>
+
+              <div class="dashboard-topbar__actions">
+                <span class="chip">Sincronização em tempo real futura</span>
+                <span class="chip">Base pronta para expansão</span>
+              </div>
+            </div>
+
+            <div class="dashboard-metrics">
+              <section class="metric-card" id="api-latency-container" aria-label="Latência de sincronização">
+                <div class="metric-value">—</div>
+                <div class="metric-subtitle">Latência estimada da sincronização</div>
+              </section>
+
+              <section class="metric-card" id="devices-analyzed-container" aria-label="Total de análises">
+                <div class="metric-value">0</div>
+                <div class="metric-subtitle">Análises registradas</div>
+              </section>
+
+              <section class="metric-card" id="avg-budget-container" aria-label="Orçamento médio analisado">
+                <div class="metric-value">R$ 0,00</div>
+                <div class="metric-subtitle">Investimento médio analisado</div>
+              </section>
+            </div>
+
+            <section class="dashboard-panel">
+              <div class="dashboard-panel__header">
+                <div>
+                  <h2 class="dashboard-panel__title">Tendência das prioridades</h2>
+                  <p class="dashboard-panel__description">
+                    Visualização resumida dos focos mais frequentes nas análises registradas.
+                  </p>
+                </div>
+              </div>
+
+              <div id="chart-container" class="dashboard-chart-shell"></div>
+            </section>
+
+            <div class="dashboard-insight-grid">
+              <section class="dashboard-insight-card">
+                <h2 class="dashboard-insight-card__title">Leitura do produto</h2>
+                <p class="dashboard-insight-card__text">
+                  O painel reforça a percepção de plataforma real, mostrando que a recomendação
+                  não é apenas uma interface bonita, mas parte de um sistema com estrutura.
+                </p>
+              </section>
+
+              <section class="dashboard-insight-card">
+                <h2 class="dashboard-insight-card__title">Próxima evolução natural</h2>
+                <p class="dashboard-insight-card__text">
+                  Em fases futuras, este ambiente pode crescer para histórico detalhado,
+                  favoritos, preferências salvas e personalização mais profunda.
+                </p>
+              </section>
+            </div>
+
+            <section class="dashboard-panel">
+              <div class="dashboard-panel__header">
+                <div>
+                  <h2 class="dashboard-panel__title">Análises recentes</h2>
+                  <p class="dashboard-panel__description">
+                    Últimos registros disponíveis para o usuário autenticado.
+                  </p>
+                </div>
+              </div>
+
+              <div id="recent-matches-container" class="match-list dashboard-history-shell"></div>
+            </section>
+          </div>
+        </div>
+      </section>
     </main>
+  </div>
 
-    <script type="module" src="js/api-services.js"></script>
-    <script type="module" src="js/ui-engine.js"></script>
+  <script type="module" src="./js/global-auth.js"></script>
+  <script type="module" src="./js/dashboard-controller-v2.js"></script>
 </body>
 </html>

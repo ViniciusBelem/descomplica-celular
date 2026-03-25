@@ -1,100 +1,150 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Acesse sua conta no Descomplica Celular.">
-    <title>Entrar | Descomplica Celular</title>
-    
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/forms.css">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar | Descomplica Celular</title>
+  <meta
+    name="description"
+    content="Acesse sua conta no Descomplica Celular para acompanhar análises e evoluir com a plataforma."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./css/global.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/forms.css" />
 </head>
 <body>
-    <div class="ambient-glow" aria-hidden="true"></div>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container-lg site-header__inner">
+        <a href="./index.html" class="site-brand" aria-label="Página inicial do Descomplica Celular">
+          <span class="site-brand__mark">D</span>
+          <span class="site-brand__text">
+            <span class="site-brand__title">Descomplica Celular</span>
+            <span class="site-brand__subtitle">Recomendação inteligente de smartphones</span>
+          </span>
+        </a>
 
-    <header class="header-global" role="banner">
-        <div class="container-mestre header-container">
-            <a href="index.html" class="brand-area" aria-label="Voltar para a página inicial">
-                <img src="https://i.postimg.cc/pVsQZMHR/Chat-GPT-Image-4-de-mar-de-2026-00-54-47.png" alt="Logo Descomplica Celular" class="brand-logo" width="48" height="48">
-                <span class="brand-name">Descomplica</span>
-            </a>
-            
-            <nav class="nav-menu" role="navigation" aria-label="Menu de autenticação">
-                <a href="index.html" class="nav-link">Voltar ao Início</a>
-                <span class="text-muted" aria-hidden="true">|</span>
-                <span class="text-secondary" style="font-size: var(--fs-sm);">Ainda não tem conta? <a href="registro.html" style="font-weight: 700;">Criar Credencial</a></span>
-            </nav>
-        </div>
+        <nav class="site-nav" aria-label="Navegação principal">
+          <div class="site-nav__links">
+            <a class="nav-link" href="./index.html#consultor">Consultor</a>
+            <a class="nav-link" href="./index.html#catalogo">Catálogo</a>
+            <a class="nav-link" href="./index.html#faq">FAQ</a>
+          </div>
+
+          <div class="site-nav__actions">
+            <a class="btn btn-ghost" href="./index.html">Voltar ao início</a>
+          </div>
+        </nav>
+      </div>
     </header>
 
-    <main class="main-content container-mestre registro-layout" role="main">
-        
-        <section class="registro-section" aria-labelledby="login-title">
-            <div class="glass-card form-wrapper interactive">
-                
-                <header class="form-header">
-                    <h1 id="login-title" class="form-headline">Bem-vindo de volta.</h1>
-                    <p class="text-secondary">Insira suas credenciais para acessar o painel algorítmico.</p>
-                </header>
+    <main class="site-main">
+      <section class="auth-layout">
+        <div class="auth-shell">
+          <aside class="auth-side-panel">
+            <span class="eyebrow">Acesso à plataforma</span>
+            <h1 class="auth-side-panel__title">Entre e acompanhe sua evolução no projeto.</h1>
+            <p class="auth-side-panel__description">
+              Ao acessar sua conta, você pode evoluir com uma experiência mais organizada,
+              integrada e preparada para futuras funcionalidades do Descomplica Celular.
+            </p>
 
-                <form id="form-login" class="form-core" novalidate aria-live="polite">
-                    
-                    <div class="input-row">
-                        <fieldset class="input-group">
-                            <label for="email" class="input-label">E-mail Profissional</label>
-                            <input type="email" id="email" name="email" class="input-text" placeholder="voce@empresa.com" required aria-required="true">
-                            <span class="error-message" id="error-email" role="alert"></span>
-                        </fieldset>
-                    </div>
-
-                    <div class="input-row">
-                        <fieldset class="input-group">
-                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <label for="senha" class="input-label">Senha de Acesso</label>
-                                <a href="#" class="text-muted" style="font-size: var(--fs-xs);">Esqueceu a senha?</a>
-                            </div>
-                            <input type="password" id="senha" name="senha" class="input-text" placeholder="Sua senha segura" required aria-required="true">
-                            <span class="error-message" id="error-senha" role="alert"></span>
-                        </fieldset>
-                    </div>
-
-                    <div id="loading-state" class="loading-state" aria-hidden="true" style="display: none;">
-                        <div class="skeleton skeleton-text"></div>
-                        <div class="skeleton skeleton-text" style="width: 70%;"></div>
-                        <p class="text-brand text-center mt-2" style="font-size: var(--fs-xs);">Autenticando credenciais...</p>
-                    </div>
-
-                    <button type="submit" id="btn-submit-login" class="btn-principal mt-4">Acessar Painel</button>
-                    
-                </form>
-
-                <div id="success-state" class="success-state" aria-hidden="true" style="display: none; text-align: center;">
-                    <div class="success-icon">✓</div>
-                    <h3>Acesso Liberado</h3>
-                    <p class="text-secondary">Redirecionando para a sua área de trabalho...</p>
-                    <div class="skeleton skeleton-block mt-4" style="height: 4px; border-radius: 2px;"></div>
+            <div class="auth-benefits">
+              <div class="auth-benefit">
+                <div class="auth-benefit__icon">01</div>
+                <div class="auth-benefit__content">
+                  <h3>Continuidade</h3>
+                  <p>Continue usando a plataforma com uma base mais conectada ao seu perfil.</p>
                 </div>
+              </div>
 
+              <div class="auth-benefit">
+                <div class="auth-benefit__icon">02</div>
+                <div class="auth-benefit__content">
+                  <h3>Dashboard</h3>
+                  <p>Acesse o painel para visualizar dados e futuras análises salvas.</p>
+                </div>
+              </div>
+
+              <div class="auth-benefit">
+                <div class="auth-benefit__icon">03</div>
+                <div class="auth-benefit__content">
+                  <h3>Evolução do sistema</h3>
+                  <p>Este fluxo já está preparado para crescer junto com a plataforma.</p>
+                </div>
+              </div>
             </div>
-        </section>
+          </aside>
 
-    </main>
-
-    <footer class="footer-global" role="contentinfo">
-        <div class="container-mestre footer-content">
-            <div class="footer-texto">
-                &copy; 2026 Descomplica Celular. Arquitetura Premium Sênior.
+          <section class="auth-card" aria-labelledby="login-title">
+            <div class="auth-card__header">
+              <span class="eyebrow">Login</span>
+              <h2 class="auth-card__title" id="login-title">Entrar na sua conta</h2>
+              <p class="auth-card__description">
+                Informe seu e-mail e senha para acessar o painel do projeto.
+              </p>
             </div>
+
+            <div data-auth-flash></div>
+
+            <form id="login-form" class="form-stack" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="login-email">E-mail</label>
+                <input
+                  id="login-email"
+                  class="input"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="voce@exemplo.com"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="login-password">Senha</label>
+                <input
+                  id="login-password"
+                  class="input"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Digite sua senha"
+                />
+              </div>
+
+              <div id="login-feedback"></div>
+
+              <button id="login-submit" type="submit" class="btn btn-primary btn-block">
+                Entrar
+              </button>
+            </form>
+
+            <div class="form-divider">ou</div>
+
+            <div class="auth-card__footer">
+              <p class="form-hint">
+                Ainda não possui conta?
+                <a class="inline-link" href="./registro.html">Criar conta agora</a>
+              </p>
+
+              <p class="form-hint">
+                <a class="inline-link" href="./index.html">Voltar para a página inicial</a>
+              </p>
+            </div>
+          </section>
         </div>
-    </footer>
+      </section>
+    </main>
+  </div>
 
-    <script type="module" src="js/ui-engine.js"></script>
-    <script type="module" src="js/login.js"></script>
+  <script type="module" src="./js/global-auth.js"></script>
+  <script type="module" src="./js/login.js"></script>
 </body>
 </html>

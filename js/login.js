@@ -5,11 +5,18 @@ import {
 } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
 
 import { qs, setText, setDisabled, getValue } from './utils/dom.js';
+import { escapeHtml, sanitizeRedirectPath } from './utils/security.js';
 import { validateLoginForm } from './utils/validators.js';
-import { setSessionItem, getSessionItem, removeSessionItem } from './utils/storage.js';
+import {
+  setSessionItem,
+  getSessionItem,
+  removeSessionItem
+} from './utils/storage.js';
+import { ensureUserProfile } from './services/firebase-service.js';
 
 const REDIRECT_SESSION_KEY = 'postLoginRedirect';
 const FLASH_MESSAGE_SESSION_KEY = 'authFlashMessage';
+const DEFAULT_REDIRECT = 'dashboard.html';
 
 function getLoginElements() {
   return {
@@ -21,26 +28,27 @@ function getLoginElements() {
   };
 }
 
+function getRedirectParam() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('redirect');
+}
+
 function getSafeRedirectPath() {
+  const redirectFromQuery = getRedirectParam();
   const storedRedirect = getSessionItem(REDIRECT_SESSION_KEY, '');
-  const fallbackPath = 'dashboard.html';
 
-  if (!storedRedirect || typeof storedRedirect !== 'string') {
-    return fallbackPath;
-  }
-
-  const normalized = storedRedirect.trim();
-
-  const blockedProtocols = ['http:', 'https:', 'javascript:', '//'];
-  const isBlocked = blockedProtocols.some((prefix) =>
-    normalized.toLowerCase().startsWith(prefix)
+  return sanitizeRedirectPath(
+    redirectFromQuery || storedRedirect,
+    DEFAULT_REDIRECT
   );
+}
 
-  if (isBlocked) {
-    return fallbackPath;
-  }
+function persistRedirectFromQueryIfNeeded() {
+  const redirectFromQuery = getRedirectParam();
+  if (!redirectFromQuery) return;
 
-  return normalized || fallbackPath;
+  const safeRedirect = sanitizeRedirectPath(redirectFromQuery, DEFAULT_REDIRECT);
+  setSessionItem(REDIRECT_SESSION_KEY, safeRedirect);
 }
 
 function setFeedback(message = '', type = 'default') {
@@ -53,11 +61,11 @@ function setFeedback(message = '', type = 'default') {
   }
 
   feedbackBox.innerHTML = `
-    <div class="feedback-box feedback-box--${type}">
+    <div class="feedback-box feedback-box--${escapeHtml(type)}">
       <h3 class="feedback-box-title">${
         type === 'error' ? 'Falha no login' : type === 'success' ? 'Tudo certo' : 'Status'
       }</h3>
-      <p class="feedback-box-description">${message}</p>
+      <p class="feedback-box-description">${escapeHtml(message)}</p>
     </div>
   `;
 }
@@ -124,7 +132,10 @@ async function handleLoginSubmit(event) {
     setFeedback('', 'default');
     setFormLoading(true);
 
-    await signInWithEmailAndPassword(auth, payload.email, payload.password);
+    const credential = await signInWithEmailAndPassword(auth, payload.email, payload.password);
+    
+    // Garante que o usuário existe no banco de dados (Corrige contas antigas)
+    await ensureUserProfile(credential.user);
 
     setSessionItem(FLASH_MESSAGE_SESSION_KEY, {
       type: 'success',
@@ -165,6 +176,7 @@ function bootstrapLogin() {
   const { form } = getLoginElements();
   if (!form) return;
 
+  persistRedirectFromQueryIfNeeded();
   redirectIfAlreadyAuthenticated();
   attachSubmitHandler();
 }

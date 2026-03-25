@@ -1,186 +1,433 @@
-/* ==========================================================================
-   ARQUITETURA PREMIUM v4.0 - LAYOUT MESTRE
-   Projeto: Descomplica Celular
-   Camada: Grid Estrutural, Cabeçalho Fixo (Navbar) e Rodapé
-   ========================================================================== */
+@import url('./tokens.css');
 
-/* --- 1. GRID MESTRE E CONTAINERS --- */
-/* O container principal garante limite de largura em telas 4K e margens seguras no Mobile */
-.container-mestre {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+.site-shell {
+  position: relative;
+  min-height: 100vh;
 }
 
-/* Proteção para o conteúdo não ser engolido pelo Header Fixo */
-.main-content {
-    padding-top: 120px; /* Altura do header + respiro */
-    padding-bottom: 5rem;
-    min-height: calc(100vh - 100px); /* Altura total menos o footer */
-    display: flex;
-    flex-direction: column;
-    gap: 4rem; /* Espaçamento vertical padrão entre seções */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--bg-header);
+  backdrop-filter: blur(18px);
 }
 
-/* --- 2. CABEÇALHO FIXO (STICKY GLASS HEADER) --- */
-.header-global {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: var(--z-header);
-    background: rgba(3, 4, 7, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-glass);
-    transition: var(--transition-base);
-    /* Prevenção de Repaint durante o scroll: */
-    will-change: transform, background-color, padding;
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  min-height: var(--header-height);
 }
 
-/* Estado ativado via JS quando o usuário rola a página (Shrink effect) */
-.header-global.scrolled {
-    background: rgba(3, 4, 7, 0.9);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
 }
 
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 90px;
-    transition: var(--transition-base);
+.site-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--brand-primary), var(--indigo-600));
+  box-shadow: var(--shadow-sm);
+  color: #ffffff;
+  font-weight: var(--fw-extrabold);
+  font-size: var(--fs-lg);
+  letter-spacing: -1px;
 }
 
-.header-global.scrolled .header-container {
-    height: 70px; /* Encolhe suavemente ao rolar */
+.site-brand__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-/* --- 3. IDENTIDADE VISUAL (LOGO) --- */
-.brand-area {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-    z-index: calc(var(--z-header) + 1);
+.site-brand__title {
+  color: var(--text-primary);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
-.brand-logo {
-    height: 48px;
-    width: auto;
-    border-radius: var(--radius-sm);
-    transition: var(--transition-base);
+.site-brand__subtitle {
+  color: var(--text-muted);
+  font-size: var(--fs-2xs);
+  line-height: 1.2;
 }
 
-.brand-name {
-    font-size: var(--fs-h3);
-    font-weight: 900;
-    color: #FFF;
-    letter-spacing: -0.05em;
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-/* --- 4. NAVEGAÇÃO PRINCIPAL --- */
-.nav-menu {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-.nav-link {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: var(--fs-sm);
-    position: relative;
-    padding: 0.5rem 0;
+.site-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-/* Sublinhado animado de alta performance (Escala X) */
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--brand-cyan);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.4s var(--ease-fluid);
+.site-main {
+  position: relative;
+  padding-bottom: var(--space-24);
 }
 
-.nav-link:hover {
-    color: #FFF;
+.site-footer {
+  position: relative;
+  border-top: 1px solid var(--border-soft);
+  background: var(--bg-footer);
 }
 
-.nav-link:hover::after,
-.nav-link.active::after {
-    transform: scaleX(1);
-    transform-origin: left;
+.site-footer__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: var(--space-10);
+  padding-block: var(--space-16);
 }
 
-/* --- 5. RODAPÉ (FOOTER) --- */
-.footer-global {
-    border-top: 1px solid var(--border-glass);
-    padding: 2rem 0;
-    margin-top: auto; /* Empurra o footer pro final da página sempre */
-    background: rgba(10, 15, 26, 0.2);
+.site-footer__brand {
+  max-width: 32rem;
 }
 
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+.site-footer__title {
+  color: var(--text-primary);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
 }
 
-.footer-texto {
-    color: var(--text-muted);
-    font-size: var(--fs-xs);
+.site-footer__description {
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
 }
 
-.footer-links {
-    display: flex;
-    gap: 1.5rem;
+.site-footer__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
-.footer-links a {
-    color: var(--text-secondary);
-    font-size: var(--fs-xs);
+.site-footer__heading {
+  color: var(--text-primary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
 }
 
-.footer-links a:hover {
-    color: var(--brand-cyan);
+.site-footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-/* --- 6. RESPONSIVIDADE (MOBILE FIRST ADAPTADO) --- */
-@media (max-width: 768px) {
-    .main-content {
-        padding-top: 100px;
-    }
+.hero {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-20);
+}
 
-    .nav-menu {
-        display: none; /* Em um cenário real, aqui entraria um Menu Hambúrguer via JS */
-    }
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr; /* Proporção mais limpa, remove o limite rígido de 320px que quebra o tablet */
+  align-items: center;
+  gap: var(--space-12);
+}
 
-    /* O CTA do header permanece visível no mobile */
-    .nav-menu.mobile-active {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: rgba(3, 4, 7, 0.95);
-        backdrop-filter: blur(20px);
-        padding: 2rem;
-        border-bottom: 1px solid var(--border-glass);
-    }
+/* Refinamento dos orbs para estilo Mesh Gradient Enterprise */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  opacity: 0.12;
+  pointer-events: none;
+}
 
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-        justify-content: center;
-    }
+.glow-orb--top {
+  top: -15%;
+  left: 15%;
+  width: 600px;
+  height: 600px;
+  background: var(--brand-primary);
+}
+
+.glow-orb--left {
+  top: 30%;
+  left: -5%;
+  width: 500px;
+  height: 500px;
+  background: var(--brand-accent); /* Acento quebra o monocromático */
+}
+
+.hero__content {
+  position: relative;
+  z-index: var(--z-base);
+}
+
+.hero__headline {
+  margin-top: var(--space-5);
+  max-width: 14ch;
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  font-weight: var(--fw-extrabold);
+  color: var(--text-primary);
+}
+
+.hero__description {
+  max-width: 44rem;
+  margin-top: var(--space-5);
+  font-size: var(--fs-lg);
+  color: var(--text-secondary);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.hero__panel {
+  position: relative;
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-10);
+}
+
+.section-header--center {
+  align-items: center;
+  text-align: center;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); /* Responsividade fluida automática */
+  gap: var(--space-8);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: var(--space-6);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: var(--space-6);
+}
+
+.content-layout {
+  display: grid;
+  grid-template-columns: 7fr 5fr; /* 12-column grid fractioning */
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.stack-lg > * + * {
+  margin-top: var(--space-8);
+}
+
+.stack-md > * + * {
+  margin-top: var(--space-6);
+}
+
+.stack-sm > * + * {
+  margin-top: var(--space-4);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.cluster-between {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.panel-grid__main {
+  grid-column: span 8;
+}
+
+.panel-grid__side {
+  grid-column: span 4;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: clamp(250px, 22vw, 320px) minmax(0, 1fr); /* Sidebar elástica que respira com a tela */
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.dashboard-main {
+  min-width: 0;
+}
+
+.dashboard-stack > * + * {
+  margin-top: var(--space-6);
+}
+
+.auth-layout {
+  min-height: calc(100vh - var(--header-height));
+  display: grid;
+  place-items: center;
+  padding-block: var(--space-16);
+}
+
+.auth-shell {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-8);
+  width: min(100% - 2rem, 1120px);
+  align-items: stretch;
+}
+
+.auth-panel {
+  padding: var(--space-10);
+}
+
+.legal-layout {
+  padding-block: var(--space-16);
+}
+
+.legal-content {
+  width: min(100% - 2rem, 860px);
+  margin-inline: auto;
+}
+
+.legal-article {
+  padding: var(--space-10);
+}
+
+.legal-article > * + * {
+  margin-top: var(--space-5);
+}
+
+.legal-article h1,
+.legal-article h2,
+.legal-article h3 {
+  color: var(--text-primary);
+  line-height: var(--lh-snug);
+}
+
+.legal-article h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.legal-article h2 {
+  font-size: var(--fs-2xl);
+}
+
+.legal-article h3 {
+  font-size: var(--fs-xl);
+}
+
+.legal-article p,
+.legal-article li {
+  color: var(--text-secondary);
+}
+
+.legal-article ul,
+.legal-article ol {
+  padding-left: 1.25rem;
+}
+
+@media (max-width: 1100px) {
+  .hero__inner,
+  .content-layout,
+  .auth-shell,
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .panel-grid__main,
+  .panel-grid__side {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 767px) {
+  .site-header__inner {
+    min-height: 72px;
+    gap: var(--space-4);
+  }
+
+  .site-nav {
+    display: none;
+  }
+
+  .hero {
+    padding-top: var(--space-10);
+    padding-bottom: var(--space-16);
+  }
+
+  .hero__headline {
+    max-width: 100%;
+    font-size: clamp(2.1rem, 10vw, 3.2rem);
+  }
+
+  .hero__description {
+    font-size: var(--fs-md);
+  }
+
+  .site-footer__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .section-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .auth-panel,
+  .legal-article {
+    padding: var(--space-7);
+  }
 }
