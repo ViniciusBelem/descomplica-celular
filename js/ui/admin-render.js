@@ -125,24 +125,28 @@ export function renderAuditTable(logs) {
     const date = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleString('pt-BR') : 'Sem data';
     const actionConfig = ACTION_MAP[log.action] || { label: log.action, color: 'var(--text-secondary)' };
     const hasComments = log.comments && log.comments.length > 0;
+    const targetDisplay = log.target?.desc || log.target?.email || log.target?.id || 'Desconhecido';
 
     return `
       <tr style="${log.archived ? 'opacity: 0.6;' : ''}">
         <td>
            <span class="badge" style="font-size: 0.7rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: ${actionConfig.color};">${actionConfig.label}</span>
-           ${hasComments ? '<span style="margin-left:8px;font-size:12px;" title="Possui Comentário">💬</span>' : ''}
+           ${hasComments ? '<div style="display:inline-block; width:8px; height:8px; background:var(--green-400); border-radius:50%; margin-left:8px;" title="Anotações Inclusas"></div>' : ''}
         </td>
         <td style="font-size: 0.85rem;">
           <strong style="color:var(--text-primary);">${log.actor?.email || 'Sistema'}</strong>
         </td>
-        <td style="font-size: 0.85rem; color:var(--text-muted);">${log.target?.desc ? log.target.desc : log.target?.id}</td>
+        <td style="font-size: 0.85rem; color:var(--text-muted);">${targetDisplay}</td>
         <td style="font-size: 0.8rem; color:var(--text-muted);">${date}</td>
-        <td style="text-align:right; position: relative;">
-          <button class="btn btn-ghost btn-sm" data-action="toggle-menu" data-index="${index}">⋮</button>
+        <td style="text-align:right; position: relative; min-width: 90px; vertical-align: middle;">
+          <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.2rem;">
+             <button class="btn btn-ghost btn-sm" data-action="open-note-modal" data-index="${index}" title="Criar Anotação / Alerta" style="padding: 0.4rem; display: flex; align-items: center; justify-content: center; transform: translateY(-2px);"><i class="gg-pen" style="--ggs: 0.8; color: var(--text-primary); pointer-events: none;"></i></button>
+             <button class="btn btn-ghost btn-sm" data-action="toggle-menu" data-index="${index}" style="padding: 0.2rem 0.5rem;">⋮</button>
+          </div>
           
           <div class="audit-dropdown-menu" id="audit-menu-${index}" style="display: none; position: absolute; right: 0; top:calc(100% - 5px); background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 0.5rem 0; z-index: 100; min-width: 150px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
              <button class="dropdown-item-btn" style="width: 100%; padding: 0.5rem 1rem; border: none; background: transparent; text-align: left; color: var(--text-primary); cursor: pointer;" data-action="view-log" data-index="${index}">Ver Diferenças</button>
-             <button class="dropdown-item-btn" style="width: 100%; padding: 0.5rem 1rem; border: none; background: transparent; text-align: left; color: var(--text-primary); cursor: pointer;" data-action="comment-log" data-index="${index}">Comentar</button>
+             ${hasComments ? `<button class="dropdown-item-btn" style="width: 100%; padding: 0.5rem 1rem; border: none; background: transparent; text-align: left; color: var(--green-400); cursor: pointer;" data-action="read-comments" data-index="${index}">Ler Anotações</button>` : ''}
              <button class="dropdown-item-btn" style="width: 100%; padding: 0.5rem 1rem; border: none; background: transparent; text-align: left; color: var(--text-primary); cursor: pointer;" data-action="archive-log" data-index="${index}">${log.archived ? 'Desarquivar' : 'Arquivar'}</button>
              <hr style="border-color: var(--border-soft); margin: 0.25rem 0;">
              <button class="dropdown-item-btn" style="width: 100%; padding: 0.5rem 1rem; border: none; background: transparent; text-align: left; color: var(--red-400); cursor: pointer;" data-action="undo-log" data-index="${index}">Desfazer (Rollback)</button>

@@ -368,3 +368,54 @@ export async function getAllAdmins() {
     return [];
   }
 }
+
+// ===== AÇÕES AVANÇADAS DE AUDITORIA =====
+
+export async function updateLogArchiveStatus(logId, status) {
+  try {
+    await fireUpdate(fireDoc(db, 'audit_logs', logId), { archived: status });
+  } catch(e) {
+    console.error('[Auditoria] Erro ao arquivar', e);
+    throw e;
+  }
+}
+
+export async function addLogComment(logId, text) {
+  try {
+    const docRef = fireDoc(db, 'audit_logs', logId);
+    const snap = await getDoc(docRef);
+    if (!snap.exists()) return;
+    const comments = snap.data().comments || [];
+    comments.push({ text, date: new Date().toISOString(), author: auth.currentUser?.email || 'Admin' });
+    await fireUpdate(docRef, { comments });
+  } catch(e) {
+    console.error('[Auditoria] Erro ao comentar', e);
+    throw e;
+  }
+}
+
+export async function revertAdminAction(log) {
+  if (!auth.currentUser) throw new Error("Sessão admin inválida.");
+  const { CatalogRepository } = await import('./catalog-repository.js');
+  
+  if (log.action === 'UPDATE_DEVICE' || log.action === 'DELETE_DEVICE') {
+    const payload = log.before;
+    if (!payload || Object.keys(payload).length === 0) throw new Error("Sem dados anteriores guardados na nuvem para restaurar.");
+    
+    // Força a restauração sem ativar Anti-Colisão passando isNew=false
+    await CatalogRepository.save(payload, false);
+    
+    await logAdminAction('UNDO_ACTION', log.target.id, {
+      customCategory: 'Segurança',
+      info: `Estado original restaurado a partir do Snapshot do Log ID: ${log.id}`
+    });
+  } else if (log.action === 'CREATE_DEVICE') {
+    await CatalogRepository.delete(log.target.id);
+    await logAdminAction('UNDO_ACTION', log.target.id, {
+      customCategory: 'Segurança',
+      info: `Criação vazia revertida (Dispositivo Excluído) a partir do Log ID: ${log.id}`
+    });
+  } else {
+    throw new Error("O tipo de evento não suporta mecanismo de Rollback automático.");
+  }
+}
