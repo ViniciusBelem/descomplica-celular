@@ -1,262 +1,308 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html class="dark" lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Admin | Descomplica Celular</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./css/tokens.css" />
-  <link rel="stylesheet" href="./css/global.css" />
-  <link rel="stylesheet" href="./css/components.css" />
-  <link rel="stylesheet" href="./css/forms.css" />
-  <link rel="stylesheet" href="./css/admin.css" />
-  <link rel="stylesheet" href="./css/toast.css" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Painel Admin | Descomplica Celular</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href='https://css.gg/css?=|pen' rel='stylesheet'>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#8083ff", "on-primary-fixed-variant": "#2f2ebe", "primary-fixed-dim": "#c0c1ff",
+                        "on-secondary-container": "#003f38", "tertiary": "#ffb783", "surface-bright": "#39393b",
+                        "tertiary-fixed-dim": "#ffb783", "outline-variant": "#464554", "on-tertiary-fixed-variant": "#703700",
+                        "primary": "#c0c1ff", "on-error": "#690005", "on-primary-container": "#0d0096", "on-surface": "#e5e1e4",
+                        "surface-tint": "#c0c1ff", "secondary-container": "#04b4a2", "inverse-on-surface": "#313032",
+                        "surface-container-lowest": "#0e0e10", "on-surface-variant": "#c7c4d7", "on-primary": "#1000a9",
+                        "on-tertiary": "#4f2500", "on-tertiary-fixed": "#301400", "tertiary-fixed": "#ffdcc5",
+                        "surface-container-low": "#1c1b1d", "secondary-fixed": "#71f8e4", "inverse-primary": "#494bd6",
+                        "on-secondary-fixed": "#00201c", "surface-variant": "#353437", "tertiary-container": "#d97721",
+                        "error": "#ffb4ab", "surface": "#131315", "background": "#131315", "surface-container-high": "#2a2a2c",
+                        "error-container": "#93000a", "primary-fixed": "#e1e0ff", "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353437", "surface-container": "#201f22", "outline": "#908fa0",
+                        "inverse-surface": "#e5e1e4", "on-background": "#e5e1e4", "surface-dim": "#131315",
+                        "on-primary-fixed": "#07006c", "on-secondary-fixed-variant": "#005048", "secondary": "#4fdbc8",
+                        "on-secondary": "#003731", "secondary-fixed-dim": "#4fdbc8", "on-tertiary-container": "#452000"
+                    },
+                    fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
+                    borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #131315; color: #e5e1e4; overflow-x: hidden; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(53, 52, 55, 0.6); backdrop-filter: blur(24px); }
+        .row-hover-lift:hover { transform: translateY(-2px); transition: all 0.2s ease-out; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1c1b1d; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #464554; border-radius: 10px; }
+        
+        /* HYBRID MODAL BRIDGES FOR JS CONTROLLER */
+        .admin-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); }
+        .admin-modal[aria-hidden="true"] { display: none; }
+        .admin-modal-backdrop { position: absolute; inset: 0; }
+        .admin-modal-panel { position: relative; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; background: #201f22; border: 1px solid rgba(144, 143, 160, 0.2); border-radius: 1rem; padding: 2rem; color: #e5e1e4; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .admin-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(144, 143, 160, 0.1); padding-bottom: 1rem; }
+        .form-title { font-size: 1.25rem; font-weight: 700; color: #c0c1ff; margin: 0; }
+        .form-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group--full { grid-column: 1 / -1; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+        .form-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #c7c4d7; margin-bottom: 0.2rem; }
+        .input, .textarea, .select { box-sizing: border-box; width: 100%; background: #1c1b1d; border: 1px solid rgba(144, 143, 160, 0.2); border-radius: 0.5rem; padding: 0.75rem 1rem; color: #e5e1e4; font-size: 0.875rem; outline: none; transition: all 0.2s; }
+        .input:focus, .textarea:focus, .select:focus { border-color: #c0c1ff; background: #2a2a2c; }
+        .btn { display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; border: none; }
+        .btn-primary { background: linear-gradient(to right, #c0c1ff, #8083ff); color: #1000a9; }
+        .btn-primary:active { transform: scale(0.95); }
+        .btn-secondary { background: #353437; color: #e5e1e4; }
+        .btn-secondary:hover { background: #464554; }
+        .btn-ghost { background: transparent; color: #c7c4d7; padding: 0.4rem 0.8rem; }
+        .btn-ghost:hover { background: rgba(255,255,255,0.05); color: #e5e1e4; }
+        .btn-danger { background: rgba(255,180,171,0.1); color: #ffb4ab; }
+        .btn-danger:hover { background: rgba(255,180,171,0.2); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.75rem; }
+        hr { border: none; border-top: 1px solid rgba(144, 143, 160, 0.1); margin: 1.5rem 0; width: 100%; }
+        /* Toast UI variables inherited by old modal styles */
+        :root { --bg-card: #201f22; --bg-card-elevated: #2a2a2c; --text-primary: #e5e1e4; --text-muted: #c7c4d7; --bg-main: #131315; --brand-primary: #c0c1ff; --border-soft: rgba(144, 143, 160, 0.2); --green-400: #4fdbc8; --red-400: #ffb4ab; --amber-400: #ffdcc5; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
+    </style>
 </head>
-<body class="admin-body">
-  <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <div class="site-brand__mark">DC</div>
-      <div class="site-brand__text">
-        <span class="site-brand__title">Admin V1</span>
+<body class="flex min-h-screen bg-surface selection:bg-primary/30">
+
+<aside class="fixed left-0 top-0 z-40 h-screen w-64 hidden lg:flex flex-col border-r border-outline-variant/15 bg-surface-container-low transition-all duration-400 ease-in-out">
+<div class="px-6 py-8 flex flex-col h-full">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-8 h-8 rounded bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl">auto_awesome</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-primary leading-none">Admin V2</h1>
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60 mt-1">Smart Advisor</p>
+</div>
+</div>
+<nav class="admin-nav space-y-2 flex-grow">
+<button class="admin-nav-item active w-full flex items-center justify-start text-left gap-3 px-4 py-3 bg-surface-container-high text-primary rounded-md font-semibold uppercase tracking-widest text-sm transition-all duration-400" data-view="dashboard">
+<span class="material-symbols-outlined">leaderboard</span><span>Visão Geral</span>
+</button>
+<button class="admin-nav-item w-full flex items-center justify-start text-left gap-3 px-4 py-3 text-on-surface-variant/50 hover:bg-surface-container-high/50 hover:text-on-surface rounded-md font-semibold uppercase tracking-widest text-sm transition-all duration-400" data-view="catalog">
+<span class="material-symbols-outlined">inventory_2</span><span>Catálogo</span>
+</button>
+</nav>
+<div class="mt-auto">
+<a class="w-full flex items-center justify-start text-left gap-3 px-4 py-3 text-on-surface-variant/50 hover:bg-surface-container-high/50 hover:text-on-surface rounded-md font-semibold uppercase tracking-widest text-sm transition-all duration-400" href="./index.html">
+<span class="material-symbols-outlined">home</span><span>Ir para o Site</span>
+</a>
+</div>
+</div>
+</aside>
+
+<main class="flex-1 lg:ml-64 min-h-screen">
+<header class="fixed top-0 right-0 left-0 lg:left-64 z-30 h-16 bg-surface-variant/80 backdrop-blur-xl flex justify-between items-center px-8 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span id="admin-page-title" class="text-xl font-bold tracking-tighter text-primary bg-clip-text bg-gradient-to-r from-primary to-primary-container">Visão Geral</span>
+</div>
+<div class="flex items-center gap-4">
+<span id="admin-header-actions" class="flex gap-2"></span>
+<button id="btn-inbox-header" class="relative group p-2 hover:bg-surface-container-high rounded-full transition-colors flex items-center justify-center" title="Caixa de Mensagens">
+<span class="material-symbols-outlined text-on-surface-variant/70 group-hover:text-primary transition-colors">notifications</span>
+<span id="inbox-badge" style="display:none;" class="absolute top-0 right-0 w-3 h-3 bg-error text-white text-[8px] font-bold rounded-full flex items-center justify-center border-2 border-surface">0</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/20 bg-primary/10 flex items-center justify-center"><span class="material-symbols-outlined text-sm text-primary">person</span></div>
+</div>
+</header>
+<div id="admin-content" class="pt-24 pb-12 px-8 max-w-7xl mx-auto space-y-10">
+<!-- Conteúdo dinâmico injetado aqui -->
+</div>
+</main>
+
+<link rel="stylesheet" href="./css/toast.css" />
+
+<!-- Modal de Formulário do Produto -->
+<div class="admin-modal" id="product-modal" aria-hidden="true">
+  <div class="admin-modal-backdrop" data-close-modal></div>
+  <div class="admin-modal-panel">
+    <div class="admin-modal-header">
+      <h2 class="form-title" id="modal-title">Novo Produto</h2>
+      <button class="btn btn-ghost" data-close-modal><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="product-form" class="form-stack">
+      <input type="hidden" name="id" /><input type="hidden" name="slug" />
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Marca</label><input type="text" class="input" name="brand" required /></div>
+        <div class="form-group"><label class="form-label">Modelo</label><input type="text" class="input" name="model" required /></div>
+        <div class="form-group"><label class="form-label">Preço (R$)</label><input type="number" class="input" name="price" step="0.01" required /></div>
+        <div class="form-group">
+          <label class="form-label">Segmento</label>
+          <select class="select" name="segment" required>
+            <option value="entrada">Entrada</option>
+            <option value="intermediario">Intermediário</option>
+            <option value="intermediario-premium">Intermediário Premium</option>
+            <option value="premium">Premium</option>
+            <option value="ultra-premium">Ultra Premium</option>
+          </select>
+        </div>
+        <div class="form-group form-group--full"><label class="form-label">URL da Imagem</label><input type="url" class="input" name="image" required /></div>
+        <div class="form-group form-group--full"><label class="form-label">Resumo do Aparelho</label><textarea class="textarea" name="summary" rows="2" required></textarea></div>
+      </div>
+      <hr>
+      <h3 class="form-title" style="font-size: 1rem;">Configuração de Destaque</h3>
+      <div class="form-grid">
+        <label class="form-group form-group--full" style="flex-direction: row; align-items: center; cursor: pointer;">
+          <input type="checkbox" name="active" checked style="width: 1.5rem; height: 1.5rem; accent-color:#c0c1ff;" />
+          <span class="form-label" style="margin: 0;">Aparelho Ativo (Visível na loja)</span>
+        </label>
+        <label class="form-group form-group--full" style="flex-direction: row; align-items: center; cursor: pointer;">
+          <input type="checkbox" name="featured" style="width: 1.5rem; height: 1.5rem; accent-color:#c0c1ff;" />
+          <span class="form-label" style="margin: 0;">Aparelho em Destaque (Badge especial)</span>
+        </label>
+        <div class="form-group form-group--full"><label class="form-label">Texto da Badge (Ex: Custo Benefício)</label><input type="text" class="input" name="badge" /></div>
+      </div>
+      <hr>
+      <h3 class="form-title" style="font-size: 1rem;">Especificações Técnicas</h3>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Tela</label><input type="text" class="input" name="specs.screen" required /></div>
+        <div class="form-group"><label class="form-label">Processador</label><input type="text" class="input" name="specs.chipset" required /></div>
+        <div class="form-group"><label class="form-label">Bateria</label><input type="text" class="input" name="specs.battery" required /></div>
+        <div class="form-group"><label class="form-label">Memória RAM</label><input type="text" class="input" name="specs.memory" required /></div>
+        <div class="form-group"><label class="form-label">Armazenamento</label><input type="text" class="input" name="specs.storage" required /></div>
+        <div class="form-group"><label class="form-label">Câmera Principal</label><input type="text" class="input" name="specs.cameraMain" required /></div>
+      </div>
+      <hr>
+      <h3 class="form-title" style="font-size: 1rem;">Motor de Recomendação (Notas 0 a 100)</h3>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Câmera</label><input type="number" class="input" name="scores.camera" min="0" max="100" required /></div>
+        <div class="form-group"><label class="form-label">Performance</label><input type="number" class="input" name="scores.performance" min="0" max="100" required /></div>
+        <div class="form-group"><label class="form-label">Bateria</label><input type="number" class="input" name="scores.battery" min="0" max="100" required /></div>
+        <div class="form-group"><label class="form-label">Tela</label><input type="number" class="input" name="scores.display" min="0" max="100" required /></div>
+        <div class="form-group"><label class="form-label">Durabilidade</label><input type="number" class="input" name="scores.durability" min="0" max="100" required /></div>
+        <div class="form-group"><label class="form-label">Longevidade</label><input type="number" class="input" name="scores.longevity" min="0" max="100" required /></div>
+        <div class="form-group form-group--full"><label class="form-label">Custo Benefício Geral</label><input type="number" class="input" name="scores.costBenefit" min="0" max="100" required /></div>
+      </div>
+      <hr>
+      <h3 class="form-title" style="font-size: 1rem;">Tags do Sistema (Separar por vírgula)</h3>
+      <div class="form-grid">
+        <div class="form-group form-group--full"><label class="form-label">Tags de Foco</label><input type="text" class="input" name="focusTags" placeholder="camera, bateria, equilibrio" required /></div>
+        <div class="form-group form-group--full"><label class="form-label">Tags de Perfil</label><input type="text" class="input" name="profileTags" placeholder="intermediario, premium" required /></div>
+      </div>
+      <div class="form-actions sticky bottom-0 bg-surface-container-lowest py-4 border-t border-outline-variant/10">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Produto</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de Detalhes da Auditoria -->
+<div class="admin-modal" id="audit-modal" aria-hidden="true">
+  <div class="admin-modal-backdrop" data-close-modal></div>
+  <div class="admin-modal-panel" style="max-width: 800px;">
+    <div class="admin-modal-header">
+      <h2 class="form-title">Detalhes da Alteração</h2>
+      <button class="btn btn-ghost" data-close-modal><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div id="audit-modal-content" style="padding-bottom: 1.5rem;"></div>
+  </div>
+</div>
+
+<!-- Modal Avançado de Comunicação e Anotações (Inbox/Outbox/Notes) -->
+<div class="admin-modal" id="inbox-modal" aria-hidden="true" style="z-index: 1000;">
+  <div class="admin-modal-backdrop" data-close-inbox></div>
+  <div class="admin-modal-panel" style="max-width: 900px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 0; overflow: hidden; background: #201f22; border: 1px solid rgba(144, 143, 160, 0.2);">
+    <div style="display: flex; height: 100%;">
+      <!-- Sidebar de Abas -->
+      <div style="width: 260px; background: #2a2a2c; border-right: 1px solid rgba(144, 143, 160, 0.2); display: flex; flex-direction: column;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(144, 143, 160, 0.2);">
+           <h2 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; color:#e5e1e4; font-weight:600;">📬 Comunicação B2B</h2>
+        </div>
+        <style>
+           .inbox-tab { padding: 1rem 1.5rem; border: none; background: transparent; color: #c7c4d7; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.8rem; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; border-left: 3px solid transparent; }
+           .inbox-tab:hover { background: rgba(255,255,255,0.03); color: #e5e1e4; }
+           .inbox-tab.active { background: rgba(255,255,255,0.05); border-left-color: #c0c1ff; color: #c0c1ff; }
+        </style>
+        <nav id="inbox-tabs" style="display: flex; flex-direction: column; padding: 1rem 0;">
+           <button class="inbox-tab active" data-tab="inbox"><span style="font-size:1.2rem;">📥</span> Caixa de Entrada</button>
+           <button class="inbox-tab" data-tab="outbox"><span style="font-size:1.2rem;">📤</span> Itens Enviados</button>
+           <button class="inbox-tab" data-tab="notes"><span style="font-size:1.2rem;">📝</span> Minhas Anotações</button>
+           <button class="inbox-tab" data-tab="trash"><span style="font-size:1.2rem;">🗑️</span> Lixeira Oculta</button>
+        </nav>
+        <div style="padding: 1.5rem; margin-top: auto; border-top: 1px solid rgba(144, 143, 160, 0.2);">
+           <button class="btn btn-primary" id="btn-compose-global" style="width:100%; justify-content:center;">➕ Cadastrar Nota/Msg</button>
+        </div>
+      </div>
+      <!-- Conteúdo da Aba Dinâmico -->
+      <div style="flex-grow: 1; display:flex; flex-direction: column; background: #201f22; position:relative;">
+         <div style="padding: 1rem 2rem; border-bottom: 1px solid rgba(144, 143, 160, 0.2); display:flex; justify-content:space-between; align-items:center;">
+            <h3 id="inbox-pane-title" style="margin:0; color:#e5e1e4; font-size:1.1rem; font-weight: 600;">Carregando...</h3>
+            <button class="btn btn-ghost" data-close-inbox style="font-weight:bold; font-size:1.2rem; padding: 0.2rem 0.6rem;">✕</button>
+         </div>
+         <div id="inbox-pane-content" style="flex-grow:1; overflow-y:auto; padding: 1.5rem 2rem; scrollbar-width: thin;"></div>
       </div>
     </div>
-    <nav class="admin-nav">
-      <button class="admin-nav-item active" data-view="dashboard">Visão Geral</button>
-      <button class="admin-nav-item" data-view="catalog">Catálogo de Produtos</button>
-      <a href="./index.html" class="admin-nav-item" style="margin-top: auto;">Voltar ao Site</a>
-    </nav>
-  </aside>
+  </div>
+</div>
 
-  <main class="admin-main">
-    <header class="admin-header">
-      <h1 class="admin-page-title" id="admin-page-title">Visão Geral</h1>
-      <div style="display:flex; gap: 1rem; align-items:center;">
-        <div class="admin-header-actions" id="admin-header-actions"></div>
-        <button id="btn-inbox-header" class="btn btn-ghost" style="position:relative; width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; background: var(--bg-card); border: 1px solid var(--border-soft); font-size:1.4rem; cursor:pointer;" title="Caixa de Mensagens">
-           🔔
-           <span id="inbox-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:var(--red-400); color:white; font-size:9px; font-weight:800; border-radius:10px; padding:2px 5px; min-width:18px;">0</span>
-        </button>
-      </div>
-    </header>
-
-    <div class="admin-content" id="admin-content">
-      <!-- Conteúdo injetado via JS -->
-    </div>
-  </main>
-
-  <!-- Modal de Formulário do Produto -->
-  <div class="admin-modal" id="product-modal" aria-hidden="true">
-    <div class="admin-modal-backdrop" data-close-modal></div>
-    <div class="admin-modal-panel">
-      <div class="admin-modal-header">
-        <h2 class="form-title" id="modal-title">Novo Produto</h2>
-        <button class="btn btn-ghost" data-close-modal>Fechar</button>
-      </div>
-      
-      <form id="product-form" class="form-stack">
-        <input type="hidden" name="id" />
-        <input type="hidden" name="slug" />
-        
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Marca</label><input type="text" class="input" name="brand" required /></div>
-          <div class="form-group"><label class="form-label">Modelo</label><input type="text" class="input" name="model" required /></div>
-          <div class="form-group"><label class="form-label">Preço (R$)</label><input type="number" class="input" name="price" step="0.01" required /></div>
-          <div class="form-group">
-            <label class="form-label">Segmento</label>
-            <select class="select" name="segment" required>
-              <option value="entrada">Entrada</option>
-              <option value="intermediario">Intermediário</option>
-              <option value="intermediario-premium">Intermediário Premium</option>
-              <option value="premium">Premium</option>
-              <option value="ultra-premium">Ultra Premium</option>
+<!-- Modal do Editor de Texto Rico (Rich Text Editor) -->
+<div class="admin-modal" id="rich-note-modal" aria-hidden="true" style="z-index: 1050;">
+  <div class="admin-modal-backdrop" data-close-note></div>
+  <div class="admin-modal-panel" style="max-width: 750px; width: 95%;">
+     <div class="admin-modal-header">
+       <h2 class="form-title" style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:0.6rem;"><i class="gg-pen" style="--ggs: 1.1; color: #c0c1ff; margin-left: 4px;"></i> Editor de Anotação</h2>
+       <button class="btn btn-ghost" data-close-note><span class="material-symbols-outlined">close</span></button>
+     </div>
+     <form id="rich-note-form" style="display:flex; flex-direction:column; gap:1.2rem;">
+        <input type="hidden" id="note-ref-log" />
+        <input type="hidden" id="note-id" />
+        <div class="form-group" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem; background: #2a2a2c; padding: 1rem; border-radius: 8px; border: 1px solid rgba(144, 143, 160, 0.2);">
+            <div style="display:flex; flex-direction:column; justify-content:center;">
+               <label class="form-label" style="margin:0; font-weight:600;">Classe do Registro</label>
+               <span style="font-size:0.75rem; color:#c7c4d7;">Defina o tipo de visibilidade.</span>
+            </div>
+            <select id="note-type" class="select" required style="border:1px solid #c0c1ff;">
+               <option value="private">🔒 Registro Privado (Apenas Eu)</option>
+               <option value="public">📨 Registro Transmissível (Enviar para Outro)</option>
             </select>
-          </div>
-          <div class="form-group form-group--full"><label class="form-label">URL da Imagem</label><input type="url" class="input" name="image" required /></div>
-          <div class="form-group form-group--full"><label class="form-label">Resumo do Aparelho</label><textarea class="textarea" name="summary" rows="2" required></textarea></div>
         </div>
-
-        <hr>
-        <h3 class="form-title" style="font-size: var(--fs-lg);">Configuração de Destaque</h3>
-        <div class="form-grid">
-          <label class="form-group form-group--full" style="flex-direction: row; align-items: center; cursor: pointer;">
-            <input type="checkbox" name="active" checked style="width: 1.5rem; height: 1.5rem;" />
-            <span class="form-label" style="margin: 0;">Aparelho Ativo (Visível na loja)</span>
-          </label>
-          <label class="form-group form-group--full" style="flex-direction: row; align-items: center; cursor: pointer;">
-            <input type="checkbox" name="featured" style="width: 1.5rem; height: 1.5rem;" />
-            <span class="form-label" style="margin: 0;">Aparelho em Destaque (Ganhará uma Badge)</span>
-          </label>
-          <div class="form-group form-group--full"><label class="form-label">Texto da Badge (Ex: Custo Benefício)</label><input type="text" class="input" name="badge" /></div>
+        <div class="form-group" id="note-target-wrapper" style="display:none; grid-template-columns: 1fr 2fr; gap:1rem; padding: 0 1rem;">
+            <label class="form-label" style="margin:0; display:flex; align-items:center;">E-mail do Destinatário</label>
+            <input type="email" id="note-target-email" class="input" placeholder="auditor@empresa.com" />
         </div>
-
-        <hr>
-        <h3 class="form-title" style="font-size: var(--fs-lg);">Especificações Técnicas</h3>
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Tela</label><input type="text" class="input" name="specs.screen" required /></div>
-          <div class="form-group"><label class="form-label">Processador</label><input type="text" class="input" name="specs.chipset" required /></div>
-          <div class="form-group"><label class="form-label">Bateria</label><input type="text" class="input" name="specs.battery" required /></div>
-          <div class="form-group"><label class="form-label">Memória RAM</label><input type="text" class="input" name="specs.memory" required /></div>
-          <div class="form-group"><label class="form-label">Armazenamento</label><input type="text" class="input" name="specs.storage" required /></div>
-          <div class="form-group"><label class="form-label">Câmera Principal</label><input type="text" class="input" name="specs.cameraMain" required /></div>
+        <div class="form-group">
+            <input type="text" id="note-subject" class="input" placeholder="Assunto / Título do Contexto" required style="font-size: 1.1rem; font-weight: 500;" />
         </div>
-
-        <hr>
-        <h3 class="form-title" style="font-size: var(--fs-lg);">Motor de Recomendação (Notas 0 a 100)</h3>
-        <div class="form-grid">
-          <div class="form-group"><label class="form-label">Câmera</label><input type="number" class="input" name="scores.camera" min="0" max="100" required /></div>
-          <div class="form-group"><label class="form-label">Performance</label><input type="number" class="input" name="scores.performance" min="0" max="100" required /></div>
-          <div class="form-group"><label class="form-label">Bateria</label><input type="number" class="input" name="scores.battery" min="0" max="100" required /></div>
-          <div class="form-group"><label class="form-label">Tela</label><input type="number" class="input" name="scores.display" min="0" max="100" required /></div>
-          <div class="form-group"><label class="form-label">Durabilidade</label><input type="number" class="input" name="scores.durability" min="0" max="100" required /></div>
-          <div class="form-group"><label class="form-label">Longevidade</label><input type="number" class="input" name="scores.longevity" min="0" max="100" required /></div>
-          <div class="form-group form-group--full"><label class="form-label">Custo Benefício Geral</label><input type="number" class="input" name="scores.costBenefit" min="0" max="100" required /></div>
+        <div style="border: 1px solid rgba(144, 143, 160, 0.2); border-radius: 8px; overflow:hidden;">
+            <div id="rich-editor-toolbar" style="background: #2a2a2c; padding: 0.5rem 0.8rem; border-bottom: 1px solid rgba(144, 143, 160, 0.2); display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;">
+               <select id="rt-font" class="select" style="padding:0.25rem; height:auto; width:130px; font-size:0.75rem;">
+                 <option value="Inter">Sistema (Inter)</option><option value="Arial">Legado (Arial)</option>
+               </select>
+               <select id="rt-size" class="select" style="padding:0.25rem; height:auto; width:65px; font-size:0.75rem;">
+                 <option value="3" selected>16px</option>
+               </select>
+               <button type="button" class="btn btn-ghost" style="padding:0.2rem; min-width:32px; font-weight:bold;" onclick="document.execCommand('bold', false, null)">B</button>
+               <button type="button" class="btn btn-ghost" style="padding:0.2rem; min-width:32px; font-style:italic;" onclick="document.execCommand('italic', false, null)">I</button>
+               <div style="position:relative; display:flex; align-items:center;">
+                  <span style="font-size:0.5rem; position:absolute; bottom:-12px;">Cor</span>
+                  <input type="color" id="rt-color" style="width:24px; height:24px; padding:0; border:none; background:none; cursor:pointer;" />
+               </div>
+               <button type="button" class="btn btn-ghost" style="padding:0.2rem; font-size:0.85rem;" onclick="document.execCommand('insertUnorderedList', false, null)">• Topicos</button>
+            </div>
+            <div id="note-body" contenteditable="true" style="min-height: 250px; max-height: 50vh; overflow-y:auto; padding: 1.5rem; outline:none; background:#201f22; color:#e5e1e4; line-height:1.6; font-family:'Inter', sans-serif;"></div>
         </div>
-
-        <hr>
-        <h3 class="form-title" style="font-size: var(--fs-lg);">Tags do Sistema (Separar por vírgula)</h3>
-        <div class="form-grid" style="margin-bottom: 2rem;">
-          <div class="form-group form-group--full"><label class="form-label">Tags de Foco</label><input type="text" class="input" name="focusTags" placeholder="camera, bateria, equilibrio" required /></div>
-          <div class="form-group form-group--full"><label class="form-label">Tags de Perfil</label><input type="text" class="input" name="profileTags" placeholder="intermediario, premium" required /></div>
+        <div class="form-actions">
+           <button type="button" class="btn btn-secondary" data-close-note>Descartar</button>
+           <button type="submit" class="btn btn-primary" id="btn-save-note">Publicar / Enviar</button>
         </div>
-
-        <div class="form-actions" style="position: sticky; bottom: 0; background: var(--bg-card-elevated); padding-block: 1rem; border-top: 1px solid var(--border-soft); z-index: 10;">
-          <button type="button" class="btn btn-secondary" data-close-modal>Cancelar</button>
-          <button type="submit" class="btn btn-primary">Salvar Produto</button>
-        </div>
-      </form>
-    </div>
+     </form>
   </div>
+</div>
 
-  <!-- Modal de Detalhes da Auditoria -->
-  <div class="admin-modal" id="audit-modal" aria-hidden="true">
-    <div class="admin-modal-backdrop" data-close-modal></div>
-    <div class="admin-modal-panel" style="max-width: 800px;">
-      <div class="admin-modal-header">
-        <h2 class="form-title">Detalhes da Alteração</h2>
-        <button class="btn btn-ghost" data-close-modal>Fechar</button>
-      </div>
-      <div id="audit-modal-content" style="padding-bottom: 1.5rem;"></div>
-    </div>
-  </div>
-
-  <!-- Modal Avançado de Comunicação e Anotações (Inbox/Outbox/Notes) -->
-  <div class="admin-modal" id="inbox-modal" aria-hidden="true" style="z-index: 1000;">
-    <div class="admin-modal-backdrop" data-close-inbox></div>
-    <div class="admin-modal-panel" style="max-width: 900px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding: 0; overflow: hidden; background: var(--bg-card); border: 1px solid var(--border-soft);">
-      
-      <div style="display: flex; height: 100%;">
-        <!-- Sidebar de Abas (Vertical Tabs) -->
-        <div style="width: 260px; background: var(--bg-card-elevated); border-right: 1px solid var(--border-soft); display: flex; flex-direction: column;">
-          <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-soft);">
-             <h2 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:0.5rem; color:var(--text-primary); font-weight:600;">📬 Comunicação B2B</h2>
-          </div>
-          <style>
-             .inbox-tab { padding: 1rem 1.5rem; border: none; background: transparent; color: var(--text-muted); text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.8rem; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; border-left: 3px solid transparent; }
-             .inbox-tab:hover { background: rgba(255,255,255,0.03); color: var(--text-primary); }
-             .inbox-tab.active { background: rgba(255,255,255,0.05); border-left-color: var(--brand-primary); color: var(--brand-primary); }
-          </style>
-          <nav id="inbox-tabs" style="display: flex; flex-direction: column; padding: 1rem 0;">
-             <button class="inbox-tab active" data-tab="inbox"><span style="font-size:1.2rem;">📥</span> Caixa de Entrada</button>
-             <button class="inbox-tab" data-tab="outbox"><span style="font-size:1.2rem;">📤</span> Itens Enviados</button>
-             <button class="inbox-tab" data-tab="notes"><span style="font-size:1.2rem;">📝</span> Minhas Anotações</button>
-             <button class="inbox-tab" data-tab="trash"><span style="font-size:1.2rem;">🗑️</span> Lixeira Oculta</button>
-          </nav>
-          <div style="padding: 1.5rem; margin-top: auto; border-top: 1px solid var(--border-soft);">
-             <button class="btn btn-primary" id="btn-compose-global" style="width:100%; justify-content:center;">➕ Cadastrar Nota/Msg</button>
-          </div>
-        </div>
-        
-        <!-- Conteúdo da Aba Dinâmico -->
-        <div style="flex-grow: 1; display:flex; flex-direction: column; background: var(--bg-card); position:relative;">
-           <div style="padding: 1rem 2rem; border-bottom: 1px solid var(--border-soft); display:flex; justify-content:space-between; align-items:center;">
-              <h3 id="inbox-pane-title" style="margin:0; color:var(--text-primary); font-size:1.1rem; font-weight: 600;">Carregando...</h3>
-              <button class="btn btn-ghost" data-close-inbox style="font-weight:bold; font-size:1.2rem; padding: 0.2rem 0.6rem;">✕</button>
-           </div>
-           <!-- Tela Listagem -->
-           <div id="inbox-pane-content" style="flex-grow:1; overflow-y:auto; padding: 1.5rem 2rem; scrollbar-width: thin;">
-              <!-- Cards Injetados Via JS -->
-           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal do Editor de Texto Rico (Rich Text Editor) -->
-  <div class="admin-modal" id="rich-note-modal" aria-hidden="true" style="z-index: 1050;">
-    <div class="admin-modal-backdrop" data-close-note></div>
-    <div class="admin-modal-panel" style="max-width: 750px; width: 95%; background: var(--bg-card);">
-       <div class="admin-modal-header" style="border-bottom: 1px solid var(--border-soft); padding-bottom: 1rem;">
-         <h2 class="form-title" style="margin:0; font-size:1.2rem; display:flex; align-items:center; gap:0.6rem;"><i class="gg-pen" style="--ggs: 1.1; color: var(--brand-primary); margin-left: 4px;"></i> Editor de Anotação</h2>
-         <button class="btn btn-ghost" data-close-note>Fechar</button>
-       </div>
-       <form id="rich-note-form" style="padding-top: 1.5rem; display:flex; flex-direction:column; gap:1.2rem;">
-          <input type="hidden" id="note-ref-log" />
-          <input type="hidden" id="note-id" />
-          
-          <div class="form-group" style="display:grid; grid-template-columns: 1fr 2fr; gap:1rem; background: var(--bg-card-elevated); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-soft);">
-              <div style="display:flex; flex-direction:column; justify-content:center;">
-                 <label class="form-label" style="margin:0; font-weight:600;">Classe do Registro</label>
-                 <span style="font-size:0.75rem; color:var(--text-muted);">Defina o tipo de visibilidade.</span>
-              </div>
-              <select id="note-type" class="select" required style="border:1px solid var(--brand-primary);">
-                 <option value="private">🔒 Registro Privado (Apenas Eu)</option>
-                 <option value="public">📨 Registro Transmissível (Enviar para Outro)</option>
-              </select>
-          </div>
-          
-          <div class="form-group" id="note-target-wrapper" style="display:none; grid-template-columns: 1fr 2fr; gap:1rem; padding: 0 1rem;">
-              <label class="form-label" style="margin:0; display:flex; align-items:center;">E-mail do Destinatário</label>
-              <input type="email" id="note-target-email" class="input" placeholder="auditor@empresa.com" />
-          </div>
-          
-          <div class="form-group">
-              <input type="text" id="note-subject" class="input" placeholder="Assunto / Título do Contexto" required style="font-size: 1.1rem; font-weight: 500; border-color: var(--border-soft);" />
-          </div>
-          
-          <!-- Barra de Ferramentas WYSIWYG -->
-          <div style="border: 1px solid var(--border-soft); border-radius: 8px; overflow:hidden;">
-              <div id="rich-editor-toolbar" style="background: var(--bg-card-elevated); padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border-soft); display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;">
-                 <select id="rt-font" class="select" style="padding:0.25rem; height:auto; width:130px; font-size:0.75rem; border-color:var(--border-soft); background:transparent;">
-                   <option value="Inter">Sistema (Inter)</option>
-                   <option value="Arial">Legado (Arial)</option>
-                   <option value="Verdana">Sólida (Verdana)</option>
-                   <option value="Times New Roman">Documento (Times)</option>
-                   <option value="Courier New">Código (Courier)</option>
-                   <option value="Georgia">Editorial (Georgia)</option>
-                 </select>
-                 <select id="rt-size" class="select" style="padding:0.25rem; height:auto; width:65px; font-size:0.75rem; border-color:var(--border-soft); background:transparent;">
-                   <option value="1">10px</option>
-                   <option value="2">13px</option>
-                   <option value="3" selected>16px</option>
-                   <option value="4">18px</option>
-                   <option value="5">24px</option>
-                   <option value="6">32px</option>
-                 </select>
-                 <div style="height:20px; width:1px; background:var(--border-soft); margin:0 4px;"></div>
-                 <button type="button" class="btn btn-ghost" style="padding:0.2rem 0.6rem; min-width:32px; font-weight:bold; border-radius:4px;" onclick="document.execCommand('bold', false, null)">B</button>
-                 <button type="button" class="btn btn-ghost" style="padding:0.2rem 0.6rem; min-width:32px; font-style:italic; font-family:serif; border-radius:4px;" onclick="document.execCommand('italic', false, null)">I</button>
-                 <button type="button" class="btn btn-ghost" style="padding:0.2rem 0.6rem; min-width:32px; text-decoration:underline; border-radius:4px;" onclick="document.execCommand('underline', false, null)">U</button>
-                 <button type="button" class="btn btn-ghost" style="padding:0.2rem 0.6rem; min-width:32px; text-decoration:line-through; border-radius:4px;" onclick="document.execCommand('strikeThrough', false, null)">S</button>
-                 <div style="position:relative; display:flex; align-items:center;">
-                    <span style="font-size:0.75rem; position:absolute; bottom:-10px; left:2px; pointer-events:none;">Cor</span>
-                    <input type="color" id="rt-color" style="width:28px; height:28px; padding:0; border:none; background:none; cursor:pointer;" title="Cor do Texto" />
-                 </div>
-                 <div style="height:20px; width:1px; background:var(--border-soft); margin:0 4px;"></div>
-                 <button type="button" class="btn btn-ghost" style="padding:0.2rem 0.6rem; font-size:0.85rem; border-radius:4px;" onclick="document.execCommand('insertUnorderedList', false, null)">• Tópicos</button>
-                 <button type="button" class="btn btn-ghost" style="padding:0.2rem 0.6rem; font-size:0.85rem; border-radius:4px;" onclick="document.execCommand('insertOrderedList', false, null)">1. Lista Num</button>
-              </div>
-              <!-- Área Editável -->
-              <div id="note-body" contenteditable="true" style="min-height: 250px; max-height: 50vh; overflow-y:auto; padding: 1.5rem; outline:none; background:var(--bg-card); color:var(--text-primary); line-height:1.6; font-family:'Inter', sans-serif;"></div>
-          </div>
-          
-          <div style="display:flex; justify-content:flex-end; gap:0.8rem; margin-top:0.5rem;">
-             <button type="button" class="btn btn-secondary" data-close-note>Descartar</button>
-             <button type="submit" class="btn btn-primary" id="btn-save-note">Publicar Registro / Enviar</button>
-          </div>
-       </form>
-    </div>
-  </div>
-
-  <script type="module" src="./js/admin-controller.js"></script>
+<script type="module" src="./js/admin-controller.js"></script>
 </body>
 </html>

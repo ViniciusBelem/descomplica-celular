@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for cinematic feel */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353437;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0c1ff;
+        }
+        .reading-progress-bar {
+            transform-origin: 0%;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#8083ff",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-secondary-container": "#003f38",
+                        "tertiary": "#ffb783",
+                        "surface-bright": "#39393b",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "outline-variant": "#464554",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "primary": "#c0c1ff",
+                        "on-error": "#690005",
+                        "on-primary-container": "#0d0096",
+                        "on-surface": "#e5e1e4",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-container": "#04b4a2",
+                        "inverse-on-surface": "#313032",
+                        "surface-container-lowest": "#0e0e10",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-primary": "#1000a9",
+                        "on-tertiary": "#4f2500",
+                        "on-tertiary-fixed": "#301400",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-low": "#1c1b1d",
+                        "secondary-fixed": "#71f8e4",
+                        "inverse-primary": "#494bd6",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-variant": "#353437",
+                        "tertiary-container": "#d97721",
+                        "error": "#ffb4ab",
+                        "surface": "#131315",
+                        "background": "#131315",
+                        "surface-container-high": "#2a2a2c",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#e1e0ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353437",
+                        "surface-container": "#201f22",
+                        "outline": "#908fa0",
+                        "inverse-surface": "#e5e1e4",
+                        "on-background": "#e5e1e4",
+                        "surface-dim": "#131315",
+                        "on-primary-fixed": "#07006c",
+                        "on-secondary-fixed-variant": "#005048",
+                        "secondary": "#4fdbc8",
+                        "on-secondary": "#003731",
+                        "secondary-fixed-dim": "#4fdbc8",
+                        "on-tertiary-container": "#452000"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30 selection:text-primary-fixed">
+<!-- Reading Progress Indicator (Fixed to Top) -->
+<div class="fixed top-0 left-0 w-full h-1 z-[60] bg-surface-container-low">
+<div class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-out" style="width: 35%;"></div>
+</div>
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 bg-[#353437]/60 backdrop-blur-xl flex justify-between items-center px-8 h-16 max-w-full mx-auto shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tighter text-[#c0c1ff] bg-clip-text bg-gradient-to-r from-[#c0c1ff] to-[#8083ff]">Descomplica Celular</span>
+</div>
+<div class="hidden md:flex items-center space-x-8 font-['Inter'] tracking-tight text-sm font-medium">
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Discover</a>
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Compare</a>
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Specs</a>
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Advisors</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#c0c1ff] hover:opacity-80 transition-opacity">notifications</button>
+<button class="material-symbols-outlined text-[#c0c1ff] hover:opacity-80 transition-opacity">contrast</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img alt="User Profile" data-alt="minimalist user avatar silhouette on a dark tech-themed background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmmL8g9kDJU7djXanMqoGkOZArT20sPO9S0YaSWzqTXnCjWvuxx4jpM03EGhdmChx9y-8y-BSajhTocOgz7Ya_6GUV5mvAgawxpGb-eaTFossIQZxeawCkPL8gHyl8ZiLyj78CBoychokRQruWSPrfSR08rWPcgxm8WZZnFgi9WwqRF7oxZGCnywSrDm4a5mrcoNu7funDAkLEXOEIVs3gM9fUu9ntFcHAKTIt3i09sC_u-brpBKtpa0fxceWn8B3pMRTOYBaeu54"/>
+</div>
+</div>
+</nav>
+<!-- Side Navigation Shell (Suppressed on focus screens, but included per JSON for desktop layout reference) -->
+<aside class="fixed left-0 top-0 h-full z-40 h-screen w-64 hidden lg:flex flex-col border-r border-[#464554]/15 bg-[#1c1b1d]">
+<div class="p-8 pb-4">
+<div class="text-lg font-black text-[#c0c1ff]">Descomplica</div>
+<div class="text-[10px] font-semibold uppercase tracking-widest text-[#e5e1e4]/40">Smart Advisor</div>
+</div>
+<nav class="flex-1 px-4 mt-8 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out font-['Inter'] text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out font-['Inter'] text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span>Explore</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out font-['Inter'] text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">bookmarks</span>
+<span>Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out font-['Inter'] text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#2a2a2c] text-[#c0c1ff] rounded-md transition-all duration-400 ease-quart-in-out font-['Inter'] text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-32 pb-32 px-6 lg:px-0">
+<div class="max-w-3xl mx-auto">
+<!-- Hero Header -->
+<header class="mb-24 text-center">
+<div class="inline-block px-3 py-1 mb-6 rounded-full bg-primary/10 border border-primary/20">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-primary">Last Updated: October 2023</span>
+</div>
+<h1 class="text-[3.5rem] font-bold tracking-[-0.04em] leading-tight text-primary-fixed-dim mb-6">
+                    Terms &amp; Privacy
+                </h1>
+<p class="text-xl text-on-surface-variant font-medium leading-relaxed max-w-2xl mx-auto">
+                    Transparency is the foundation of our advisory. Here is how Descomplica Celular handles your data and our mutual commitment.
+                </p>
+</header>
+<!-- Table of Contents Floating (Left side of article) -->
+<div class="hidden xl:block fixed left-[calc(16rem+2rem)] top-48 w-48 text-left">
+<h4 class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant/40 mb-4">On this page</h4>
+<ul class="space-y-4 text-sm font-medium">
+<li><a class="text-primary hover:text-primary transition-colors" href="#introduction">Introduction</a></li>
+<li><a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#data-collection">Data Collection</a></li>
+<li><a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#usage">Usage Rights</a></li>
+<li><a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#privacy">Privacy Shield</a></li>
+<li><a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#cookies">Cookie Policy</a></li>
+</ul>
+</div>
+<!-- Content Body -->
+<article class="space-y-20">
+<!-- Section 1 -->
+<section class="scroll-mt-32" id="introduction">
+<div class="flex items-center gap-4 mb-8">
+<div class="h-px flex-1 bg-outline-variant/15"></div>
+<span class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-secondary">01</span>
+<div class="h-px flex-1 bg-outline-variant/15"></div>
+</div>
+<h2 class="text-[2rem] font-semibold tracking-[-0.02em] text-on-surface mb-8">Introduction</h2>
+<div class="space-y-6 text-[0.875rem] leading-[1.7] text-on-surface-variant/90">
+<p>
+                            Welcome to Descomplica Celular. These Terms of Service and Privacy Policy govern your use of our platform, including our smartphone comparison engine, advisor network, and specialized content. By accessing our services, you agree to the conditions outlined in this document.
+                        </p>
+<p>
+                            Our goal is to provide unbiased, data-driven insights to help you make the best choice for your next mobile device. We operate with a "user-first" philosophy, meaning your decision-making journey is protected from intrusive advertising and deceptive tracking.
+                        </p>
+</div>
+</section>
+<!-- Section 2: Image Breakdown -->
+<section class="relative h-[400px] w-full rounded-xl overflow-hidden group">
+<img alt="Smartphone components" class="w-full h-full object-cover grayscale opacity-50 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-70 scale-105" data-alt="Close-up of sleek modern smartphone internal components with blue and teal neon accents, cinematic macro photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIDh6UlqCdlcgs_5hJTXB0vM8uxGskFwRCZVzrcWjgOFJHPS69w4Evp3EYnPKumQn_6VWiGnfr6Ip08d3HdfQdGOF6ASiRNsbDBGx9bgWcNh76kLUFdK-WNykNYrwpIIyq5K7MToqJLWta3iDumK_9WLlsMZ5b2n79FP9WHjvEmuVYlGWLlybKwTMBNabYkg3oMjqW6frli5O_8TKI-x8gWg9ApJcLrAhZOKC2MGg-IPaqreXPR7jh-3xZfqIzhvC5OoXNBH-YmAQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8">
+<h3 class="text-xl font-bold text-white mb-2">Designed for Clarity</h3>
+<p class="text-sm text-on-surface-variant">We believe legal documents should be as clear as our smartphone specs.</p>
+</div>
+</section>
+<!-- Section 3 -->
+<section class="scroll-mt-32" id="data-collection">
+<div class="flex items-center gap-4 mb-8">
+<div class="h-px flex-1 bg-outline-variant/15"></div>
+<span class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-secondary">02</span>
+<div class="h-px flex-1 bg-outline-variant/15"></div>
+</div>
+<h2 class="text-[2rem] font-semibold tracking-[-0.02em] text-on-surface mb-8">Data Collection</h2>
+<div class="grid md:grid-cols-2 gap-8">
+<div class="p-8 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary mb-4" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<h4 class="font-bold text-lg mb-2">What we track</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Anonymous hardware preferences, comparison history, and regional device availability to improve our recommendation algorithms.
+                            </p>
+</div>
+<div class="p-8 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary mb-4" style="font-variation-settings: 'FILL' 1;">security</span>
+<h4 class="font-bold text-lg mb-2">What we don't</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                We never track your location outside of the app, sell your contact info, or monitor your private browsing habits on other sites.
+                            </p>
+</div>
+</div>
+</section>
+<!-- Section 4 -->
+<section class="scroll-mt-32" id="usage">
+<div class="flex items-center gap-4 mb-8">
+<div class="h-px flex-1 bg-outline-variant/15"></div>
+<span class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-secondary">03</span>
+<div class="h-px flex-1 bg-outline-variant/15"></div>
+</div>
+<h2 class="text-[2rem] font-semibold tracking-[-0.02em] text-on-surface mb-8">Usage Rights</h2>
+<div class="space-y-6 text-[0.875rem] leading-[1.7] text-on-surface-variant/90">
+<p>
+                            All content provided on Descomplica Celular, including but not limited to spec sheets, comparison logic, and original reviews, is the intellectual property of Descomplica Celular.
+                        </p>
+<ul class="space-y-4">
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<span>Personal use of comparisons for individual purchasing decisions is fully permitted.</span>
+</li>
+<li class="flex gap-4">
+<span class="material-symbols-outlined text-primary text-sm mt-1">block</span>
+<span>Commercial scraping or republishing of our specialized "Smart Advisor" scoring is strictly prohibited without written consent.</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- CTA Section / Glassmorphism -->
+<section class="p-12 rounded-xl bg-[#353437]/40 backdrop-blur-2xl border border-primary/20 text-center relative overflow-hidden">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px]"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary/10 rounded-full blur-[100px]"></div>
+<h3 class="text-2xl font-bold mb-4 relative z-10">Have questions about your data?</h3>
+<p class="text-on-surface-variant mb-8 max-w-md mx-auto relative z-10">Our privacy officers are ready to help you understand how we protect your digital footprint.</p>
+<button class="px-8 py-3 rounded-md bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-sm tracking-tight transition-transform active:scale-95 shadow-lg shadow-primary/20 relative z-10">
+                        Contact Privacy Team
+                    </button>
+</section>
+</article>
+<!-- Footer Small -->
+<footer class="mt-32 pt-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/40">
+                    © 2023 Descomplica Celular. All Rights Reserved.
+                </div>
+<div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">
+<a class="hover:text-primary transition-colors" href="#">Twitter</a>
+<a class="hover:text-primary transition-colors" href="#">LinkedIn</a>
+<a class="hover:text-primary transition-colors" href="#">Status</a>
+</div>
+</footer>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 pb-safe bg-[#131315]/80 backdrop-blur-2xl lg:hidden border-t border-[#464554]/20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<button class="flex flex-col items-center justify-center text-[#e5e1e4]/40">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#e5e1e4]/40">
+<span class="material-symbols-outlined">compare_arrows</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Compare</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#e5e1e4]/40">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Saved</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#c0c1ff] scale-110">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_outline</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Account</span>
+</button>
+</nav>
+</body></html>

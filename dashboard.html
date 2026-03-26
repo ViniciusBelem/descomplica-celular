@@ -1,212 +1,153 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html class="dark" lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Descomplica Celular</title>
-  <meta
-    name="description"
-    content="Painel do usuário no Descomplica Celular com métricas, histórico e visão geral das análises."
-  />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-
-  <link rel="stylesheet" href="./css/global.css" />
-  <link rel="stylesheet" href="./css/layout.css" />
-  <link rel="stylesheet" href="./css/components.css" />
-  <link rel="stylesheet" href="./css/dashboard.css" />
-
-  <script>
-    (function() {
-      var theme = localStorage.getItem('descomplica_theme');
-      if (theme === 'light' || (!theme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard | Descomplica Celular</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary-container": "#8083ff", "primary-fixed-dim": "#c0c1ff", "primary": "#c0c1ff", "on-surface": "#e5e1e4", "surface-container-lowest": "#0e0e10", "on-surface-variant": "#c7c4d7", "surface-container-low": "#1c1b1d", "inverse-primary": "#494bd6", "surface-variant": "#353437", "error": "#ffb4ab", "surface": "#131315", "background": "#131315", "surface-container-high": "#2a2a2c", "secondary": "#4fdbc8", "tertiary": "#ffb783"
+                },
+                fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
+            },
+        },
+    }
+</script>
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #131315; color: #e5e1e4; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-panel { background: rgba(53, 52, 55, 0.6); backdrop-filter: blur(24px); }
+    /* Adapters for legacy JS output */
+    .match-list-item { background: #2a2a2c; border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; border: 1px solid rgba(144, 143, 160, 0.1); }
+    .match-main-info { display: flex; align-items: center; gap: 1rem; }
+    .match-main-pic { width: 4rem; height: 4rem; border-radius: 0.5rem; object-fit: contain; background: #353437; padding: 4px; }
+</style>
 </head>
-<body class="dashboard-page">
-  <div class="site-shell">
-    <header class="site-header">
-      <div class="container-lg site-header__inner">
-        <a href="./index.html" class="site-brand" aria-label="Página inicial do Descomplica Celular">
-          <span class="site-brand__mark">D</span>
-          <span class="site-brand__text">
-            <span class="site-brand__title">Descomplica Celular</span>
-            <span class="site-brand__subtitle">Recomendação inteligente de smartphones</span>
-          </span>
-        </a>
+<body class="bg-background text-on-surface selection:bg-primary/30">
 
-        <nav class="site-nav" aria-label="Navegação principal">
-          <div class="site-nav__links">
-            <a class="nav-link" href="./index.html">Início</a>
-            <a class="nav-link" href="./index.html#consultor">Consultor</a>
-            <a class="nav-link" href="./index.html#catalogo">Catálogo</a>
-          </div>
+<header class="fixed top-0 w-full z-30 h-16 bg-[#353437]/60 backdrop-blur-xl flex justify-between items-center px-8 border-b border-[#464554]/20 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+<div class="flex items-center gap-8">
+  <a href="./index.html" class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+      <span class="font-bold text-[#1000a9]">D</span>
+    </div>
+    <span class="font-bold text-primary tracking-tight">Descomplica</span>
+  </a>
+  <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
+    <a href="./index.html" class="text-on-surface-variant hover:text-on-surface transition-colors">Início</a>
+    <a href="./index.html#consultor" class="text-on-surface-variant hover:text-on-surface transition-colors">Consultor</a>
+    <a href="./index.html#catalogo" class="text-on-surface-variant hover:text-on-surface transition-colors">Catálogo</a>
+  </nav>
+</div>
+<div class="flex items-center gap-6">
+  <span class="px-2 py-1 rounded bg-surface-container-high text-[10px] font-bold text-primary border border-primary/20" id="api-status-badge">API</span>
+  <div class="flex items-center gap-3">
+    <div class="text-right hidden sm:block">
+      <p class="text-xs font-bold text-on-surface" id="user-name-display">Carregando...</p>
+      <p class="text-[10px] text-on-surface-variant/50 uppercase tracking-tighter" id="user-email-display">Acessando...</p>
+    </div>
+    <div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/20 text-on-surface font-bold shadow-inner" id="user-avatar-topbar">?</div>
+    <button id="btn-logout" class="text-xs font-bold text-error ml-2 hover:underline">Sair</button>
+  </div>
+</div>
+</header>
 
-          <div class="site-nav__actions">
-            <span class="badge" id="api-status-badge" data-state="loading">Conectando...</span>
+<main class="pt-24 pb-16 min-h-screen">
+<div class="max-w-7xl mx-auto px-8">
 
-            <div class="dashboard-profile-menu profile-menu">
-              <button
-                id="profile-menu-trigger"
-                class="dashboard-profile-trigger"
-                type="button"
-                aria-expanded="false"
-                aria-haspopup="true"
-                aria-controls="profile-dropdown"
-              >
-                <span class="dashboard-profile-trigger__avatar" id="user-avatar-topbar">?</span>
-                <span class="dashboard-profile-trigger__text">
-                  <span class="dashboard-profile-trigger__label" id="user-name-display">Visitante</span>
-                  <span class="dashboard-profile-trigger__sub">Conta autenticada</span>
-                </span>
-              </button>
+<section class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<h2 class="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-2">Painel de Bordo Autenticado</h2>
+<h3 class="text-4xl lg:text-5xl font-black tracking-tighter text-on-surface leading-tight">
+    Visão Geral <br/><span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-container">Smart Dashboard</span>
+</h3>
+</div>
+<div class="flex gap-4">
+<button id="btn-refresh-data" class="px-6 py-3 rounded-md bg-surface-container-high text-on-surface font-semibold text-sm hover:bg-surface-container-highest border border-outline-variant/10 shadow-lg">Atualizar Painel</button>
+<a href="./index.html#consultor" class="px-6 py-3 rounded-md bg-gradient-to-br from-primary to-primary-container text-[#1000a9] font-bold text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all">Nova Análise</a>
+</div>
+</div>
 
-              <div
-                id="profile-dropdown"
-                class="profile-dropdown"
-                aria-hidden="true"
-              >
-                <div class="profile-dropdown__list">
-                  <a class="profile-dropdown__item" href="./index.html">Ir para início</a>
-                  <a class="profile-dropdown__item" href="./privacidade.html">Privacidade</a>
-                  <a class="profile-dropdown__item" href="./termos.html">Termos</a>
-                  <a class="profile-dropdown__item" href="#" id="btn-logout">Sair da conta</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </header>
-
-    <main class="site-main">
-      <section class="section">
-        <div class="container-lg dashboard-layout">
-          <aside class="dashboard-sidebar">
-            <div class="dashboard-user">
-              <div class="dashboard-user__avatar" id="user-avatar-sidebar">?</div>
-              <div class="dashboard-user__content">
-                <div class="dashboard-user__name" id="user-name-display">Visitante</div>
-                <div class="dashboard-user__email" id="user-email-display">Sessão indisponível</div>
-              </div>
-            </div>
-
-            <div class="dashboard-sidebar__group">
-              <h2 class="dashboard-sidebar__title">Sobre este painel</h2>
-              <p class="dashboard-sidebar__text">
-                Aqui você acompanha a evolução da sua relação com a plataforma, visualiza
-                métricas e enxerga melhor a proposta do produto em funcionamento.
-              </p>
-            </div>
-
-            <div class="dashboard-sidebar__group">
-              <h2 class="dashboard-sidebar__title">O que você verá</h2>
-              <div class="dashboard-chip-list">
-                <span class="chip">Métricas</span>
-                <span class="chip">Histórico</span>
-                <span class="chip">Tendências</span>
-                <span class="chip">Status</span>
-              </div>
-            </div>
-
-            <div class="dashboard-sidebar__actions">
-              <button id="btn-refresh-data" class="btn btn-primary">Atualizar painel</button>
-              <a class="btn btn-secondary" href="./index.html#consultor">Nova análise</a>
-              <a class="btn btn-ghost" href="./index.html">Voltar ao início</a>
-            </div>
-          </aside>
-
-          <div class="dashboard-main dashboard-stack">
-            <div class="dashboard-topbar">
-              <div class="dashboard-topbar__content">
-                <span class="eyebrow">Painel autenticado</span>
-                <h1 class="dashboard-topbar__title">Visão geral da sua experiência no projeto</h1>
-                <p class="dashboard-topbar__description">
-                  Este painel resume análises registradas, comportamento da base e sinais
-                  de tendência que ajudam a mostrar o valor do Descomplica Celular como produto.
-                </p>
-              </div>
-
-              <div class="dashboard-topbar__actions">
-                <span class="chip">Sincronização em tempo real futura</span>
-                <span class="chip">Base pronta para expansão</span>
-              </div>
-            </div>
-
-            <div class="dashboard-metrics">
-              <section class="metric-card" id="api-latency-container" aria-label="Latência de sincronização">
-                <div class="metric-value">—</div>
-                <div class="metric-subtitle">Latência estimada da sincronização</div>
-              </section>
-
-              <section class="metric-card" id="devices-analyzed-container" aria-label="Total de análises">
-                <div class="metric-value">0</div>
-                <div class="metric-subtitle">Análises registradas</div>
-              </section>
-
-              <section class="metric-card" id="avg-budget-container" aria-label="Orçamento médio analisado">
-                <div class="metric-value">R$ 0,00</div>
-                <div class="metric-subtitle">Investimento médio analisado</div>
-              </section>
-            </div>
-
-            <section class="dashboard-panel">
-              <div class="dashboard-panel__header">
-                <div>
-                  <h2 class="dashboard-panel__title">Tendência das prioridades</h2>
-                  <p class="dashboard-panel__description">
-                    Visualização resumida dos focos mais frequentes nas análises registradas.
-                  </p>
-                </div>
-              </div>
-
-              <div id="chart-container" class="dashboard-chart-shell"></div>
-            </section>
-
-            <div class="dashboard-insight-grid">
-              <section class="dashboard-insight-card">
-                <h2 class="dashboard-insight-card__title">Leitura do produto</h2>
-                <p class="dashboard-insight-card__text">
-                  O painel reforça a percepção de plataforma real, mostrando que a recomendação
-                  não é apenas uma interface bonita, mas parte de um sistema com estrutura.
-                </p>
-              </section>
-
-              <section class="dashboard-insight-card">
-                <h2 class="dashboard-insight-card__title">Próxima evolução natural</h2>
-                <p class="dashboard-insight-card__text">
-                  Em fases futuras, este ambiente pode crescer para histórico detalhado,
-                  favoritos, preferências salvas e personalização mais profunda.
-                </p>
-              </section>
-            </div>
-
-            <section class="dashboard-panel">
-              <div class="dashboard-panel__header">
-                <div>
-                  <h2 class="dashboard-panel__title">Análises recentes</h2>
-                  <p class="dashboard-panel__description">
-                    Últimos registros disponíveis para o usuário autenticado.
-                  </p>
-                </div>
-              </div>
-
-              <div id="recent-matches-container" class="match-list dashboard-history-shell"></div>
-            </section>
-          </div>
-        </div>
-      </section>
-    </main>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Metric 1: Latency -->
+  <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/5 group hover:bg-surface-container-high transition-colors" id="api-latency-container">
+    <div class="flex justify-between items-start mb-4">
+      <span class="material-symbols-outlined text-secondary text-3xl">bolt</span>
+    </div>
+    <p class="text-on-surface-variant/60 text-xs font-bold uppercase tracking-widest mb-1">Latência da API</p>
+    <p class="text-4xl font-bold text-on-surface tracking-tighter metric-value">--ms</p>
+  </div>
+  
+  <!-- Metric 2: Analyses -->
+  <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/5 group hover:bg-surface-container-high transition-colors" id="devices-analyzed-container">
+    <div class="flex justify-between items-start mb-4">
+      <span class="material-symbols-outlined text-primary text-3xl">monitoring</span>
+    </div>
+    <p class="text-on-surface-variant/60 text-xs font-bold uppercase tracking-widest mb-1">Análises Realizadas</p>
+    <p class="text-4xl font-bold text-on-surface tracking-tighter metric-value">0</p>
   </div>
 
-  <script type="module" src="./js/global-auth.js"></script>
-  <script type="module" src="./js/dashboard-controller-v2.js"></script>
+  <!-- Metric 3: Budget -->
+  <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/5 group hover:bg-surface-container-high transition-colors" id="avg-budget-container">
+    <div class="flex justify-between items-start mb-4">
+      <span class="material-symbols-outlined text-tertiary text-3xl">payments</span>
+    </div>
+    <p class="text-on-surface-variant/60 text-xs font-bold uppercase tracking-widest mb-1">Budget Médio Buscado</p>
+    <p class="text-4xl font-bold text-on-surface tracking-tighter metric-value">R$ 0,00</p>
+  </div>
+</div>
+</section>
+
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+  <div class="bg-surface-container-low rounded-2xl p-6 border border-outline-variant/5 shadow-2xl">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+         <span class="material-symbols-outlined text-sm text-primary">pie_chart</span>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold text-on-surface">Tendência de Prioridades</h4>
+        <p class="text-[10px] uppercase font-bold text-on-surface-variant/50">Gráfico gerado com o seu histórico</p>
+      </div>
+    </div>
+    <!-- Contenedor do ApexCharts -->
+    <div id="chart-container" class="w-full flex justify-center items-center h-[300px]"></div>
+  </div>
+  
+  <div class="bg-surface-container-low rounded-2xl p-6 border border-outline-variant/5 shadow-2xl overflow-y-auto max-h-[450px] custom-scrollbar">
+    <div class="flex items-center gap-3 mb-6 sticky top-0 bg-surface-container-low pb-2 z-10 border-b border-outline-variant/10">
+      <div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center">
+         <span class="material-symbols-outlined text-sm text-secondary">history</span>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold text-on-surface">Histórico Recente</h4>
+        <p class="text-[10px] uppercase font-bold text-on-surface-variant/50">Últimas recomendações da sua conta</p>
+      </div>
+    </div>
+    <!-- The Javascript will render items inside this logic -->
+    <div id="recent-matches-container" class="space-y-4"></div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<script type="module" src="./js/global-auth.js"></script>
+<script type="module" src="./js/dashboard-controller-v2.js"></script>
+
+<!-- Add a silent script to force ApexCharts to use a dark theme internally in dashboards if possible -->
+<script>
+  window.addEventListener('load', () => {
+    // If we want we can hook into ApexCharts global here, but controller handles it fine
+  });
+</script>
 </body>
 </html>

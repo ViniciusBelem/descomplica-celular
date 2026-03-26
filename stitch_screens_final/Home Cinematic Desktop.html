@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Descomplica Celular | Smart Advisor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#8083ff",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-secondary-container": "#003f38",
+                        "tertiary": "#ffb783",
+                        "surface-bright": "#39393b",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "outline-variant": "#464554",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "primary": "#c0c1ff",
+                        "on-error": "#690005",
+                        "on-primary-container": "#0d0096",
+                        "on-surface": "#e5e1e4",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-container": "#04b4a2",
+                        "inverse-on-surface": "#313032",
+                        "surface-container-lowest": "#0e0e10",
+                        "on-surface-variant": "#c7c4d7",
+                        "on-primary": "#1000a9",
+                        "on-tertiary": "#4f2500",
+                        "on-tertiary-fixed": "#301400",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface-container-low": "#1c1b1d",
+                        "secondary-fixed": "#71f8e4",
+                        "inverse-primary": "#494bd6",
+                        "on-secondary-fixed": "#00201c",
+                        "surface-variant": "#353437",
+                        "tertiary-container": "#d97721",
+                        "error": "#ffb4ab",
+                        "surface": "#131315",
+                        "background": "#131315",
+                        "surface-container-high": "#2a2a2c",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#e1e0ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353437",
+                        "surface-container": "#201f22",
+                        "outline": "#908fa0",
+                        "inverse-surface": "#e5e1e4",
+                        "on-background": "#e5e1e4",
+                        "surface-dim": "#131315",
+                        "on-primary-fixed": "#07006c",
+                        "on-secondary-fixed-variant": "#005048",
+                        "secondary": "#4fdbc8",
+                        "on-secondary": "#003731",
+                        "secondary-fixed-dim": "#4fdbc8",
+                        "on-tertiary-container": "#452000"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .cinematic-mask {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .glass-panel {
+            background: rgba(53, 52, 55, 0.6);
+            backdrop-filter: blur(24px);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(192, 193, 255, 0.08) 0%, rgba(19, 19, 21, 0) 70%);
+        }
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#353437]/60 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.4)] h-16">
+<div class="flex justify-between items-center px-8 h-full max-w-full mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#c0c1ff] bg-clip-text bg-gradient-to-r from-[#c0c1ff] to-[#8083ff]">Descomplica Celular</span>
+<nav class="hidden md:flex gap-6 font-['Inter'] tracking-tight text-sm font-medium">
+<a class="text-[#c0c1ff] border-b-2 border-[#c0c1ff] pb-1 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Discover</a>
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Compare</a>
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Specs</a>
+<a class="text-[#e5e1e4]/70 hover:text-[#e5e1e4] transition-all duration-400 ease-in-out" href="#">Advisors</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#e5e1e4]/70 hover:text-[#c0c1ff] transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-[#e5e1e4]/70 hover:text-[#c0c1ff] transition-colors" data-icon="contrast">contrast</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/20">
+<img alt="User Profile" data-alt="close-up portrait of a professional man with a neutral expression in soft studio lighting against a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB20EiwzaTeLQQHkBTnrtkaKJrJQRowQ-DG_hT_B10udwAnLPO_VWP3O63EuCMruIZ7SJVY-WJ-xuJl7IhQzl5EfZNeCUfwF3OnMDziUP7H3HtcD-tZ_Z-ioYRYVSbjlCq1_JDZ94wRJ_6b_wUy14vAMh6dFtUqc_TXETMJ8NuSzf3cP0rJ8JCoMWELRwREIswSg8xhaytB6s6UMoet6C6hHEozo2cY4nkGA_V2RTaM7BdttjNtYzYYXnfUxdJ4631EscPefJxh6sQ"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Hidden on Mobile/Tablet based on JSON Logic) -->
+<aside class="fixed left-0 top-0 h-full z-40 h-screen w-64 hidden lg:flex flex-col bg-[#1c1b1d] border-r border-[#464554]/15">
+<div class="p-8 pb-12">
+<h2 class="text-lg font-black text-[#c0c1ff]">Descomplica</h2>
+<p class="text-[10px] font-bold uppercase tracking-tighter text-[#c0c1ff]">Smart Advisor</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 bg-[#2a2a2c] text-[#c0c1ff] rounded-md transition-all duration-400 ease-quart-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-sm font-semibold uppercase tracking-widest">Home</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Inter'] text-sm font-semibold uppercase tracking-widest">Explore</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="bookmarks">bookmarks</span>
+<span class="font-['Inter'] text-sm font-semibold uppercase tracking-widest">Library</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-['Inter'] text-sm font-semibold uppercase tracking-widest">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-[#e5e1e4]/50 hover:bg-[#2a2a2c]/50 hover:text-[#e5e1e4] transition-all duration-400 ease-quart-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-semibold uppercase tracking-widest">Settings</span>
+</a>
+</nav>
+</aside>
+<main class="lg:pl-64 pt-16">
+<!-- Hero Section -->
+<section class="relative h-[921px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0 hero-gradient"></div>
+<!-- Canvas Placeholder for Force-Graph -->
+<div class="absolute inset-0 z-0 opacity-30 flex items-center justify-center pointer-events-none">
+<div class="w-full h-full bg-[radial-gradient(#464554_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_20%,transparent_100%)]"></div>
+</div>
+<div class="relative z-10 text-center px-4 max-w-5xl">
+<span class="label-sm text-secondary tracking-[0.3em] mb-6 block">PRECISION ALGORITHM</span>
+<h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-on-surface to-on-surface/40 leading-[1.1]">
+                    The Art of Selection. <br/> Redefined.
+                </h1>
+<p class="text-xl text-on-surface-variant max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+                    Our neural advisor synthesizes thousands of benchmarks to architect your perfect mobile experience. Cinematic precision in every recommendation.
+                </p>
+<div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+<button class="px-8 py-4 bg-gradient-to-br from-primary to-primary-container rounded-md text-on-primary font-bold tracking-tight text-lg shadow-lg hover:scale-105 transition-transform duration-400">
+                        Begin Consultation
+                    </button>
+<button class="px-8 py-4 bg-surface-container-highest border border-outline-variant/20 rounded-md text-on-surface font-semibold hover:bg-surface-bright transition-colors duration-400">
+                        Watch Narrative
+                    </button>
+</div>
+</div>
+<div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce opacity-40">
+<span class="material-symbols-outlined text-4xl" data-icon="expand_more">expand_more</span>
+</div>
+</section>
+<!-- Feature: 'Consultor' Guided Experience -->
+<section class="py-32 px-8 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="grid lg:grid-cols-2 gap-20 items-center">
+<div class="space-y-12">
+<div class="space-y-4">
+<h2 class="text-4xl md:text-5xl font-semibold tracking-tight">The Advisor's Path</h2>
+<p class="text-on-surface-variant text-lg">A non-linear journey through your digital desires. No forms, just intuition.</p>
+</div>
+<!-- Steps Navigation (Mockup) -->
+<div class="space-y-8">
+<div class="flex items-start gap-6 group">
+<span class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-on-primary font-black">01</span>
+<div class="pt-2">
+<h3 class="text-xl font-medium mb-1">Visual Philosophy</h3>
+<p class="text-on-surface-variant/70 text-sm">Define your relationship with resolution and depth.</p>
+</div>
+</div>
+<div class="flex items-start gap-6 opacity-40 hover:opacity-100 transition-opacity">
+<span class="w-12 h-12 flex items-center justify-center rounded-full border border-outline-variant text-on-surface font-black">02</span>
+<div class="pt-2">
+<h3 class="text-xl font-medium mb-1">Compute Intent</h3>
+<p class="text-on-surface-variant/70 text-sm">Analyzing workflows from leisure to high-frequency creation.</p>
+</div>
+</div>
+<div class="flex items-start gap-6 opacity-40">
+<span class="w-12 h-12 flex items-center justify-center rounded-full border border-outline-variant text-on-surface font-black">03</span>
+<div class="pt-2">
+<h3 class="text-xl font-medium mb-1">Sustenance Needs</h3>
+<p class="text-on-surface-variant/70 text-sm">Battery architecture mapped to your daily orbit.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Step Visualization (Cinematic Mask) -->
+<div class="relative aspect-square rounded-2xl overflow-hidden glass-panel border border-outline-variant/10 shadow-2xl">
+<div class="absolute inset-0 bg-cover bg-center transition-all duration-[1200ms] cinematic-mask" data-alt="high-end minimalist smartphone lying on dark slate surface with moody cyan accent lighting from the side" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA8QH6eh0U9P7KpTa7uItXBRd4_V3ak_xmo4GVQ1qEMy-Ct2TAWEGW6QLo9iBRYXI1H09CW6FIlNss8rT10tah3_djbHpq7fEnSKIhU61yN_i2XCDvvDr8C1vEirjKWomjYlD7gPEbvHNHxM7hWCPHP53hhgeNtZvlMEQCO5O0X8beoVAKA9-ub9wDa9U9c2tIG24XcENqaZI3V5orf7ng7yTYJIjSAC5w1HgDwrR7Ee4yv7PYiFThGNjHk-nZSWeaqmE8Qdf5DeNE')">
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent opacity-60"></div>
+<div class="absolute bottom-8 left-8 right-8 text-white">
+<div class="p-6 bg-black/40 backdrop-blur-md rounded-xl border border-white/10">
+<h4 class="text-2xl font-bold mb-2">Display Dynamics</h4>
+<p class="text-sm text-white/80">Select the saturation curve that matches your environment.</p>
+<div class="mt-6 flex gap-3">
+<button class="flex-1 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded">Natural</button>
+<button class="flex-1 py-2 bg-transparent border border-white/40 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-white/10">Vivid</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Showcase: Recommendations -->
+<section class="py-32 px-8 overflow-hidden">
+<div class="max-w-7xl mx-auto mb-20 flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-semibold tracking-tight mb-4">Top Contenders</h2>
+<p class="text-on-surface-variant max-w-xl">Our algorithm's final selection for the avant-garde mobile user. Staged and ready for your review.</p>
+</div>
+<button class="flex items-center gap-2 text-primary font-semibold hover:gap-4 transition-all duration-400">
+                    View Complete Roster <span class="material-symbols-outlined" data-icon="arrow_right_alt">arrow_right_alt</span>
+</button>
+</div>
+<!-- Horizontal Grid/Bento for Showcase -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group relative aspect-[3/4] bg-surface-container-high rounded-2xl overflow-hidden transition-all duration-[800ms] hover:-translate-y-4 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
+<img class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1200ms]" data-alt="sleek professional smartphone in titanium finish being held by a hand in shadows with dramatic rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_T__h993zaCUbaga6umt3tD8zv3wnb2ldSn6jt6926MkhHH6pF-wjwjQ1mvgvMcy-Uw9bP6KOcI5awiKSMuOJnqG7nLgFNAXpXk9sk3_0dJ0yq_o0h1TujJr9Yr9BH99NT-K4YP2n-SCwOTe_4UOCarQF22zVDrmHpSANntivatTd_4s_BBTG0JwYdkYSO183W2mKvww4i2bD6K6MwGMdOwf_UQtHiqUs7rZmDBuhEuiY1P69m8YZLbaO2azbGVzJAQ4NHFiJaS8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 p-8 w-full transform transition-transform duration-700 group-hover:translate-y-[-1rem]">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary mb-2 block">FLAGSHIP PRIME</span>
+<h3 class="text-3xl font-bold mb-4 tracking-tighter">Obsidian X1</h3>
+<div class="flex items-center gap-4 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity delay-200">
+<span class="px-3 py-1 bg-white/10 rounded-full border border-white/10">9.8 Compute</span>
+<span class="px-3 py-1 bg-white/10 rounded-full border border-white/10">4K Optics</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative aspect-[3/4] bg-surface-container-high rounded-2xl overflow-hidden transition-all duration-[800ms] hover:-translate-y-4 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)] mt-12 md:mt-24">
+<img class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1200ms]" data-alt="close-up of a high-resolution smartphone display showing vibrant abstract fluid art with macro lens detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW1bM4zlCNyQybWghxY4S5__5RDXzj59ZhYZc0fMgdCYsZaQmP5qZYHoPN4QHOkk_LKu_CTayS8dR8pnox26zPB8tANrP0kSqpZLS6yhe1a2NGAKq4Wf32GO0EvzmN0czON8Sd-nGR-I0qj6CJGV3qQQlITNZ4NTSYl3JjI-ZOPRtF5edt7h_JWvuMN2nDXoG7Lz0ojFVvLCxTHoOEAvmzAXefnBOi1wncY8oVvv0S-aRd8wGTvGkdJXfaFi477xe71GS6KJCf07I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 p-8 w-full transform transition-transform duration-700 group-hover:translate-y-[-1rem]">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">CREATIVE MASTER</span>
+<h3 class="text-3xl font-bold mb-4 tracking-tighter">Lumina Pro</h3>
+<div class="flex items-center gap-4 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity delay-200">
+<span class="px-3 py-1 bg-white/10 rounded-full border border-white/10">OLED Pro</span>
+<span class="px-3 py-1 bg-white/10 rounded-full border border-white/10">100MP</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative aspect-[3/4] bg-surface-container-high rounded-2xl overflow-hidden transition-all duration-[800ms] hover:-translate-y-4 hover:shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
+<img class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1200ms]" data-alt="modern smartphone resting on a wooden desk next to a cup of coffee in soft morning window light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgl1PcW0sIAzXd-MsgiVHSducwBl3HCI4uUoOGhn70Kx-KHzIrYO1xYZr0G0nSY0DVeDDdeC0kGH8-ovCFEWF7RbhA_c3hKdKL2OCVOtvE2gplHT9iM119t4KqZP5ns_y5mqzfkxS4l5X7PnYBSgijPGFu6XRxP23uGhMSIHgncB8hC9qMcm8pm5RdhVRxo9Whos06zLH4DVve3fPBuNaq3mkbahGj-I29SLUp_UxhRQAsFAOa8sGjaggbUu7PbHIJEN2Y2Z80Wno"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 p-8 w-full transform transition-transform duration-700 group-hover:translate-y-[-1rem]">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-tertiary mb-2 block">UTILITY CORE</span>
+<h3 class="text-3xl font-bold mb-4 tracking-tighter">Nomad Edge</h3>
+<div class="flex items-center gap-4 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity delay-200">
+<span class="px-3 py-1 bg-white/10 rounded-full border border-white/10">3-Day Life</span>
+<span class="px-3 py-1 bg-white/10 rounded-full border border-white/10">Rugged</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ Section -->
+<section class="py-32 px-8 bg-surface-container-lowest">
+<div class="max-w-3xl mx-auto">
+<h2 class="text-4xl font-semibold tracking-tight text-center mb-16">The Advisor's Protocol</h2>
+<div class="space-y-4">
+<!-- FAQ Item 1 -->
+<div class="group border-b border-outline-variant/10 pb-4">
+<button class="w-full flex justify-between items-center py-6 text-left focus:outline-none">
+<span class="text-xl font-medium group-hover:text-primary transition-colors">How does the algorithm determine 'feel'?</span>
+<span class="material-symbols-outlined transition-transform duration-400 group-hover:rotate-180" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+<div class="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-[800ms] ease-in-out">
+<p class="text-on-surface-variant leading-relaxed pb-6">
+                                We analyze touch-latency benchmarks, weight distribution coefficients, and material haptics to project a sensory score before you ever touch the device.
+                            </p>
+</div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="group border-b border-outline-variant/10 pb-4">
+<button class="w-full flex justify-between items-center py-6 text-left focus:outline-none">
+<span class="text-xl font-medium group-hover:text-primary transition-colors">Is my data path secure?</span>
+<span class="material-symbols-outlined transition-transform duration-400 group-hover:rotate-180" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+<div class="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-[800ms] ease-in-out">
+<p class="text-on-surface-variant leading-relaxed pb-6">
+                                All preference processing happens locally. We use ephemeral sessions that dissolve once your consultation is complete.
+                            </p>
+</div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="group border-b border-outline-variant/10 pb-4">
+<button class="w-full flex justify-between items-center py-6 text-left focus:outline-none">
+<span class="text-xl font-medium group-hover:text-primary transition-colors">Can I override the recommendations?</span>
+<span class="material-symbols-outlined transition-transform duration-400 group-hover:rotate-180" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+<div class="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-[800ms] ease-in-out">
+<p class="text-on-surface-variant leading-relaxed pb-6">
+                                Absolute agency is your right. The advisor is a guide, not a gatekeeper. You can filter the global catalog at any time.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="py-20 px-8 bg-surface-container-low border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-2 space-y-6">
+<h3 class="text-2xl font-black text-[#c0c1ff]">Descomplica</h3>
+<p class="text-on-surface-variant max-w-sm">Curating the digital intersection of hardware and human intent. Precision advice for the modern nomad.</p>
+</div>
+<div>
+<h4 class="label-sm text-secondary mb-6">RESOURCES</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">API Access</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Benchmark Suite</a></li>
+</ul>
+</div>
+<div>
+<h4 class="label-sm text-secondary mb-6">CONNECT</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Instagram</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">X / Twitter</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Support</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-outline-variant/10 flex justify-between items-center">
+<p class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/40">© 2024 DESCOMPLICA CELULAR. ALL RIGHTS RESERVED.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-primary cursor-pointer" data-icon="language">language</span>
+<span class="material-symbols-outlined text-on-surface-variant/40 hover:text-primary cursor-pointer" data-icon="shield">shield</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- BottomNavBar (Only visible on Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 lg:hidden flex justify-around items-center h-16 pb-safe bg-[#131315]/80 backdrop-blur-2xl border-t border-[#464554]/20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-[#c0c1ff] scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e5e1e4]/40" href="#">
+<span class="material-symbols-outlined" data-icon="compare_arrows">compare_arrows</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Compare</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e5e1e4]/40" href="#">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e5e1e4]/40" href="#">
+<span class="material-symbols-outlined" data-icon="person_outline">person_outline</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Account</span>
+</a>
+</nav>
+</body></html>

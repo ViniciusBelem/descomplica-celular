@@ -1,0 +1,8 @@
+{
+  "success": false,
+  "error": {
+    "code": "SCREENS_FETCH_FAILED",
+    "message": "[\n  {\n    \"code\": \"custom\",\n    \"path\": [],\n    \"message\": \"Authentication failed. Provide either 'apiKey' OR ('accessToken' + 'projectId').\"\n  }\n]",
+    "recoverable": false
+  }
+}

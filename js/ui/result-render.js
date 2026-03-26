@@ -12,7 +12,6 @@ function translateCriterion(criterion) {
     longevity: 'Longevidade',
     costBenefit: 'Custo-benefício'
   };
-
   return labels[criterion] || criterion;
 }
 
@@ -23,19 +22,19 @@ function getRecommendationBadge(position) {
   return 'Opção recomendada';
 }
 
-function createFeedbackMarkup({
-  title = '',
-  description = '',
-  variant = 'default'
-} = {}) {
+function createFeedbackMarkup({ title = '', description = '', variant = 'default' } = {}) {
+  const colors = {
+    error: 'border-error/50 bg-error/10 text-error',
+    success: 'border-secondary/50 bg-secondary/10 text-secondary',
+    empty: 'border-outline-variant/20 bg-surface-container-high text-on-surface-variant',
+    default: 'border-primary/50 bg-primary/10 text-primary'
+  };
+  const colorClass = colors[variant] || colors.default;
+
   return `
-    <div class="feedback-box feedback-box--${escapeHtml(variant)}">
-      ${title ? `<h3 class="feedback-box-title">${escapeHtml(title)}</h3>` : ''}
-      ${
-        description
-          ? `<p class="feedback-box-description">${escapeHtml(description)}</p>`
-          : ''
-      }
+    <div class="p-6 rounded-xl border ${colorClass} mb-6">
+      ${title ? `<h3 class="font-bold mb-2">${escapeHtml(title)}</h3>` : ''}
+      ${description ? `<p class="text-sm opacity-80">${escapeHtml(description)}</p>` : ''}
     </div>
   `;
 }
@@ -43,57 +42,30 @@ function createFeedbackMarkup({
 function createLoadingMarkup(quantity = 3) {
   return Array.from({ length: quantity }, (_, index) => {
     return `
-      <div class="skeleton-card skeleton-card--recommendation" aria-hidden="true" data-skeleton-index="${
-        index + 1
-      }">
-        <div class="skeleton skeleton-image"></div>
-        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-        <div class="skeleton skeleton-line"></div>
-        <div class="skeleton skeleton-line skeleton-line--sm"></div>
+      <div class="flex flex-col md:flex-row gap-6 p-6 mb-6 bg-surface-container-high rounded-2xl border border-outline-variant/5" aria-hidden="true" data-skeleton-index="${index + 1}">
+        <div class="w-full md:w-48 h-48 bg-surface-container-highest rounded-xl animate-pulse shrink-0"></div>
+        <div class="flex-1 py-2">
+          <div class="h-6 w-1/3 bg-surface-variant rounded mb-3 animate-pulse"></div>
+          <div class="h-8 w-2/3 bg-surface-variant rounded mb-6 animate-pulse"></div>
+          <div class="h-4 w-1/4 bg-surface-variant rounded mb-3 animate-pulse"></div>
+          <div class="h-20 w-full bg-surface-variant rounded animate-pulse"></div>
+        </div>
       </div>
     `;
   }).join('');
 }
 
-function buildSpecsList(device) {
-  const specs = [
-    { label: 'Tela', value: device.specs?.screen },
-    { label: 'Chip', value: device.specs?.chipset },
-    { label: 'Bateria', value: device.specs?.battery },
-    { label: 'Memória', value: device.specs?.memory },
-    { label: 'Armazenamento', value: device.specs?.storage },
-    { label: 'Câmera', value: device.specs?.cameraMain }
-  ];
-
-  return specs
-    .filter((item) => item.value)
-    .map(
-      (item) => `
-        <li class="device-spec-item">
-          <span class="device-spec-label">${escapeHtml(item.label)}:</span>
-          <span class="device-spec-value">${escapeHtml(item.value)}</span>
-        </li>
-      `
-    )
-    .join('');
-}
-
 function buildHighlightsList(highlights = []) {
   if (!Array.isArray(highlights) || !highlights.length) {
-    return `
-      <li class="highlight-item">
-        <span class="highlight-name">Sem destaques disponíveis</span>
-      </li>
-    `;
+    return `<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-medium">Sem destaques</span>`;
   }
 
   return highlights
     .map(
       (item) => `
-        <li class="highlight-item">
-          <span class="highlight-name">${escapeHtml(translateCriterion(item.criterion))}</span>
-          <span class="highlight-score">${Number(item.deviceScore || 0)}/100</span>
-        </li>
+        <span class="px-3 py-1 bg-secondary/10 border border-secondary/20 text-secondary rounded-full text-xs font-bold">
+          ${escapeHtml(translateCriterion(item.criterion))} • ${Number(item.deviceScore || 0)}/100
+        </span>
       `
     )
     .join('');
@@ -103,28 +75,31 @@ function createExplanationMarkup(result) {
   if (!result?.explanation) return '';
 
   const profileLabel = result.profile?.label
-    ? `<span class="recommendation-profile-chip">${escapeHtml(result.profile.label)}</span>`
+    ? `<span class="px-3 py-1 bg-primary/20 text-primary rounded border border-primary/20 text-[10px] font-bold uppercase tracking-widest">${escapeHtml(result.profile.label)}</span>`
     : '';
 
   const budgetLabel = result.budget
-    ? `<span class="recommendation-budget-chip">Orçamento analisado: ${escapeHtml(
-        formatBRL(result.budget)
-      )}</span>`
+    ? `<span class="px-3 py-1 bg-surface-container-highest text-on-surface rounded border border-outline-variant/20 text-[10px] font-bold uppercase tracking-widest">Teto: ${escapeHtml(formatBRL(result.budget))}</span>`
     : '';
 
   const focusLabel = result.focusTag
-    ? `<span class="recommendation-budget-chip">Foco: ${escapeHtml(result.focusTag)}</span>`
+    ? `<span class="px-3 py-1 bg-tertiary/20 text-tertiary rounded border border-tertiary/20 text-[10px] font-bold uppercase tracking-widest">Vetor: ${escapeHtml(result.focusTag)}</span>`
     : '';
 
   return `
-    <div class="recommendation-explanation-box">
-      <div class="recommendation-explanation-meta">
+    <div class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 md:p-8 mb-8 shadow-inner">
+      <div class="flex flex-wrap gap-2 mb-6">
         ${profileLabel}
         ${budgetLabel}
         ${focusLabel}
       </div>
-      <h3 class="recommendation-explanation-title">Resumo da análise</h3>
-      <p class="recommendation-explanation-text">${escapeHtml(result.explanation)}</p>
+      <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-3xl text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+        <div>
+          <h3 class="text-xl font-bold text-on-surface mb-2">Parecer Neural</h3>
+          <p class="text-on-surface-variant leading-relaxed text-sm md:text-base">${escapeHtml(result.explanation)}</p>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -132,59 +107,44 @@ function createExplanationMarkup(result) {
 function createRecommendationCard(device) {
   const recommendation = device.recommendation || {};
   const position = Number(recommendation.position || 0);
+  const isBest = position === 1;
 
   return `
-    <article class="recommendation-card ${
-      position === 1 ? 'recommendation-card--best' : ''
-    }" data-device-id="${escapeHtml(device.id)}">
-      <div class="recommendation-card-header">
-        <span class="recommendation-rank">${escapeHtml(getRecommendationBadge(position))}</span>
-        <span class="recommendation-score">${Number(
-          recommendation.finalScore || 0
-        ).toFixed(2)}/100</span>
+    <article class="relative flex flex-col md:flex-row gap-6 bg-surface-container-high rounded-2xl overflow-hidden border border-outline-variant/5 shadow-xl p-6 hover:-translate-y-1 transition-transform mb-6 ${isBest ? 'border-primary/50 shadow-[0_10px_40px_rgba(192,193,255,0.1)]' : ''}" data-device-id="${escapeHtml(device.id)}">
+      
+      <div class="relative w-full md:w-48 h-48 shrink-0 bg-[#353437]/50 rounded-xl p-4 flex items-center justify-center">
+        <img src="${escapeHtml(device.image)}" alt="${escapeHtml(`${device.brand} ${device.model}`)}" class="max-w-full max-h-full object-contain" loading="lazy" />
+        <span class="absolute top-2 left-2 px-3 py-1 text-[10px] uppercase tracking-widest font-black ${isBest ? 'bg-primary text-[#1000a9]' : 'bg-surface-variant text-on-surface'} rounded-full shadow-lg">
+          ${escapeHtml(getRecommendationBadge(position))}
+        </span>
       </div>
 
-      <div class="recommendation-card-main">
-        <div class="recommendation-card-media">
-          <img
-            class="recommendation-card-image"
-            src="${escapeHtml(device.image)}"
-            alt="${escapeHtml(`${device.brand} ${device.model}`)}"
-            loading="lazy"
-          />
-        </div>
-
-        <div class="recommendation-card-content">
-          <p class="recommendation-card-brand">${escapeHtml(device.brand)}</p>
-          <h3 class="recommendation-card-title">${escapeHtml(device.model)}</h3>
-          <p class="recommendation-card-price">${escapeHtml(formatBRL(device.price))}</p>
-          <p class="recommendation-card-summary">${escapeHtml(device.summary)}</p>
-          <p class="recommendation-card-reason">${escapeHtml(recommendation.reason || '')}</p>
-          ${
-            recommendation.alternativeNote
-              ? `<p class="recommendation-card-note">${escapeHtml(
-                  recommendation.alternativeNote
-                )}</p>`
-              : ''
-          }
-        </div>
-      </div>
-
-      <div class="recommendation-card-details">
-        <div class="recommendation-card-column">
-          <h4 class="recommendation-card-subtitle">Pontos fortes</h4>
-          <ul class="recommendation-highlight-list">
+      <div class="flex-1 flex flex-col justify-between pt-2">
+        <div>
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 block">${escapeHtml(device.brand)}</span>
+              <h3 class="text-2xl font-black text-on-surface tracking-tight leading-none mb-2">${escapeHtml(device.model)}</h3>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold mb-1">Match Score</p>
+              <p class="text-2xl font-black text-secondary leading-none">${Number(recommendation.finalScore || 0).toFixed(0)}<span class="text-sm text-on-surface-variant/50">/100</span></p>
+            </div>
+          </div>
+          
+          <p class="text-xl font-bold text-on-surface mb-4">${escapeHtml(formatBRL(device.price))}</p>
+          
+          <div class="flex flex-wrap gap-2 mb-4">
             ${buildHighlightsList(recommendation.highlights)}
-          </ul>
-        </div>
+          </div>
 
-        <div class="recommendation-card-column">
-          <h4 class="recommendation-card-subtitle">Ficha rápida</h4>
-          <ul class="device-spec-list">
-            ${buildSpecsList(device)}
-          </ul>
+          <div class="p-4 bg-surface-container-lowest border border-outline-variant/10 rounded-xl mb-4">
+            <p class="text-[13px] text-on-surface-variant leading-relaxed"><strong>Painel Técnico:</strong> ${escapeHtml(recommendation.reason || device.summary)}</p>
+            ${recommendation.alternativeNote ? `<p class="text-[11px] text-primary/70 mt-2 font-medium">Nota do Sistema: ${escapeHtml(recommendation.alternativeNote)}</p>` : ''}
+          </div>
         </div>
       </div>
+      
     </article>
   `;
 }
@@ -203,10 +163,8 @@ export function renderRecommendationState({
     setHTML(
       resultsElement,
       createFeedbackMarkup({
-        title: 'Nenhuma recomendação encontrada',
-        description:
-          result?.message ||
-          'Tente ajustar orçamento, perfil ou prioridade para uma nova análise.',
+        title: 'Nenhuma recomendação',
+        description: result?.message || 'Tente ajustar o orçamento, perfil ou prioridade para o algoritmo calcular novamente.',
         variant: 'empty'
       })
     );
@@ -243,7 +201,7 @@ export function renderRecommendationLoadingState({
 }
 
 export function renderRecommendationErrorState({
-  message = 'Não foi possível gerar a recomendação agora.',
+  message = 'O algoritmo falhou ao processar sua requisição.',
   resultsTarget = '[data-recommendation-results]',
   explanationTarget = '[data-recommendation-explanation]'
 } = {}) {
@@ -255,7 +213,7 @@ export function renderRecommendationErrorState({
   setHTML(
     resultsElement,
     createFeedbackMarkup({
-      title: 'Erro ao gerar recomendação',
+      title: 'Erro Crítico no Motor',
       description: message,
       variant: 'error'
     })

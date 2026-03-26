@@ -1,0 +1,60 @@
+{
+  "success": true,
+  "projectId": "8350851107438834130",
+  "screens": [
+    {
+      "screenId": "7dd71ccad4b845dfb21d3068b5cbba50",
+      "title": "7dd71ccad4b845dfb21d3068b5cbba50",
+      "suggestedRoute": "/7dd71ccad4b845dfb21d3068b5cbba50",
+      "hasHtml": true
+    },
+    {
+      "screenId": "eeb6f344b53b4368b87d192328e60c79",
+      "title": "eeb6f344b53b4368b87d192328e60c79",
+      "suggestedRoute": "/eeb6f344b53b4368b87d192328e60c79",
+      "hasHtml": true
+    },
+    {
+      "screenId": "d206d0995c3548f2aa2dccdc227f187c",
+      "title": "d206d0995c3548f2aa2dccdc227f187c",
+      "suggestedRoute": "/d206d0995c3548f2aa2dccdc227f187c",
+      "hasHtml": true
+    },
+    {
+      "screenId": "2f9d6bb3d3f74863ae038d9b1661cc68",
+      "title": "2f9d6bb3d3f74863ae038d9b1661cc68",
+      "suggestedRoute": "/2f9d6bb3d3f74863ae038d9b1661cc68",
+      "hasHtml": true
+    },
+    {
+      "screenId": "2fc831a356a247a09cad27a8b188baad",
+      "title": "2fc831a356a247a09cad27a8b188baad",
+      "suggestedRoute": "/2fc831a356a247a09cad27a8b188baad",
+      "hasHtml": true
+    },
+    {
+      "screenId": "dc4a7063d732486889db1886fca6facf",
+      "title": "dc4a7063d732486889db1886fca6facf",
+      "suggestedRoute": "/dc4a7063d732486889db1886fca6facf",
+      "hasHtml": true
+    },
+    {
+      "screenId": "87e005ee343041d1a4ad70d6e2634908",
+      "title": "87e005ee343041d1a4ad70d6e2634908",
+      "suggestedRoute": "/87e005ee343041d1a4ad70d6e2634908",
+      "hasHtml": true
+    },
+    {
+      "screenId": "fbb517c09822453a85c51dc5352ddd26",
+      "title": "fbb517c09822453a85c51dc5352ddd26",
+      "suggestedRoute": "/fbb517c09822453a85c51dc5352ddd26",
+      "hasHtml": true
+    },
+    {
+      "screenId": "2684f5e93ee149f6870014eab9e2e77b",
+      "title": "2684f5e93ee149f6870014eab9e2e77b",
+      "suggestedRoute": "/2684f5e93ee149f6870014eab9e2e77b",
+      "hasHtml": true
+    }
+  ]
+}
