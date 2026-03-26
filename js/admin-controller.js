@@ -745,6 +745,25 @@ class AdminController {
         } catch(err) { console.error(err); }
     }));
   }
+
+  async refreshInboxBadge() {
+    if (!this.msgService) return;
+    try {
+      const msgs = await this.msgService.getInboxMessages();
+      const unreadCount = msgs.filter(m => !m.read).length;
+      const badge = document.getElementById('inbox-badge');
+      if (badge) {
+        if (unreadCount > 0) {
+          badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+          badge.style.display = 'block';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+    } catch (err) {
+      console.error('[Inbox] Falha ao atualizar badge:', err);
+    }
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

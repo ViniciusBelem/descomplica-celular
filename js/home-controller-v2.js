@@ -5,7 +5,6 @@
  */
 
 import { auth } from './firebase-config.js';
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
 
 import { getFeaturedDevices } from './catalog-service.js';
 import {
@@ -420,12 +419,18 @@ async function handleRecommendationSubmit(event) {
       quantity: 3
     });
 
-    const result = await explainRecommendation({
-      budget: payload.budget,
-      profileId: payload.profileId,
-      focusTag: payload.focusTag,
-      limit: 3
-    });
+    // Pipeline animation roda em paralelo com a busca real,
+    // dando feedback visual de "processamento inteligente" ao usuário
+    const { statusBox } = getHomeElements();
+    const [, result] = await Promise.all([
+      runPipelineAnimation(statusBox),
+      explainRecommendation({
+        budget: payload.budget,
+        profileId: payload.profileId,
+        focusTag: payload.focusTag,
+        limit: 3
+      })
+    ]);
 
     renderRecommendationState({
       result,
@@ -540,10 +545,7 @@ async function bootstrapHome() {
   // Inicializa os selects customizados (Vital para o layout funcionar)
   initEnhancedSelects();
 
-  // Monitorar autenticação
-  onAuthStateChanged(auth, (user) => {
-    console.log('[Home] Usuário:', user ? user.email : 'não autenticado');
-  });
+
 
   console.log('[Home] Inicialização concluída');
 }

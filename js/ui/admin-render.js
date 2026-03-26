@@ -1,4 +1,5 @@
 import { formatBRL } from '../utils/currency.js';
+import { escapeHtml } from '../utils/security.js';
 
 export function renderAdminDashboard(devices) {
   const total = devices.length;
@@ -21,21 +22,21 @@ export function renderAdminTable(devices) {
 
   const rows = devices.map(device => `
     <tr>
-      <td style="width: 70px;"><img src="${device.image}" class="admin-table-img" alt="${device.model}"></td>
+      <td style="width: 70px;"><img src="${escapeHtml(device.image)}" class="admin-table-img" alt="${escapeHtml(device.model)}"></td>
       <td>
-        <strong style="color: var(--text-primary); font-size: 1.05rem;">${device.brand} ${device.model}</strong>
-        <div style="color: var(--text-muted); font-size: var(--fs-xs); margin-top: 4px;">${device.segment}</div>
+        <strong style="color: var(--text-primary); font-size: 1.05rem;">${escapeHtml(device.brand)} ${escapeHtml(device.model)}</strong>
+        <div style="color: var(--text-muted); font-size: var(--fs-xs); margin-top: 4px;">${escapeHtml(device.segment)}</div>
       </td>
-      <td style="font-weight: 600; color: var(--text-primary);">${formatBRL(device.price)}</td>
+      <td style="font-weight: 600; color: var(--text-primary);">${escapeHtml(formatBRL(device.price))}</td>
       <td>
         <div style="display: flex; gap: 8px;">
           ${device.active ? `<span class="badge" data-state="success">Ativo</span>` : `<span class="badge" data-state="error">Inativo</span>`}
-          ${device.featured ? `<span class="badge" data-state="loading">${device.badge || 'Destaque'}</span>` : ''}
+          ${device.featured ? `<span class="badge" data-state="loading">${escapeHtml(device.badge || 'Destaque')}</span>` : ''}
         </div>
       </td>
       <td style="text-align: right;">
-        <button class="btn btn-secondary btn-sm" data-action="edit" data-id="${device.id}">Editar</button>
-        <button class="btn btn-danger btn-sm" data-action="delete" data-id="${device.id}" style="margin-left: 8px;">Excluir</button>
+        <button class="btn btn-secondary btn-sm" data-action="edit" data-id="${escapeHtml(device.id)}">Editar</button>
+        <button class="btn btn-danger btn-sm" data-action="delete" data-id="${escapeHtml(device.id)}" style="margin-left: 8px;">Excluir</button>
       </td>
     </tr>
   `).join('');
@@ -60,11 +61,11 @@ export function renderAdminTable(devices) {
 export function renderAccessControl(admins) {
   const rows = admins.map(a => `
     <tr>
-      <td><strong>${a.nome}</strong></td>
-      <td>${a.email}</td>
-      <td><span class="badge" data-state="loading">${a.role.toUpperCase()}</span></td>
+      <td><strong>${escapeHtml(a.nome)}</strong></td>
+      <td>${escapeHtml(a.email)}</td>
+      <td><span class="badge" data-state="loading">${escapeHtml(a.role.toUpperCase())}</span></td>
       <td style="text-align: right;">
-        ${a.role === 'superadmin' ? '' : `<button class="btn btn-danger btn-sm btn-revoke-admin" data-id="${a.id}" data-email="${a.email}">Revogar</button>`}
+        ${a.role === 'superadmin' ? '' : `<button class="btn btn-danger btn-sm btn-revoke-admin" data-id="${escapeHtml(a.id)}" data-email="${escapeHtml(a.email)}">Revogar</button>`}
       </td>
     </tr>
   `).join('');
@@ -108,7 +109,7 @@ export function renderAuditFilters(activeFilter = 'all') {
   ];
   
   const buttons = filters.map(f => 
-    `<button class="btn btn-sm ${activeFilter === f.id ? 'btn-primary' : 'btn-ghost'}" data-filter-audit="${f.id}" style="white-space: nowrap; border-radius: 20px;">${f.label}</button>`
+    `<button class="btn btn-sm ${activeFilter === f.id ? 'btn-primary' : 'btn-ghost'}" data-filter-audit="${escapeHtml(f.id)}" style="white-space: nowrap; border-radius: 20px;">${escapeHtml(f.label)}</button>`
   ).join('');
 
   return `
@@ -125,19 +126,19 @@ export function renderAuditTable(logs) {
     const date = log.createdAt?.toDate ? log.createdAt.toDate().toLocaleString('pt-BR') : 'Sem data';
     const actionConfig = ACTION_MAP[log.action] || { label: log.action, color: 'var(--text-secondary)' };
     const hasComments = log.comments && log.comments.length > 0;
-    const targetDisplay = log.target?.desc || log.target?.email || log.target?.id || 'Desconhecido';
+    const targetDisplay = escapeHtml(log.target?.desc || log.target?.email || log.target?.id || 'Desconhecido');
 
     return `
       <tr style="${log.archived ? 'opacity: 0.6;' : ''}">
         <td>
-           <span class="badge" style="font-size: 0.7rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: ${actionConfig.color};">${actionConfig.label}</span>
+           <span class="badge" style="font-size: 0.7rem; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: ${actionConfig.color};">${escapeHtml(actionConfig.label)}</span>
            ${hasComments ? '<div style="display:inline-block; width:8px; height:8px; background:var(--green-400); border-radius:50%; margin-left:8px;" title="Anotações Inclusas"></div>' : ''}
         </td>
         <td style="font-size: 0.85rem;">
-          <strong style="color:var(--text-primary);">${log.actor?.email || 'Sistema'}</strong>
+          <strong style="color:var(--text-primary);">${escapeHtml(log.actor?.email || 'Sistema')}</strong>
         </td>
         <td style="font-size: 0.85rem; color:var(--text-muted);">${targetDisplay}</td>
-        <td style="font-size: 0.8rem; color:var(--text-muted);">${date}</td>
+        <td style="font-size: 0.8rem; color:var(--text-muted);">${escapeHtml(date)}</td>
         <td style="text-align:right; position: relative; min-width: 90px; vertical-align: middle;">
           <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.2rem;">
              <button class="btn btn-ghost btn-sm" data-action="open-note-modal" data-index="${index}" title="Criar Anotação / Alerta" style="padding: 0.4rem; display: flex; align-items: center; justify-content: center; transform: translateY(-2px);"><i class="gg-pen" style="--ggs: 0.8; color: var(--text-primary); pointer-events: none;"></i></button>

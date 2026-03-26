@@ -1,21 +1,26 @@
-function normalizeText(value) {
+/**
+ * Retorna o valor como string com espaços removidos das extremidades.
+ * NÃO confundir com normalizeText() de security.js, que além de trim
+ * também remove acentos e converte para lowercase.
+ */
+function trimValue(value) {
   return String(value ?? '').trim();
 }
 
 export function isEmpty(value) {
-  return normalizeText(value).length === 0;
+  return trimValue(value).length === 0;
 }
 
 export function hasMinLength(value, min = 1) {
-  return normalizeText(value).length >= Number(min || 1);
+  return trimValue(value).length >= Number(min || 1);
 }
 
 export function hasMaxLength(value, max = Infinity) {
-  return normalizeText(value).length <= Number(max || Infinity);
+  return trimValue(value).length <= Number(max || Infinity);
 }
 
 export function isValidEmail(email) {
-  const normalized = normalizeText(email).toLowerCase();
+  const normalized = trimValue(email).toLowerCase();
 
   if (!normalized) return false;
 

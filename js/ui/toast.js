@@ -1,3 +1,5 @@
+import { escapeHtml } from '../utils/security.js';
+
 const CONTAINER_ID = "toast-container";
 
 function ensureContainer() {
@@ -29,8 +31,8 @@ export function showToast({
   toast.setAttribute("aria-atomic", "true");
 
   toast.innerHTML = `
-    ${title ? `<div class="toast__title">${title}</div>` : ""}
-    ${message ? `<div class="toast__message">${message}</div>` : ""}
+    ${title ? `<div class="toast__title">${escapeHtml(title)}</div>` : ""}
+    ${message ? `<div class="toast__message">${escapeHtml(message)}</div>` : ""}
   `;
 
   container.appendChild(toast);

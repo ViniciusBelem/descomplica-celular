@@ -14,11 +14,9 @@ import {
   doc,
   updateDoc,
   addDoc,
-  setDoc as fireSetDoc,
+  setDoc,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js';
-// Correção do import de firestore no seu código real:
-import { getDoc as fireGetDoc, doc as fireDoc, updateDoc as fireUpdate, addDoc as fireAddDoc, setDoc as fireSetDocBackup } from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js';
 
 // ===== ANÁLISES / RECOMENDAÇÕES =====
 
@@ -118,7 +116,7 @@ export async function getUserProfile(userId) {
   try {
     const user = auth.currentUser;
     // Busca o role seguro no Firestore
-    const profileDoc = await fireGetDoc(fireDoc(db, 'usuarios', userId));
+    const profileDoc = await getDoc(doc(db, 'usuarios', userId));
     const role = profileDoc.exists() ? profileDoc.data().metadata?.role : 'user';
     
     return {
@@ -136,8 +134,8 @@ export async function getUserProfile(userId) {
 export async function ensureUserProfile(user) {
   if (!user || !user.uid) return;
   try {
-    const userRef = fireDoc(db, 'usuarios', user.uid);
-    const docSnap = await fireGetDoc(userRef);
+    const userRef = doc(db, 'usuarios', user.uid);
+    const docSnap = await getDoc(userRef);
 
     const existingData = docSnap.exists() ? docSnap.data() : {};
     const existingMetadata = existingData.metadata || {};
@@ -171,8 +169,7 @@ export async function ensureUserProfile(user) {
       payload.createdAt = serverTimestamp();
     }
 
-    const setDocFunc = fireSetDoc || fireSetDocBackup;
-    await setDocFunc(userRef, payload, { merge: true });
+    await setDoc(userRef, payload, { merge: true });
   } catch (error) {
     console.error('[Auth] Erro ao sincronizar usuário:', error);
   }
@@ -270,7 +267,7 @@ export async function logAdminAction(action, targetId, details = {}) {
     };
     const categoryName = details.customCategory || categoryMap[action] || 'Geral';
 
-    await fireAddDoc(collection(db, 'audit_logs'), {
+    await addDoc(collection(db, 'audit_logs'), {
       action,
       category: categoryName,
       archived: false,
@@ -335,8 +332,8 @@ export async function getUserByEmailForAdmin(email) {
 
 export async function changeUserRole(userId, targetEmail, newRole) {
   try {
-    const userRef = fireDoc(db, 'usuarios', userId);
-    await fireUpdate(userRef, {
+    const userRef = doc(db, 'usuarios', userId);
+    await updateDoc(userRef, {
       'metadata.role': newRole,
       updatedAt: serverTimestamp()
     });
@@ -373,7 +370,7 @@ export async function getAllAdmins() {
 
 export async function updateLogArchiveStatus(logId, status) {
   try {
-    await fireUpdate(fireDoc(db, 'audit_logs', logId), { archived: status });
+    await updateDoc(doc(db, 'audit_logs', logId), { archived: status });
   } catch(e) {
     console.error('[Auditoria] Erro ao arquivar', e);
     throw e;
@@ -382,12 +379,12 @@ export async function updateLogArchiveStatus(logId, status) {
 
 export async function addLogComment(logId, text) {
   try {
-    const docRef = fireDoc(db, 'audit_logs', logId);
+    const docRef = doc(db, 'audit_logs', logId);
     const snap = await getDoc(docRef);
     if (!snap.exists()) return;
     const comments = snap.data().comments || [];
     comments.push({ text, date: new Date().toISOString(), author: auth.currentUser?.email || 'Admin' });
-    await fireUpdate(docRef, { comments });
+    await updateDoc(docRef, { comments });
   } catch(e) {
     console.error('[Auditoria] Erro ao comentar', e);
     throw e;

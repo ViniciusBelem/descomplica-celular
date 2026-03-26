@@ -93,6 +93,16 @@ function buildWeights(profile, focusTag) {
   const weights = profile?.weights ? { ...profile.weights } : getDefaultWeights();
   const normalizedFocusTag = normalizeText(focusTag);
 
+  /**
+   * CONVENÇÃO DE NOMENCLATURA:
+   * As CHAVES deste mapa (bateria, custo-beneficio, jogos, etc.) seguem
+   * o vocabulário PT-BR usado nas focusTags dos devices.json e profiles.json.
+   * Os VALORES (battery, costBenefit, longevity, etc.) correspondem às chaves
+   * em inglês (camelCase) do objeto `scores` dos dispositivos.
+   *
+   * Essa tradução é o ponto único de conversão PT-BR → EN no sistema.
+   * Se novas focusTags forem adicionadas, elas DEVEM ser mapeadas aqui.
+   */
   const focusAdjustments = {
     camera: { camera: 0.12, display: 0.03, performance: 0.01 },
     bateria: { battery: 0.12, longevity: 0.03, costBenefit: 0.01 },

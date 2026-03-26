@@ -1,22 +1,6 @@
 import { formatBRL } from '../utils/currency.js';
 import { qs, setHTML } from '../utils/dom.js';
-
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
-
-function resolveElement(targetOrSelector) {
-  if (!targetOrSelector) return null;
-  if (typeof targetOrSelector === 'string') {
-    return qs(targetOrSelector);
-  }
-  return targetOrSelector;
-}
+import { escapeHtml, resolveElement } from '../utils/security.js';
 
 function createFeedbackMarkup({
   title = '',
