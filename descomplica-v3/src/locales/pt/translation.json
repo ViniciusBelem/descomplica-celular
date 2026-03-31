@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "discover": "Descobrir",
+    "compare": "Comparar",
+    "specs": "Catálogo",
+    "advisors": "Consultor"
+  },
+  "advisor": {
+    "step1Title": "Parâmetros Financeiros",
+    "step1Desc": "Defina sua barreira de orçamento máxima.",
+    "step2Title": "Intenção de Uso (Perfil)",
+    "step2Desc": "Analisando fluxos de lazer a criação em alta frequência.",
+    "step3Title": "Foco Principal",
+    "step3Desc": "Qual especificação importa mais para você?",
+    "btnProceed": "Prosseguir",
+    "btnMap": "Mapear Prioridades",
+    "btnSearch": "Executar Busca Neural",
+    "btnComputing": "Processando Redes...",
+    "resultsTitle": "Seus Resultados",
+    "btnRedo": "Refazer Busca"
+  }
+}

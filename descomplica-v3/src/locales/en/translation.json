@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "discover": "Discover",
+    "compare": "Compare",
+    "specs": "Specs",
+    "advisors": "Advisors"
+  },
+  "advisor": {
+    "step1Title": "Financial Parameters",
+    "step1Desc": "Define your maximum budget barrier.",
+    "step2Title": "Compute Intent (Profile)",
+    "step2Desc": "Analyzing workflows from leisure to high-frequency creation.",
+    "step3Title": "Priority Focus",
+    "step3Desc": "What specification matters most to you?",
+    "btnProceed": "Proceed",
+    "btnMap": "Map Priorities",
+    "btnSearch": "Execute Neural Search",
+    "btnComputing": "Processing Networks...",
+    "resultsTitle": "Your Match Results",
+    "btnRedo": "Run Again"
+  }
+}
