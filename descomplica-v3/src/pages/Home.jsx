@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import AdvisorForm from '../components/AdvisorForm';
 
 /**
@@ -6,8 +5,6 @@ import AdvisorForm from '../components/AdvisorForm';
  * Extracted from the monolithic App.jsx into a dedicated Page component.
  */
 export function Home() {
-  const { t } = useTranslation();
-  
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] p-4 text-center max-w-5xl mx-auto animate-in fade-in duration-700">
       <div className="mb-20">

@@ -1,5 +1,3 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useAdvisorStore } from '../store/useAdvisorStore';
 import { BudgetStep } from './advisor/BudgetStep';
 import { ProfileStep } from './advisor/ProfileStep';
@@ -7,6 +5,7 @@ import { PriorityStep } from './advisor/PriorityStep';
 import ResultCard from './ResultCard';
 import { Button } from './ui/Button';
 
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
@@ -14,7 +13,6 @@ import { motion, AnimatePresence } from 'framer-motion';
  * Now an orchestrator of modular step components.
  */
 export default function AdvisorForm() {
-  const { t } = useTranslation();
   const { results, reset } = useAdvisorStore();
 
   return (
@@ -30,7 +28,7 @@ export default function AdvisorForm() {
         >
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-3xl font-bold tracking-tighter text-white">
-              {t('advisor.resultsTitle')}
+              Resultados
             </h3>
             <span className="px-3 py-1 bg-secondary/20 text-secondary text-[10px] font-black uppercase tracking-widest rounded-full border border-secondary/30">
               Neural Match Found
@@ -48,7 +46,7 @@ export default function AdvisorForm() {
             className="mt-10 w-full"
             onClick={reset}
           >
-            {t('advisor.btnRedo')}
+            Refazer Busca
           </Button>
         </motion.div>
       ) : (

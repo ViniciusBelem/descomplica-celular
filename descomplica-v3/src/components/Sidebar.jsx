@@ -13,7 +13,7 @@ export default function Sidebar() {
       </div>
       <nav className="flex-1 px-4 space-y-2">
         <SidebarLink to="/" icon={Home} label={t('sidebar.home', 'Home')} />
-        <SidebarLink to="/explore" icon={Compass} label={t('sidebar.explore', 'Explore')} />
+        <SidebarLink to="/phones" icon={Compass} label={t('sidebar.explore', 'Catálogo')} />
         <SidebarLink to="/library" icon={Bookmark} label={t('sidebar.library', 'Library')} />
         <SidebarLink to="/analytics" icon={BarChart2} label={t('sidebar.analytics', 'Analytics')} />
         <SidebarLink to="/settings" icon={Settings} label={t('sidebar.settings', 'Settings')} />
@@ -22,13 +22,14 @@ export default function Sidebar() {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function SidebarLink({ to, icon: Icon, label }) {
   return (
     <Link 
       to={to} 
-      className="flex items-center gap-4 px-4 py-3 text-gray-400 hover:bg-surface/50 hover:text-gray-200 transition-all rounded-md"
+      className="flex items-center gap-4 px-4 py-3 text-gray-400 hover:bg-surface/50 hover:text-gray-200 transition-all rounded-md group"
     >
-      <Icon size={20} />
+      <Icon size={20} className="group-hover:text-primary transition-colors" />
       <span className="font-sans text-sm font-semibold uppercase tracking-widest">{label}</span>
     </Link>
   );

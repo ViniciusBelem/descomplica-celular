@@ -1,16 +1,47 @@
-# React + Vite
+# Descomplica Celular V3 (React Edition)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A evolução do Descomplica Celular para uma arquitetura moderna, escalável e de alto desempenho.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologias
+- **Frontend:** React + Vite + Tailwind CSS
+- **Gestão de Estado:** Zustand
+- **Backend/DB:** Supabase (PostgreSQL + Auth)
+- **Internacionalização:** i18next
+- **Ícones:** Lucide-React
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ⚙️ Configuração Inicial
 
-## React Compiler
+### 1. Variáveis de Ambiente
+Renomeie o arquivo `.env.example` para `.env` e preencha com suas credenciais do Supabase:
+```env
+VITE_SUPABASE_URL=sua_url_do_supabase
+VITE_SUPABASE_ANON_KEY=sua_chave_anon_publica
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Configurar Banco de Dados
+Acesse o SQL Editor no painel do Supabase e execute o conteúdo do arquivo:
+`../docs/supabase_schema.sql`
 
-## Expanding the ESLint configuration
+Este script irá criar a tabela `smartphones`, configurar as políticas de segurança (RLS) e inserir os dados iniciais.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Rodar o Projeto
+```bash
+npm install
+npm run dev
+```
+
+## 📂 Estrutura de Pastas
+- `/src/app`: Configurações globais e roteamento.
+- `/src/components`: Componentes atômicos e complexos (Advisor, UI, Admin).
+- `/src/lib`: Clientes de API (Supabase).
+- `/src/pages`: Telas da aplicação (Home, Catalog, Detail, Admin).
+- `/src/services`: Camada de lógica de dados e comunicação com banco.
+- `/src/store`: Estado global (Auth, Advisor).
+
+## 🛡️ Admin Panel
+O acesso administrativo está disponível em `/admin` e requer autenticação.
+- Gerencie o catálogo de aparelhos em tempo real.
+- Edite scores, links de afiliados e tags de perfil.
+
+---
+**Desenvolvido para máxima usabilidade (99% usual).**

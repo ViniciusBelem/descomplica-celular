@@ -5,6 +5,14 @@ import { Button } from "./ui/Button";
  * Shows the match result with a premium "Glass" look and interactive hover.
  */
 export default function ResultCard({ item, rank }) {
+  const handleOfferClick = () => {
+    if (item.affiliate_link) {
+      window.open(item.affiliate_link, '_blank', 'noopener,noreferrer');
+    } else {
+      alert("Link de oferta não disponível no momento para este aparelho.");
+    }
+  };
+
   return (
     <div className="group relative p-6 bg-surface-container border border-white/5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 hover:border-primary/40 hover:bg-white/5 transition-all duration-500 overflow-hidden shadow-2xl">
       {/* Decorative rank background */}
@@ -38,7 +46,12 @@ export default function ResultCard({ item, rank }) {
         <span className="text-[10px] text-gray-600 uppercase font-bold tracking-widest mb-4">
           Menor preço disponível
         </span>
-        <Button variant="secondary" size="sm" className="w-full sm:w-auto">
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          className="w-full sm:w-auto"
+          onClick={handleOfferClick}
+        >
           Ver Oferta
         </Button>
       </div>

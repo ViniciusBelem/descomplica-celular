@@ -1,25 +1,51 @@
-import { Compass, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 
+/**
+ * Coming Soon Placeholder Page
+ * Used for routes that are planned but not yet implemented.
+ */
 export function ComingSoon() {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center animate-in fade-in duration-500 p-8">
-      <div className="w-24 h-24 mb-8 bg-primary/10 rounded-full flex items-center justify-center animate-pulse">
-        <Compass className="text-primary w-12 h-12" />
+    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-500">
+      <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-8 border border-primary/20">
+        <LayoutDashboard size={40} className="text-primary animate-pulse" />
       </div>
-      <h1 className="text-4xl md:text-5xl font-black text-white text-center tracking-tighter mb-4">
-        Área em Construção
-      </h1>
-      <p className="text-gray-400 text-center max-w-lg mb-10 text-lg">
-        Esta seção faz parte do roadmap da Arquitetura V3 e será liberada em breve com integrações avançadas.
-      </p>
       
-      <Link to="/">
-        <Button variant="primary" className="gap-2">
-          <ArrowLeft size={18} /> Voltar para o Consultor
+      <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter">
+        EM BREVE
+      </h1>
+      
+      <p className="text-gray-400 max-w-md text-lg mb-12">
+        Esta funcionalidade está em desenvolvimento e fará parte da próxima atualização do ecossistema Descomplica.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Link to="/">
+          <Button variant="primary" className="gap-2">
+            <ArrowLeft size={18} /> Voltar ao Início
+          </Button>
+        </Link>
+        <Button variant="outline">
+          Ficar por dentro
         </Button>
-      </Link>
+      </div>
+      
+      <div className="mt-16 pt-16 border-t border-white/5 w-full max-w-2xl grid grid-cols-3 gap-8">
+        <div>
+          <span className="block text-2xl font-bold text-white mb-1">94%</span>
+          <span className="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Core Completo</span>
+        </div>
+        <div>
+          <span className="block text-2xl font-bold text-white mb-1">V3</span>
+          <span className="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Engine React</span>
+        </div>
+        <div>
+          <span className="block text-2xl font-bold text-white mb-1">2026</span>
+          <span className="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Pronto para o Futuro</span>
+        </div>
+      </div>
     </div>
   );
 }

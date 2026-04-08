@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, Bell, Moon, User } from 'lucide-react';
+import { Menu, Bell, Moon, User, LayoutDashboard } from 'lucide-react';
+import { useAuthStore } from '../store/useAuthStore';
 
 export default function TopNav() {
   const { t, i18n } = useTranslation();
+  const { user } = useAuthStore();
 
   return (
     <header className="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/5 h-16">
@@ -32,8 +34,25 @@ export default function TopNav() {
           <button className="text-gray-400 hover:text-primary md:hidden"><Menu size={24} /></button>
           <button className="text-gray-400 hover:text-primary"><Bell size={24} /></button>
           <button className="text-gray-400 hover:text-primary hidden sm:block"><Moon size={24} /></button>
-          <Link to="/login" className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-gray-400 hover:border-primary transition-colors">
-            <User size={20} />
+          
+          <Link 
+            to={user ? "/admin" : "/login"} 
+            className="group relative flex items-center justify-center"
+          >
+            <div className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all overflow-hidden shadow-lg">
+              {user ? (
+                <span className="text-xs font-black text-primary uppercase">
+                  {user.email?.charAt(0)}
+                </span>
+              ) : (
+                <User size={20} />
+              )}
+            </div>
+            {user && (
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center border-2 border-surface shadow-sm">
+                <LayoutDashboard size={8} className="text-black font-black" />
+              </div>
+            )}
           </Link>
         </div>
       </div>

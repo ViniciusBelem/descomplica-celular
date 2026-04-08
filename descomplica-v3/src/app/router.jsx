@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Home } from "../pages/Home";
+import { Phones } from "../pages/Phones";
+import { PhoneDetail } from "../pages/PhoneDetail";
 import { Admin } from "../pages/Admin";
 import { Login } from "../pages/Login";
 import { ComingSoon } from "../pages/ComingSoon";
@@ -19,16 +21,22 @@ export const router = createBrowserRouter([
         index: true,
         element: <Home />
       },
-      // Tratamento para os links fantasmas da Sidebar
-      { path: "explore", element: <ComingSoon /> },
+      { 
+        path: "phones", 
+        element: <Phones /> 
+      },
+      { 
+        path: "phones/:id", 
+        element: <PhoneDetail /> 
+      },
       { path: "library", element: <ComingSoon /> },
       { path: "analytics", element: <ComingSoon /> },
       { path: "settings", element: <ComingSoon /> },
-      // Fallback 404 (Tudo que não existir)
+      // Fallback 404
       { path: "*", element: <ComingSoon /> }
     ]
   },
-  // -- AUTH ROUTE (Unprotected shell) --
+  // -- AUTH ROUTE --
   {
     path: "/login",
     element: <Login />
