@@ -16,7 +16,7 @@ export function AdvisorStep({
   return (
     <div className={cn(
       "flex items-start gap-6 transition-all duration-500",
-      !active && !completed ? "opacity-30 pointer-events-none" : "opacity-100"
+      !active && !completed ? "grayscale opacity-40" : "opacity-100"
     )}>
       <StepBadge 
         number={number} 
@@ -27,12 +27,15 @@ export function AdvisorStep({
       
       <div className="pt-2 w-full">
         <h3 className={cn(
-          "text-xl font-medium mb-1 transition-colors",
-          active ? "text-white" : "text-gray-400"
+          "text-xl font-black mb-1 transition-colors",
+          active ? "text-text" : "text-text-muted"
         )}>
           {title}
         </h3>
-        <p className="text-gray-500 text-sm mb-4 leading-relaxed">
+        <p className={cn(
+          "text-sm mb-4 leading-relaxed font-bold",
+          active ? "text-text-muted" : "text-muted"
+        )}>
           {description}
         </p>
 

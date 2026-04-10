@@ -49,7 +49,7 @@ export const useAdvisorStore = create((set, get) => ({
       const { budget, profile, priority } = get();
       const results = await phoneService.getRecommendations({ budget, profile, priority });
       set({ results, isComputing: false });
-    } catch (err) {
+    } catch {
       set({ error: "Erro ao processar recomendações. Tente novamente.", isComputing: false });
     }
   },

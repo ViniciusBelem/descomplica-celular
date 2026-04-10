@@ -8,10 +8,10 @@ export function ProfileStep() {
   const { step, profile, setProfile, nextStep, setStep, isStep2Valid } = useAdvisorStore();
 
   const options = [
-    { value: "balanced", label: "Equilibrado", icon: "⚖️" },
-    { value: "gamer", label: "Gamer / Performance", icon: "🎮" },
-    { value: "camera", label: "Fotografia", icon: "📸" },
-    { value: "battery", label: "Bateria Máxima", icon: "🔋" }
+    { value: "balanced", label: t('profile.balanced', 'Equilibrado'), icon: "⚖️" },
+    { value: "gamer", label: t('profile.gamer', 'Gamer / Performance'), icon: "🎮" },
+    { value: "camera", label: t('profile.camera', 'Fotografia'), icon: "📸" },
+    { value: "battery", label: t('profile.battery', 'Bateria Máxima'), icon: "🔋" }
   ];
 
   return (
@@ -28,14 +28,14 @@ export function ProfileStep() {
           <button
             key={opt.value}
             onClick={() => setProfile(opt.value)}
-            className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${
+            className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left group ${
               profile === opt.value 
-                ? "bg-primary/10 border-primary text-white shadow-lg shadow-primary/5" 
-                : "bg-surface border-white/5 text-gray-400 hover:border-white/20 hover:bg-white/5"
+                ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/5" 
+                : "bg-surface-container border-primary/5 text-text-muted hover:border-primary/20 hover:bg-surface"
             }`}
           >
-            <span className="text-2xl">{opt.icon}</span>
-            <span className="font-bold text-sm tracking-wide">{opt.label}</span>
+            <span className="text-2xl grayscale group-hover:grayscale-0 transition-all">{opt.icon}</span>
+            <span className={`font-black text-sm tracking-wide ${profile === opt.value ? 'text-primary' : 'text-text-muted group-hover:text-text'}`}>{opt.label}</span>
           </button>
         ))}
         <div className="col-span-1 sm:col-span-2 mt-4">

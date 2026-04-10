@@ -3,13 +3,77 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* DEFAULT LIGHT THEME - High Contrast / No Translucency on text */
+    --background: #ffffff;
+    --surface: #f8fafc;
+    --surface-container: #f1f5f9;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary: #9333ea;
+    --accent: #0d9488;
+    --success: #059669;
+    --error: #dc2626;
+    --warning: #d97706;
+    --muted: #64748b;
+    --text: #0f172a;       /* Deep Slate for maximum contrast */
+    --text-muted: #475569; /* Solid Slate for subtext */
+  }
+
+  .dark {
+    /* DARK THEME - Solid colors for text */
+    --background: #020617;
+    --surface: #0f172a;
+    --surface-container: #1e293b;
+    --primary: #818cf8;
+    --primary-hover: #6366f1;
+    --secondary: #c084fc;
+    --accent: #2dd4bf;
+    --success: #10b981;
+    --error: #f43f5e;
+    --warning: #fbbf24;
+    --muted: #64748b;
+    --text: #f8fafc;       /* Off-white for comfort */
+    --text-muted: #94a3b8; /* Slate gray for subtext */
+  }
+
+  /* PERSONALIZED PALETTE: "Midnight Ocean" */
+  .theme-ocean {
+    --background: #f0f9ff;
+    --surface: #e0f2fe;
+    --primary: #0369a1;
+    --text: #082f49;
+    --text-muted: #0c4a6e;
+  }
+  .dark .theme-ocean {
+    --background: #082f49;
+    --surface: #0c4a6e;
+    --primary: #38bdf8;
+    --text: #f0f9ff;
+    --text-muted: #bae6fd;
+  }
+
   body {
-    @apply bg-background text-gray-200 antialiased selection:bg-primary/40 selection:text-white;
+    @apply bg-background text-text antialiased transition-colors duration-300;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    background-color: var(--primary);
+    color: white;
   }
 }
 
 @layer utilities {
   .glass-panel {
-    @apply bg-surface/50 backdrop-blur-2xl border border-white/10 shadow-2xl;
+    background-color: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--primary), transparent 85%);
+    @apply shadow-xl;
+  }
+  
+  /* Remove translucency from all text utility children */
+  .text-high-contrast {
+    color: var(--text) !important;
+    opacity: 1 !important;
   }
 }

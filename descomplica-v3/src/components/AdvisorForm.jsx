@@ -7,6 +7,7 @@ import { PriorityStep } from './advisor/PriorityStep';
 import ResultCard from './ResultCard';
 import { Button } from './ui/Button';
 
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**

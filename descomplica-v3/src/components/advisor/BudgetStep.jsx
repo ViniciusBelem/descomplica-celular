@@ -24,7 +24,7 @@ export function BudgetStep() {
             value={budget} 
             onChange={(e) => setBudget(e.target.value)}
             placeholder="Ex: 3500" 
-            className="w-full bg-surface border border-white/5 rounded-lg py-4 pl-12 pr-4 text-white text-lg placeholder:text-gray-600 focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all outline-none font-sans" 
+            className="w-full bg-surface-container border border-primary/10 rounded-lg py-4 pl-12 pr-4 text-text text-lg placeholder:text-text-muted focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all outline-none font-bold" 
           />
         </div>
         <Button 

@@ -17,6 +17,62 @@
     "btnSearch": "Executar Busca Neural",
     "btnComputing": "Processando Redes...",
     "resultsTitle": "Seus Resultados",
-    "btnRedo": "Refazer Busca"
+    "btnRedo": "Refazer Busca",
+    "bestChoice": "Melhor Escolha",
+    "lowestPrice": "Menor preço disponível",
+    "viewOffer": "Ver Oferta"
+  },
+  "sidebar": {
+    "home": "Início"
+  },
+  "home": {
+    "badge": "Algoritmo de Precisão",
+    "title": "A Arte da Escolha. Redefinida.",
+    "desc": "Descomplicamos o mercado de celulares. Use o nosso Algoritmo Dinâmico para descobrir o smartphone ideal para seu orçamento e perfil de uso, em menos de 10 segundos."
+  },
+  "comingSoon": {
+    "title": "Área em Construção",
+    "desc": "Esta seção faz parte do roadmap da Arquitetura V3 e será liberada em breve com integrações avançadas.",
+    "back": "Voltar ao Site"
+  },
+  "profile": {
+    "balanced": "Equilibrado",
+    "gamer": "Gamer / Performance",
+    "camera": "Fotografia",
+    "battery": "Bateria Máxima"
+  },
+  "priority": {
+    "camera": "Qualidade da Câmera",
+    "battery": "Durabilidade de Bateria",
+    "performance": "Performance em Jogos",
+    "screen": "Qualidade de Tela"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "logout": "Sair",
+    "panel": "Painel Admin",
+    "catalog": "Catálogo de Aparelhos",
+    "catalogDesc": "Gerencie a base de dados do Algoritmo de Decisão.",
+    "addPhone": "Adicionar Celular",
+    "noPhones": "Nenhum aparelho cadastrado no Supabase.",
+    "colModel": "Modelo",
+    "colBrand": "Marca",
+    "colPrice": "Preço (R$)",
+    "colScore": "Score Base",
+    "colActions": "Ações",
+    "errLoadDb": "Erro ao carregar banco de dados:",
+    "backHome": "Voltar ao Site",
+    "settings": "Configurações",
+    "settingsDesc": "Personalize sua experiência administrativa."
+  },
+  "settings": {
+    "appearance": "Aparência",
+    "appearanceDesc": "Altere o tema e paleta de cores.",
+    "colorMode": "Modo de Cor",
+    "light": "Claro",
+    "dark": "Escuro",
+    "palettes": "Paletas de Cores",
+    "language": "Idioma",
+    "languageDesc": "Escolha o idioma global da interface."
   }
 }

@@ -107,23 +107,23 @@ export function PhoneModal({ isOpen, onClose, onSave, phoneToEdit = null }) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={!loading ? onClose : undefined} />
       
       {/* Modal Content */}
-      <div className="relative bg-surface border border-white/10 rounded-2xl w-full max-w-4xl max-h-full flex flex-col shadow-2xl animate-in slide-in-from-bottom-8 duration-300">
+      <div className="relative bg-surface border border-primary/20 rounded-2xl w-full max-w-4xl max-h-full flex flex-col shadow-2xl animate-in slide-in-from-bottom-8 duration-300">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5 rounded-t-2xl shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-primary/10 bg-surface-container rounded-t-2xl shrink-0">
           <div>
-             <h2 className="text-2xl font-black text-white">{phoneToEdit ? 'Editar Celular' : 'Novo Celular'}</h2>
-             <p className="text-gray-400 text-sm mt-1">Preencha todos os dados para alimentar o Algoritmo.</p>
+             <h2 className="text-2xl font-black text-text">{phoneToEdit ? 'Editar Celular' : 'Novo Celular'}</h2>
+             <p className="text-text-muted text-sm font-bold mt-1 uppercase tracking-widest">Painel de Catalogação</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors" disabled={loading}>
+          <button onClick={onClose} className="text-text-muted hover:text-primary transition-colors" disabled={loading}>
              <X size={24} />
           </button>
         </div>
 
         {/* Scrollable Form Body */}
-        <div className="p-6 overflow-y-auto custom-scrollbar">
+        <div className="p-6 overflow-y-auto custom-scrollbar bg-surface">
           {error && (
-            <div className="p-4 mb-6 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
+            <div className="p-4 mb-6 rounded-lg bg-error/10 border border-error/20 text-error text-sm font-bold text-center">
               {error}
             </div>
           )}
@@ -133,73 +133,73 @@ export function PhoneModal({ isOpen, onClose, onSave, phoneToEdit = null }) {
              {/* Section 1: Identifier */}
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Modelo</label>
-                   <input required type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Ex: Galaxy S24 Ultra" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">Modelo</label>
+                   <input required type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Ex: Galaxy S24 Ultra" className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-bold" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Marca</label>
-                   <input required type="text" name="brand" value={formData.brand} onChange={handleChange} placeholder="Ex: Samsung" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">Marca</label>
+                   <input required type="text" name="brand" value={formData.brand} onChange={handleChange} placeholder="Ex: Samsung" className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-bold" />
                 </div>
              </div>
 
              {/* Section 2: Numbers */}
              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="col-span-2 md:col-span-1 border-r border-white/5 pr-4">
-                   <label className="block text-xs font-bold uppercase tracking-widest text-primary mb-2">Preço (R$)</label>
-                   <input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} placeholder="3500.00" className="w-full bg-primary/5 border border-primary/20 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors font-mono" />
+                <div className="col-span-2 md:col-span-1 border-r border-primary/10 pr-4">
+                   <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">Preço (R$)</label>
+                   <input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} placeholder="3500.00" className="w-full bg-primary/5 border border-primary/20 rounded-lg p-4 text-primary outline-none focus:border-primary transition-all font-black" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Geral (x/100)</label>
-                   <input required type="number" name="match_score" value={formData.match_score} onChange={handleChange} placeholder="95" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2 text-center">Geral</label>
+                   <input required type="number" name="match_score" value={formData.match_score} onChange={handleChange} placeholder="95" className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-black text-center" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Câmera</label>
-                   <input required type="number" name="camera_score" value={formData.camera_score} onChange={handleChange} placeholder="9.5" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2 text-center">Câmera</label>
+                   <input required type="number" name="camera_score" value={formData.camera_score} onChange={handleChange} placeholder="95" className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-black text-center" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Bateria</label>
-                   <input required type="number" name="battery_score" value={formData.battery_score} onChange={handleChange} placeholder="9.0" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2 text-center">Bateria</label>
+                   <input required type="number" name="battery_score" value={formData.battery_score} onChange={handleChange} placeholder="95" className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-black text-center" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Perform.</label>
-                   <input required type="number" name="performance_score" value={formData.performance_score} onChange={handleChange} placeholder="9.8" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2 text-center">Perform.</label>
+                   <input required type="number" name="performance_score" value={formData.performance_score} onChange={handleChange} placeholder="95" className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-black text-center" />
                 </div>
              </div>
 
              {/* Section 3: Arrays (Tags) */}
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-2xl bg-black/20 border border-white/5">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-2xl bg-surface-container border border-primary/10">
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Profile Tags</label>
-                   <p className="text-[10px] text-gray-400 mb-3">Separadas por vírgula (ex: gamer, battery, camera)</p>
-                   <input type="text" name="profile_tags" value={formData.profile_tags} onChange={handleChange} placeholder="gamer, battery" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors font-mono text-sm" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">Profile Tags</label>
+                   <p className="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest">gamer, battery, camera</p>
+                   <input type="text" name="profile_tags" value={formData.profile_tags} onChange={handleChange} placeholder="gamer, battery" className="w-full bg-surface border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-bold text-sm" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Priority Tags</label>
-                   <p className="text-[10px] text-gray-400 mb-3">Separadas por vírgula (ex: gaming_performance, long_battery)</p>
-                   <input type="text" name="priority_tags" value={formData.priority_tags} onChange={handleChange} placeholder="camera_quality, software_updates" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors font-mono text-sm" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">Priority Tags</label>
+                   <p className="text-[10px] text-primary font-bold mb-3 uppercase tracking-widest">camera_quality, gaming_performance</p>
+                   <input type="text" name="priority_tags" value={formData.priority_tags} onChange={handleChange} placeholder="camera_quality, software_updates" className="w-full bg-surface border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-bold text-sm" />
                 </div>
              </div>
 
              {/* Section 4: URLs */}
              <div className="grid grid-cols-1 gap-6">
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">URL da Imagem</label>
-                   <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors text-sm" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2">URL da Imagem</label>
+                   <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all text-sm font-bold" />
                 </div>
                 <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-secondary mb-2">Link Afiliado de Venda</label>
-                   <input type="url" name="affiliate_link" value={formData.affiliate_link} onChange={handleChange} placeholder="https://amazon.com.br/..." className="w-full bg-secondary/5 border border-secondary/20 rounded-lg p-3 text-white outline-none focus:border-secondary transition-colors text-sm" />
+                   <label className="block text-xs font-black uppercase tracking-widest text-secondary mb-2">Link Afiliado de Venda</label>
+                   <input type="url" name="affiliate_link" value={formData.affiliate_link} onChange={handleChange} placeholder="https://amazon.com.br/..." className="w-full bg-secondary/5 border border-secondary/20 rounded-lg p-4 text-text outline-none focus:border-secondary transition-all text-sm font-bold" />
                 </div>
              </div>
           </form>
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-white/5 bg-white/5 rounded-b-2xl shrink-0 flex items-center justify-end gap-4">
-           <Button variant="outline" onClick={onClose} disabled={loading}>
+        <div className="p-6 border-t border-primary/10 bg-surface-container rounded-b-2xl shrink-0 flex items-center justify-end gap-4">
+           <Button variant="outline" onClick={onClose} disabled={loading} className="font-bold">
              Cancelar
            </Button>
-           <Button type="submit" form="phone-form" variant="primary" className="min-w-[120px]" disabled={loading}>
+           <Button type="submit" form="phone-form" variant="primary" className="min-w-[150px] font-black uppercase tracking-widest" disabled={loading}>
              {loading ? <Loader2 className="animate-spin" size={20} /> : "Salvar Aparelho"}
            </Button>
         </div>

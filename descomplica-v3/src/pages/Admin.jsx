@@ -5,12 +5,14 @@ import { Loader2, Plus, Edit, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { PhoneModal } from '../components/admin/PhoneModal';
 import { ConfirmDialog } from '../components/admin/ConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Admin Dashboard Page
  * Reads and Mutates the catalog directly from Supabase via RLS.
  */
 export function Admin() {
+  const { t } = useTranslation();
   const [phones, setPhones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,47 +94,47 @@ export function Admin() {
     <div className="max-w-6xl mx-auto animate-in fade-in duration-500">
        <div className="flex items-center justify-between mb-8">
          <div>
-           <h1 className="text-3xl font-black text-white">Catálogo de Aparelhos</h1>
-           <p className="text-gray-400 mt-1">Gerencie a base de dados do Algoritmo de Decisão.</p>
+           <h1 className="text-3xl font-black text-text">{t('admin.catalog', 'Catálogo de Aparelhos')}</h1>
+           <p className="text-text-muted font-bold mt-1 tracking-wide">{t('admin.catalogDesc', 'Gerencie a base de dados do Algoritmo de Decisão.')}</p>
          </div>
          <Button variant="primary" className="gap-2" onClick={handleOpenNew}>
-           <Plus size={16} /> Adicionar Celular
+           <Plus size={16} /> {t('admin.addPhone', 'Adicionar Celular')}
          </Button>
        </div>
 
-       <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden">
+       <div className="glass-panel rounded-2xl border border-primary/10 overflow-hidden shadow-2xl">
          {loading ? (
             <div className="p-16 flex justify-center">
               <Loader2 className="animate-spin text-primary" size={40} />
             </div>
          ) : error ? (
-            <div className="p-8 text-center text-error bg-error/5">
-              Erro ao carregar banco de dados: {error}
+            <div className="p-8 text-center text-error bg-error/5 font-bold">
+              {t('admin.errLoadDb', 'Erro ao carregar banco de dados:')} {error}
             </div>
          ) : phones.length === 0 ? (
-            <div className="p-16 text-center text-gray-500">
-               <p>Nenhum aparelho cadastrado no Supabase.</p>
+            <div className="p-16 text-center text-text-muted font-bold">
+               <p>{t('admin.noPhones', 'Nenhum aparelho cadastrado no Supabase.')}</p>
             </div>
          ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm whitespace-nowrap">
-                <thead className="bg-black/40 text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
+                <thead className="bg-surface-container text-text-muted font-black uppercase tracking-[0.2em] text-[10px] border-b border-primary/5">
                   <tr>
-                    <th className="px-6 py-4">Modelo</th>
-                    <th className="px-6 py-4">Marca</th>
-                    <th className="px-6 py-4">Preço (R$)</th>
-                    <th className="px-6 py-4">Score Base</th>
-                    <th className="px-6 py-4 text-right">Ações</th>
+                    <th className="px-6 py-5">{t('admin.colModel', 'Modelo')}</th>
+                    <th className="px-6 py-5">{t('admin.colBrand', 'Marca')}</th>
+                    <th className="px-6 py-5">{t('admin.colPrice', 'Preço (R$)')}</th>
+                    <th className="px-6 py-5">{t('admin.colScore', 'Score Base')}</th>
+                    <th className="px-6 py-5 text-right">{t('admin.colActions', 'Ações')}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-primary/5">
                   {phones.map((phone) => (
-                    <tr key={phone.id} className="hover:bg-white/5 transition-colors group">
-                      <td className="px-6 py-4 font-bold text-gray-100">{phone.name}</td>
-                      <td className="px-6 py-4 text-gray-400">{phone.brand}</td>
-                      <td className="px-6 py-4 font-mono text-secondary">R$ {phone.price?.toFixed(2)}</td>
+                    <tr key={phone.id} className="hover:bg-primary/5 transition-colors group">
+                      <td className="px-6 py-4 font-black text-text">{phone.name}</td>
+                      <td className="px-6 py-4 text-text-muted font-bold">{phone.brand}</td>
+                      <td className="px-6 py-4 font-black text-secondary">R$ {phone.price?.toFixed(2)}</td>
                       <td className="px-6 py-4">
-                        <span className="bg-primary/10 text-primary px-2 py-1 rounded-md font-bold">
+                        <span className="bg-primary/10 text-primary px-3 py-1 rounded-lg font-black">
                           {phone.match_score}
                         </span>
                       </td>
@@ -140,14 +142,14 @@ export function Admin() {
                         <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                            <button 
                              onClick={() => handleOpenEdit(phone)}
-                             className="text-gray-400 hover:text-white p-2 transition-colors bg-white/5 rounded-lg"
+                             className="text-text-muted hover:text-primary p-2 transition-colors bg-surface-container rounded-lg border border-transparent hover:border-primary/20"
                              title="Editar"
                            >
                              <Edit size={16} />
                            </button>
                            <button 
                              onClick={() => handleOpenDelete(phone)}
-                             className="text-gray-400 hover:text-error p-2 transition-colors bg-white/5 hover:bg-error/10 rounded-lg"
+                             className="text-text-muted hover:text-error p-2 transition-colors bg-surface-container hover:bg-error/5 rounded-lg border border-transparent hover:border-error/20"
                              title="Excluir"
                            >
                              <Trash2 size={16} />

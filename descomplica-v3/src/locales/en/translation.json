@@ -17,6 +17,62 @@
     "btnSearch": "Execute Neural Search",
     "btnComputing": "Processing Networks...",
     "resultsTitle": "Your Match Results",
-    "btnRedo": "Run Again"
+    "btnRedo": "Run Again",
+    "bestChoice": "Best Choice",
+    "lowestPrice": "Lowest price available",
+    "viewOffer": "View Offer"
+  },
+  "sidebar": {
+    "home": "Home"
+  },
+  "home": {
+    "badge": "Precision Algorithm",
+    "title": "The Art of Choice. Redefined.",
+    "desc": "We simplify the mobile market. Use our Dynamic Algorithm to discover the ideal smartphone for your budget and usage profile in less than 10 seconds."
+  },
+  "coming_soon": {
+    "title": "Area Under Construction",
+    "desc": "This section is part of the V3 Architecture roadmap and will be released soon with advanced integrations.",
+    "back": "Return to Site"
+  },
+  "profile": {
+    "balanced": "Balanced",
+    "gamer": "Gaming / Performance",
+    "camera": "Photography",
+    "battery": "Maximum Battery"
+  },
+  "priority": {
+    "camera": "Camera Quality",
+    "battery": "Battery Endurance",
+    "performance": "Gaming Performance",
+    "screen": "Screen Quality"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "panel": "Admin Panel",
+    "catalog": "Device Catalog",
+    "catalogDesc": "Manage the Decision Algorithm database.",
+    "addPhone": "Add Device",
+    "noPhones": "No devices registered in Supabase.",
+    "colModel": "Model",
+    "colBrand": "Brand",
+    "colPrice": "Price ($)",
+    "colScore": "Base Score",
+    "colActions": "Actions",
+    "errLoadDb": "Error loading database:",
+    "backHome": "Return to Site",
+    "settings": "Settings",
+    "settingsDesc": "Personalize your administrative experience."
+  },
+  "settings": {
+    "appearance": "Appearance",
+    "appearanceDesc": "Change the theme and color palette.",
+    "colorMode": "Color Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "palettes": "Color Palettes",
+    "language": "Language",
+    "languageDesc": "Choose the global interface language."
   }
 }

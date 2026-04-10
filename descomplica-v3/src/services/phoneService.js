@@ -29,6 +29,7 @@ export const phoneService = {
           .select('*')
           .lte('price', parseFloat(budget) || 15000)
           .contains('profile_tags', [profile]) // PostgreSQL array contains operator
+          .contains('priority_tags', [priority]) // Filtro real de prioridade
           .order('match_score', { ascending: false })
           .limit(3);
 
