@@ -1,25 +1,72 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { phoneService } from '../services/phoneService';
-import { ArrowLeft, Star, Battery, Cpu, Camera, ShoppingCart, Loader2, ShieldCheck } from 'lucide-react';
+import { favoriteService } from '../services/favoriteService';
+import { useAuthStore } from '../store/useAuthStore';
+import { ArrowLeft, Star, Battery, Cpu, Camera, ShoppingCart, Loader2, ShieldCheck, Heart } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../components/ui/Toast';
 
 export function PhoneDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const { addToast } = useToast();
   const [phone, setPhone] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       const data = await phoneService.getPhoneById(id);
       if (data) {
         setPhone(data);
+        
+        // Check if already favorited
+        if (user) {
+          const cloudFavs = await favoriteService.getFavorites();
+          setIsFavorited(cloudFavs.some(f => f.id === data.id));
+        } else {
+          const localFavs = JSON.parse(localStorage.getItem('descomplica_favs') || '[]');
+          setIsFavorited(localFavs.some(f => f.id === data.id));
+        }
       }
       setLoading(false);
     }
     fetchData();
-  }, [id]);
+  }, [id, user]);
+
+  const toggleFavorite = async () => {
+    if (isFavorited) {
+      if (user) {
+        await favoriteService.removeFavorite(phone.id);
+      } else {
+        const localFavs = JSON.parse(localStorage.getItem('descomplica_favs') || '[]');
+        const updated = localFavs.filter(f => f.id !== phone.id);
+        localStorage.setItem('descomplica_favs', JSON.stringify(updated));
+      }
+      setIsFavorited(false);
+    } else {
+      if (user) {
+        await favoriteService.addFavorite(phone.id);
+      } else {
+        const localFavs = JSON.parse(localStorage.getItem('descomplica_favs') || '[]');
+        if (!localFavs.some(f => f.id === phone.id)) {
+          localFavs.push(phone);
+          localStorage.setItem('descomplica_favs', JSON.stringify(localFavs));
+        }
+      }
+      setIsFavorited(true);
+    }
+  };
+
+  const handleBuyClick = () => {
+    if (phone.affiliate_link) {
+      window.open(phone.affiliate_link, '_blank', 'noopener,noreferrer');
+    } else {
+      addToast("Link de oferta não disponível no momento.", 'info');
+    }
+  };
 
   if (loading) {
     return (
@@ -38,20 +85,28 @@ export function PhoneDetail() {
     );
   }
 
-  const handleBuyClick = () => {
-    if (phone.affiliate_link) {
-      window.open(phone.affiliate_link, '_blank', 'noopener,noreferrer');
-    } else {
-      alert("Link de oferta não disponível no momento.");
-    }
-  };
-
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
-      <Link to="/phones" className="inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-8 group">
-        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-sm font-bold uppercase tracking-widest">Voltar ao Catálogo</span>
-      </Link>
+      <div className="flex items-center justify-between mb-8">
+        <Link to="/phones" className="inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors group">
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-bold uppercase tracking-widest">Voltar ao Catálogo</span>
+        </Link>
+        
+        <button 
+          onClick={toggleFavorite}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${
+            isFavorited 
+              ? 'bg-error/10 border-error/20 text-error' 
+              : 'bg-white/5 border-white/5 text-gray-400 hover:text-white'
+          }`}
+        >
+          <Heart size={18} fill={isFavorited ? 'currentColor' : 'none'} />
+          <span className="text-[10px] font-black uppercase tracking-widest">
+            {isFavorited ? 'Salvo na Biblioteca' : 'Salvar Aparelho'}
+          </span>
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         {/* Left: Image Card */}

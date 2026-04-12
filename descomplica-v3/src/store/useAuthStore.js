@@ -45,6 +45,22 @@ export const useAuthStore = create((set) => ({
     return data;
   },
 
+  // Registration action
+  signUp: async (email, password, metadata = {}) => {
+    if (!supabase) throw new Error("Supabase client not initialized.");
+    
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: metadata,
+      },
+    });
+    
+    if (error) throw error;
+    return data;
+  },
+
   // Logout action
   signOut: async () => {
     if (!supabase) return;

@@ -4,9 +4,14 @@ import { Phones } from "../pages/Phones";
 import { PhoneDetail } from "../pages/PhoneDetail";
 import { Admin } from "../pages/Admin";
 import { Login } from "../pages/Login";
+import { Register } from "../pages/Register";
+import { Library } from "../pages/Library";
+import { Analytics } from "../pages/Analytics";
+import { Settings } from "../pages/Settings";
 import { ComingSoon } from "../pages/ComingSoon";
 import Layout from "../components/Layout";
 import AdminLayout from "../components/AdminLayout";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 /**
  * Global Router Setup (React Router v7 Pattern)
@@ -29,22 +34,30 @@ export const router = createBrowserRouter([
         path: "phones/:id", 
         element: <PhoneDetail /> 
       },
-      { path: "library", element: <ComingSoon /> },
-      { path: "analytics", element: <ComingSoon /> },
-      { path: "settings", element: <ComingSoon /> },
+      { path: "library", element: <Library /> },
+      { path: "analytics", element: <Analytics /> },
+      { path: "settings", element: <Settings /> },
       // Fallback 404
       { path: "*", element: <ComingSoon /> }
     ]
   },
-  // -- AUTH ROUTE --
+  // -- AUTH ROUTES --
   {
     path: "/login",
     element: <Login />
   },
+  {
+    path: "/register",
+    element: <Register />
+  },
   // -- PRIVATE ADMIN ROUTES --
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
