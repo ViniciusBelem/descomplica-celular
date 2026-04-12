@@ -44,12 +44,24 @@ export const useAdvisorStore = create((set, get) => ({
    * Triggers the neural match algorithm (Service Call)
    */
   executeSearch: async () => {
+    const { budget, profile, priority } = get();
+    console.log("🧠 [Neural Match] Inciando processamento...");
+    console.log(`📊 Parâmetros: Orçamento: R$${budget} | Perfil: ${profile} | Prioridade: ${priority}`);
+    
     set({ isComputing: true, error: null });
+    
     try {
-      const { budget, profile, priority } = get();
       const results = await phoneService.getRecommendations({ budget, profile, priority });
+      
+      if (!results || results.length === 0) {
+        console.warn("⚠️ [Neural Match] Nenhum resultado encontrado.");
+      } else {
+        console.log(`✅ [Neural Match] ${results.length} dispositivos encontrados.`);
+      }
+      
       set({ results, isComputing: false });
-    } catch {
+    } catch (err) {
+      console.error("❌ [Neural Match] Falha crítica:", err);
       set({ error: "Erro ao processar recomendações. Tente novamente.", isComputing: false });
     }
   },

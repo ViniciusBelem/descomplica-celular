@@ -15,10 +15,10 @@ export default function TopNav() {
             Descomplica
           </Link>
           <nav className="hidden md:flex gap-6 font-sans text-sm font-medium">
-            <a href="#hero" className="text-primary border-b-2 border-primary pb-1">{t('nav.discover')}</a>
-            <a href="#compare" className="text-gray-400 hover:text-white transition-colors">{t('nav.compare')}</a>
-            <a href="#specs" className="text-gray-400 hover:text-white transition-colors">{t('nav.specs')}</a>
-            <a href="#advisors" className="text-gray-400 hover:text-white transition-colors">{t('nav.advisors')}</a>
+            <Link to="/" className="text-gray-400 hover:text-white transition-colors">{t('nav.discover', 'Home')}</Link>
+            <Link to="/phones" className="text-gray-400 hover:text-white transition-colors">{t('nav.specs', 'Catálogo')}</Link>
+            <Link to="/library" className="text-gray-400 hover:text-white transition-colors">Biblioteca</Link>
+            <Link to="/analytics" className="text-gray-400 hover:text-white transition-colors">Insights</Link>
           </nav>
         </div>
         
@@ -31,13 +31,10 @@ export default function TopNav() {
             <option value="pt" className="bg-surface text-gray-200">PT</option>
             <option value="en" className="bg-surface text-gray-200">EN</option>
           </select>
-          <button className="text-gray-400 hover:text-primary md:hidden"><Menu size={24} /></button>
-          <button className="text-gray-400 hover:text-primary"><Bell size={24} /></button>
-          <button className="text-gray-400 hover:text-primary hidden sm:block"><Moon size={24} /></button>
           
           <Link 
             to={user ? "/admin" : "/login"} 
-            className="group relative flex items-center justify-center"
+            className="group relative flex items-center justify-center ml-2"
           >
             <div className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all overflow-hidden shadow-lg">
               {user ? (

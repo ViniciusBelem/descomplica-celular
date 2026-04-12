@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail, Lock, ShieldCheck } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 /**
  * Login Page
@@ -35,61 +36,83 @@ export function Login() {
   };
 
   return (
-    <div className="p-8 max-w-md mx-auto min-h-screen flex items-center justify-center">
-       <div className="w-full animate-in slide-in-from-bottom-8 duration-500">
-         <div className="text-center mb-8">
-            <h1 className="text-3xl font-black mb-2 text-primary">Acesso Restrito</h1>
-            <p className="text-gray-400 text-sm">Credenciais de Administrador necessárias</p>
+    <div className="p-8 max-w-lg mx-auto min-h-screen flex items-center justify-center">
+       <div className="w-full animate-in slide-in-from-bottom-12 duration-700">
+         <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-3xl mb-4 border border-primary/20">
+               <ShieldCheck className="text-primary" size={32} />
+            </div>
+            <h1 className="text-4xl font-black mb-2 text-white tracking-tighter">Portal de Acesso</h1>
+            <p className="text-gray-400 text-sm font-medium">Bem-vindo à área administrativa do Descomplica</p>
          </div>
          
-         <div className="glass-panel p-8 rounded-3xl bg-surface-container border border-white/5 relative overflow-hidden">
+         <div className="glass-panel p-8 rounded-3xl bg-surface-container border border-white/5 relative overflow-hidden shadow-2xl">
             {loading && (
               <div className="absolute inset-0 bg-surface-container/80 backdrop-blur-sm flex items-center justify-center z-10">
-                <Loader2 className="animate-spin text-primary" size={32} />
+                <Loader2 className="animate-spin text-primary" size={40} />
               </div>
             )}
             
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-5">
               {error && (
-                <div className="p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm text-center">
+                <div className="p-4 rounded-xl bg-error/10 border border-error/20 text-error text-xs font-bold text-center animate-in shake duration-300">
                   {error}
                 </div>
               )}
               
-              <div>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="Administrador (E-mail)" 
-                  className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors" 
-                />
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">E-mail Corporativo</label>
+                <div className="relative">
+                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
+                   <input 
+                     type="email" 
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
+                     required
+                     placeholder="adm@descomplica.com" 
+                     className="w-full bg-black/40 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white outline-none focus:border-primary transition-all shadow-inner" 
+                   />
+                </div>
               </div>
               
-              <div>
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="Senha" 
-                  className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors" 
-                />
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Senha de Acesso</label>
+                <div className="relative">
+                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
+                   <input 
+                     type="password" 
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
+                     required
+                     placeholder="••••••" 
+                     className="w-full bg-black/40 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white outline-none focus:border-primary transition-all shadow-inner" 
+                   />
+                </div>
               </div>
               
-              <button 
-                type="submit"
-                disabled={loading}
-                className="w-full bg-primary text-black font-bold rounded-lg p-4 mt-6 hover:bg-primary-hover transition-colors shadow-lg shadow-primary/20"
-              >
-                AUTENTICAR
-              </button>
+              <div className="pt-4">
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-primary text-black font-black rounded-xl p-5 hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-[0.98]"
+                >
+                  AUTENTICAR NO SISTEMA
+                </button>
+              </div>
             </form>
+
+            <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+               <span className="text-xs text-gray-500">Novo na plataforma?</span>
+               <Link to="/register" className="text-xs font-black text-primary hover:text-white transition-colors uppercase tracking-widest">
+                 Criar Conta Profissional →
+               </Link>
+            </div>
          </div>
          
-         <div className="mt-8 text-center hidden md:block">
-           <Link to="/" className="text-sm text-gray-500 hover:text-white transition-colors">← Voltar à Tela Inicial</Link>
+         <div className="mt-12 text-center">
+           <Link to="/" className="text-[10px] font-black text-gray-600 hover:text-white transition-colors uppercase tracking-[0.3em]">
+             ← Retornar à Tela Inicial
+           </Link>
          </div>
        </div>
     </div>

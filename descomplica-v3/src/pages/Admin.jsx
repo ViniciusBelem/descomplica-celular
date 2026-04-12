@@ -5,6 +5,7 @@ import { Loader2, Plus, Edit, Trash2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { PhoneModal } from '../components/admin/PhoneModal';
 import { ConfirmDialog } from '../components/admin/ConfirmDialog';
+import { useToast } from '../components/ui/Toast';
 
 /**
  * Admin Dashboard Page
@@ -14,6 +15,7 @@ export function Admin() {
   const [phones, setPhones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToast } = useToast();
 
   // Modal States
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
@@ -31,7 +33,11 @@ export function Admin() {
   async function fetchPhones() {
     setLoading(true);
     try {
-      const { data, err } = await supabase
+      if (!supabase) {
+        throw new Error("Supabase não configurado. Verifique seu arquivo .env");
+      }
+
+      const { data, error: err } = await supabase
         .from('smartphones')
         .select('*')
         .order('created_at', { ascending: false });
@@ -41,6 +47,7 @@ export function Admin() {
       setError(null);
     } catch (err) {
       setError(err.message);
+      addToast(err.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -64,13 +71,18 @@ export function Admin() {
   };
 
   const handleSavePhone = async (payload, id) => {
-    if (id) {
-      await adminService.updatePhone(id, payload);
-    } else {
-      await adminService.insertPhone(payload);
+    try {
+      if (id) {
+        await adminService.updatePhone(id, payload);
+        addToast("Aparelho atualizado com sucesso!", "success");
+      } else {
+        await adminService.insertPhone(payload);
+        addToast("Aparelho cadastrado no catálogo!", "success");
+      }
+      await fetchPhones();
+    } catch (err) {
+      addToast("Erro ao salvar: " + err.message, "error");
     }
-    // Refresh table safely
-    await fetchPhones();
   };
 
   const handleConfirmDelete = async () => {
@@ -78,11 +90,12 @@ export function Admin() {
     setIsDeleting(true);
     try {
       await adminService.deletePhone(phoneToDelete.id);
+      addToast(`'${phoneToDelete.name}' foi removido do catálogo.`, "success");
       await fetchPhones();
       setIsConfirmOpen(false);
       setPhoneToDelete(null);
     } catch (err) {
-      alert("Erro ao excluir: " + err.message);
+      addToast("Erro ao excluir: " + err.message, "error");
     } finally {
       setIsDeleting(false);
     }
@@ -106,8 +119,9 @@ export function Admin() {
               <Loader2 className="animate-spin text-primary" size={40} />
             </div>
          ) : error ? (
-            <div className="p-8 text-center text-error bg-error/5">
-              Erro ao carregar banco de dados: {error}
+            <div className="p-8 text-center text-error bg-error/5 flex flex-col items-center gap-4">
+              <p>Erro ao carregar banco de dados: {error}</p>
+              <Button size="sm" variant="outline" onClick={fetchPhones}>Tentar Novamente</Button>
             </div>
          ) : phones.length === 0 ? (
             <div className="p-16 text-center text-gray-500">

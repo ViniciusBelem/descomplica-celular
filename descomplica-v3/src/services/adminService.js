@@ -1,44 +1,62 @@
 import { supabase } from '../lib/supabase';
 
 /**
- * Service to manage catalog operations (Create, Update, Delete)
+ * Admin Service
+ * Handles administrative operations for the smartphone catalog.
  */
-
 export const adminService = {
-  // CREATE
+  /**
+   * Inserts a new smartphone into the catalog.
+   */
   async insertPhone(phoneData) {
-    if (!supabase) throw new Error("Supabase não configurado.");
+    if (!supabase) throw new Error("Supabase client not initialized.");
+    
     const { data, error } = await supabase
       .from('smartphones')
       .insert([phoneData])
       .select();
-
-    if (error) throw error;
-    return data?.[0]; // return the inserted row
+    
+    if (error) {
+      console.error("Error inserting phone:", error);
+      throw error;
+    }
+    return data;
   },
 
-  // UPDATE
-  async updatePhone(id, phoneData) {
-    if (!supabase) throw new Error("Supabase não configurado.");
+  /**
+   * Updates an existing smartphone's data.
+   */
+  async updatePhone(id, updateData) {
+    if (!supabase) throw new Error("Supabase client not initialized.");
+
     const { data, error } = await supabase
       .from('smartphones')
-      .update(phoneData)
+      .update(updateData)
       .eq('id', id)
       .select();
 
-    if (error) throw error;
-    return data?.[0]; // return the updated row
+    if (error) {
+      console.error("Error updating phone:", error);
+      throw error;
+    }
+    return data;
   },
 
-  // DELETE
+  /**
+   * Deletes a smartphone from the database.
+   */
   async deletePhone(id) {
-    if (!supabase) throw new Error("Supabase não configurado.");
+    if (!supabase) throw new Error("Supabase client not initialized.");
+
     const { error } = await supabase
       .from('smartphones')
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error deleting phone:", error);
+      throw error;
+    }
     return true;
   }
 };

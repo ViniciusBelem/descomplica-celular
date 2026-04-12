@@ -1,40 +1,56 @@
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import { Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '../ui/Button';
 
-export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, isLoading }) {
+/**
+ * ConfirmDialog
+ * Generic modal to confirm destructive or critical actions.
+ */
+export function ConfirmDialog({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  title = "Tem certeza?", 
+  message = "Esta ação não pode ser desfeita.",
+  isLoading = false 
+}) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300" 
         onClick={!isLoading ? onClose : undefined}
       />
       
-      {/* Modal */}
-      <div className="relative bg-surface border border-white/10 rounded-2xl w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        <div className="p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center shrink-0">
-              <AlertTriangle className="text-error" size={24} />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-white">{title}</h3>
-            </div>
+      {/* Modal Content */}
+      <div className="relative w-full max-w-md bg-[#1c1b1d] border border-white/5 rounded-3xl p-8 shadow-2xl animate-in zoom-in-95 duration-300">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-16 h-16 bg-error/10 text-error rounded-full flex items-center justify-center mb-6">
+            <AlertTriangle size={32} />
           </div>
-          <p className="text-gray-400 mb-8 pl-16">{message}</p>
           
-          <div className="flex items-center justify-end gap-3">
-            <Button variant="outline" onClick={onClose} disabled={isLoading}>
+          <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+          <p className="text-gray-400 text-sm mb-10 leading-relaxed">
+            {message}
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <Button 
+              variant="outline" 
+              className="flex-1" 
+              onClick={onClose}
+              disabled={isLoading}
+            >
               Cancelar
             </Button>
             <Button 
-               className="bg-error text-white hover:bg-error/80 border-none shadow-error/20"
-               onClick={onConfirm}
-               disabled={isLoading}
+              variant="primary" 
+              className="flex-1 bg-error hover:bg-error-hover text-white shadow-error/20" 
+              onClick={onConfirm}
+              disabled={isLoading}
             >
-              {isLoading ? <Loader2 className="animate-spin" size={20} /> : "Sim, Excluir"}
+              {isLoading ? <Loader2 className="animate-spin" size={18} /> : "Excluir"}
             </Button>
           </div>
         </div>

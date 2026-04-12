@@ -1,15 +1,18 @@
 import { Button } from "./ui/Button";
+import { useToast } from "./ui/Toast";
 
 /**
  * ResultCard (Refined)
  * Shows the match result with a premium "Glass" look and interactive hover.
  */
 export default function ResultCard({ item, rank }) {
+  const { addToast } = useToast();
+
   const handleOfferClick = () => {
     if (item.affiliate_link) {
       window.open(item.affiliate_link, '_blank', 'noopener,noreferrer');
     } else {
-      alert("Link de oferta não disponível no momento para este aparelho.");
+      addToast("Link de oferta não disponível no momento para este aparelho.", 'info');
     }
   };
 

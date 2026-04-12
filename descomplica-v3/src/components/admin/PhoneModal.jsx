@@ -1,208 +1,262 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X, Save, Loader2 } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { useToast } from '../ui/Toast';
 
-// Default empty state for the form
-const initialState = {
-  name: '',
-  brand: '',
-  price: '',
-  match_score: '',
-  camera_score: '',
-  battery_score: '',
-  performance_score: '',
-  image_url: '',
-  affiliate_link: '',
-  profile_tags: '',
-  priority_tags: ''
-};
-
+/**
+ * PhoneModal
+ * Create/Edit smartphone modal with JSONB score support.
+ */
 export function PhoneModal({ isOpen, onClose, onSave, phoneToEdit = null }) {
-  const [formData, setFormData] = useState(initialState);
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Pre-fill form if editing
-  useEffect(() => {
-    if (isOpen) {
-      if (phoneToEdit) {
-        setFormData({
-          name: phoneToEdit.name || '',
-          brand: phoneToEdit.brand || '',
-          price: phoneToEdit.price?.toString() || '',
-          match_score: phoneToEdit.match_score?.toString() || '',
-          camera_score: phoneToEdit.scores?.camera?.toString() || phoneToEdit.camera_score?.toString() || '',
-          battery_score: phoneToEdit.scores?.battery?.toString() || phoneToEdit.battery_score?.toString() || '',
-          performance_score: phoneToEdit.scores?.performance?.toString() || phoneToEdit.performance_score?.toString() || '',
-          image_url: phoneToEdit.image_url || '',
-          affiliate_link: phoneToEdit.affiliate_link || '',
-          profile_tags: (phoneToEdit.profile_tags || []).join(', '),
-          priority_tags: (phoneToEdit.priority_tags || []).join(', ')
-        });
-      } else {
-        setFormData(initialState);
-      }
-      setError(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    brand: '',
+    model: '',
+    price: '',
+    image_url: '',
+    description: '',
+    affiliate_link: '',
+    match_score: 85,
+    profile_tags: [],
+    priority_tags: [],
+    scores: {
+      camera: 80,
+      battery: 80,
+      performance: 80,
+      display: 80
     }
-  }, [isOpen, phoneToEdit]);
+  });
 
-  if (!isOpen) return null;
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  useEffect(() => {
+    if (phoneToEdit) {
+      setFormData({
+        ...phoneToEdit,
+        price: phoneToEdit.price?.toString() || '',
+        scores: phoneToEdit.scores || { camera: 0, battery: 0, performance: 0, display: 0 }
+      });
+    } else {
+      setFormData({
+        name: '',
+        brand: '',
+        model: '',
+        price: '',
+        image_url: '',
+        description: '',
+        affiliate_link: '',
+        match_score: 85,
+        profile_tags: [],
+        priority_tags: [],
+        scores: { camera: 80, battery: 80, performance: 80, display: 80 }
+      });
+    }
+  }, [phoneToEdit, isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-
     try {
-      // Validate empty numerical fields before saving
-      const requiredNumbers = ['price', 'match_score', 'camera_score', 'battery_score', 'performance_score'];
-      for (const key of requiredNumbers) {
-         if (formData[key] === '' || isNaN(formData[key])) {
-            throw new Error(`O campo numérico "${key}" é obrigatório e precisa ser um número válido.`);
-         }
-      }
-
-      // Format payload for EXACT Supabase Schema
-      // Relational fields + JSONB conversions
       const payload = {
-        name: formData.name.trim(),
-        brand: formData.brand.trim(),
-        model: formData.name.trim(), // Fallback model to name as it is NOT NULL in the schema
+        ...formData,
         price: parseFloat(formData.price),
-        image_url: formData.image_url.trim() || null,
-        affiliate_link: formData.affiliate_link.trim() || null, // Returned to the payload!
-        description: "",
-        match_score: parseInt(formData.match_score, 10),
-        
-        // Tags are arrays of texts
-        profile_tags: formData.profile_tags.split(',').map(t => t.trim()).filter(Boolean),
-        priority_tags: formData.priority_tags.split(',').map(t => t.trim()).filter(Boolean),
-
-        // Deep JSONB
-        scores: {
-          camera: parseInt(formData.camera_score, 10),
-          battery: parseInt(formData.battery_score, 10),
-          performance: parseInt(formData.performance_score, 10),
-          display: 50 // Default
-        }
+        match_score: parseInt(formData.match_score)
       };
-
-      await onSave(payload, phoneToEdit?.id); // Trigger parent save function
-      onClose(); // Close modal on success
+      await onSave(payload, phoneToEdit?.id);
+      onClose();
     } catch (err) {
-      setError(err.message || 'Erro ao preparar dados do celular. Verifique os formatos.');
+      addToast("Erro ao salvar: " + err.message, 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  const toggleTag = (type, tag) => {
+    setFormData(prev => {
+      const list = [...prev[type]];
+      const index = list.indexOf(tag);
+      if (index > -1) list.splice(index, 1);
+      else list.push(tag);
+      return { ...prev, [type]: list };
+    });
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={!loading ? onClose : undefined} />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
       
-      {/* Modal Content */}
-      <div className="relative bg-surface border border-white/10 rounded-2xl w-full max-w-4xl max-h-full flex flex-col shadow-2xl animate-in slide-in-from-bottom-8 duration-300">
-        
+      <div className="relative w-full max-w-4xl bg-[#1c1b1d] border border-white/10 rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5 rounded-t-2xl shrink-0">
-          <div>
-             <h2 className="text-2xl font-black text-white">{phoneToEdit ? 'Editar Celular' : 'Novo Celular'}</h2>
-             <p className="text-gray-400 text-sm mt-1">Preencha todos os dados para alimentar o Algoritmo.</p>
-          </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors" disabled={loading}>
-             <X size={24} />
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/2">
+          <h2 className="text-xl font-bold text-white">
+            {phoneToEdit ? 'Editar Aparelho' : 'Novo Aparelho'}
+          </h2>
+          <button onClick={onClose} className="p-2 text-gray-500 hover:text-white transition-colors">
+            <X size={20} />
           </button>
         </div>
 
-        {/* Scrollable Form Body */}
-        <div className="p-6 overflow-y-auto custom-scrollbar">
-          {error && (
-            <div className="p-4 mb-6 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
-              {error}
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="p-8 overflow-y-auto max-h-[80vh]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            {/* Left Column: Basic Info */}
+            <div className="space-y-6">
+              <h3 className="text-[10px] uppercase tracking-widest font-black text-primary mb-2">Informações Básicas</h3>
+              
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400">Nome Comercial</label>
+                <input 
+                  required
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  placeholder="Ex: iPhone 15 Pro Max" 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-primary transition-colors"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-400">Marca</label>
+                  <input 
+                    required
+                    value={formData.brand}
+                    onChange={e => setFormData({...formData, brand: e.target.value})}
+                    placeholder="Apple" 
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-400">Preço (R$)</label>
+                  <input 
+                    required
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={e => setFormData({...formData, price: e.target.value})}
+                    placeholder="0.00" 
+                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400">URL da Imagem (PNG Transparente ideal)</label>
+                <div className="flex gap-4">
+                  <input 
+                    value={formData.image_url}
+                    onChange={e => setFormData({...formData, image_url: e.target.value})}
+                    placeholder="https://exemplo.com/imagem.png" 
+                    className="flex-1 bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-primary transition-colors"
+                  />
+                  {formData.image_url && (
+                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-xl p-1 flex items-center justify-center overflow-hidden">
+                       <img src={formData.image_url} alt="Preview" className="max-w-full max-h-full object-contain" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400">Link de Afiliado</label>
+                <input 
+                  value={formData.affiliate_link}
+                  onChange={e => setFormData({...formData, affiliate_link: e.target.value})}
+                  placeholder="https://amzn.to/..." 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-primary transition-colors"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400">Descrição Curta</label>
+                <textarea 
+                  value={formData.description}
+                  onChange={e => setFormData({...formData, description: e.target.value})}
+                  rows={3}
+                  placeholder="Destaque principal do aparelho..." 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-primary transition-colors resize-none"
+                />
+              </div>
             </div>
-          )}
-          
-          <form id="phone-form" onSubmit={handleSubmit} className="space-y-8">
-             
-             {/* Section 1: Identifier */}
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Modelo</label>
-                   <input required type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Ex: Galaxy S24 Ultra" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Marca</label>
-                   <input required type="text" name="brand" value={formData.brand} onChange={handleChange} placeholder="Ex: Samsung" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors" />
-                </div>
-             </div>
 
-             {/* Section 2: Numbers */}
-             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="col-span-2 md:col-span-1 border-r border-white/5 pr-4">
-                   <label className="block text-xs font-bold uppercase tracking-widest text-primary mb-2">Preço (R$)</label>
-                   <input required type="number" step="0.01" name="price" value={formData.price} onChange={handleChange} placeholder="3500.00" className="w-full bg-primary/5 border border-primary/20 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors font-mono" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Geral (x/100)</label>
-                   <input required type="number" name="match_score" value={formData.match_score} onChange={handleChange} placeholder="95" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Câmera</label>
-                   <input required type="number" name="camera_score" value={formData.camera_score} onChange={handleChange} placeholder="9.5" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Bateria</label>
-                   <input required type="number" name="battery_score" value={formData.battery_score} onChange={handleChange} placeholder="9.0" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Perform.</label>
-                   <input required type="number" name="performance_score" value={formData.performance_score} onChange={handleChange} placeholder="9.8" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-white transition-colors font-mono text-center" />
-                </div>
-             </div>
+            {/* Right Column: Algorithm Stats */}
+            <div className="space-y-6">
+               <h3 className="text-[10px] uppercase tracking-widest font-black text-secondary mb-2">Parâmetros do Algoritmo</h3>
+               
+               {/* JSONB Scores */}
+               <div className="grid grid-cols-2 gap-4 bg-white/2 p-4 rounded-2xl border border-white/5">
+                 {Object.keys(formData.scores).map(key => (
+                   <div key={key} className="space-y-1">
+                     <label className="text-[10px] font-bold text-gray-500 uppercase">{key}</label>
+                     <input 
+                       type="number" 
+                       min="0" max="100"
+                       value={formData.scores[key]}
+                       onChange={e => setFormData({
+                         ...formData, 
+                         scores: { ...formData.scores, [key]: parseInt(e.target.value) }
+                       })}
+                       className="w-full bg-black/40 border border-white/10 rounded-lg p-2 text-white text-sm outline-none focus:border-secondary transition-colors"
+                     />
+                   </div>
+                 ))}
+               </div>
 
-             {/* Section 3: Arrays (Tags) */}
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 rounded-2xl bg-black/20 border border-white/5">
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Profile Tags</label>
-                   <p className="text-[10px] text-gray-400 mb-3">Separadas por vírgula (ex: gamer, battery, camera)</p>
-                   <input type="text" name="profile_tags" value={formData.profile_tags} onChange={handleChange} placeholder="gamer, battery" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors font-mono text-sm" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Priority Tags</label>
-                   <p className="text-[10px] text-gray-400 mb-3">Separadas por vírgula (ex: gaming_performance, long_battery)</p>
-                   <input type="text" name="priority_tags" value={formData.priority_tags} onChange={handleChange} placeholder="camera_quality, software_updates" className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors font-mono text-sm" />
-                </div>
-             </div>
+               {/* Profile Tags */}
+               <div className="space-y-3">
+                 <label className="text-xs font-bold text-gray-400 block">Perfil de Uso (Tags)</label>
+                 <div className="flex flex-wrap gap-2">
+                   {['power_user', 'photography', 'balanced', 'budget', 'gamer', 'casual'].map(tag => (
+                     <button
+                       key={tag}
+                       type="button"
+                       onClick={() => toggleTag('profile_tags', tag)}
+                       className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all border ${
+                         formData.profile_tags.includes(tag) 
+                          ? 'bg-primary text-black border-primary' 
+                          : 'bg-white/5 text-gray-500 border-white/10'
+                       }`}
+                     >
+                       {tag}
+                     </button>
+                   ))}
+                 </div>
+               </div>
 
-             {/* Section 4: URLs */}
-             <div className="grid grid-cols-1 gap-6">
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">URL da Imagem</label>
-                   <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition-colors text-sm" />
-                </div>
-                <div>
-                   <label className="block text-xs font-bold uppercase tracking-widest text-secondary mb-2">Link Afiliado de Venda</label>
-                   <input type="url" name="affiliate_link" value={formData.affiliate_link} onChange={handleChange} placeholder="https://amazon.com.br/..." className="w-full bg-secondary/5 border border-secondary/20 rounded-lg p-3 text-white outline-none focus:border-secondary transition-colors text-sm" />
-                </div>
-             </div>
-          </form>
-        </div>
+               {/* Priority Tags */}
+               <div className="space-y-3">
+                 <label className="text-xs font-bold text-gray-400 block">Prioridades (Tags)</label>
+                 <div className="flex flex-wrap gap-2">
+                   {['camera', 'performance', 'battery', 'price', 'display'].map(tag => (
+                     <button
+                       key={tag}
+                       type="button"
+                       onClick={() => toggleTag('priority_tags', tag)}
+                       className={`px-3 py-1 rounded-full text-[10px] font-bold transition-all border ${
+                         formData.priority_tags.includes(tag) 
+                          ? 'bg-secondary text-black border-secondary' 
+                          : 'bg-white/5 text-gray-500 border-white/10'
+                       }`}
+                     >
+                       {tag}
+                     </button>
+                   ))}
+                 </div>
+               </div>
+            </div>
+          </div>
 
-        {/* Footer */}
-        <div className="p-6 border-t border-white/5 bg-white/5 rounded-b-2xl shrink-0 flex items-center justify-end gap-4">
-           <Button variant="outline" onClick={onClose} disabled={loading}>
-             Cancelar
-           </Button>
-           <Button type="submit" form="phone-form" variant="primary" className="min-w-[120px]" disabled={loading}>
-             {loading ? <Loader2 className="animate-spin" size={20} /> : "Salvar Aparelho"}
-           </Button>
-        </div>
+          <div className="mt-12 flex justify-end gap-4 border-t border-white/5 pt-8">
+            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+            <Button type="submit" variant="primary" className="gap-2 min-w-[140px]" disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" size={18} /> : (
+                <><Save size={18} /> {phoneToEdit ? 'Atualizar' : 'Salvar Aparelho'}</>
+              )}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
