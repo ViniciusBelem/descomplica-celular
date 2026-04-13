@@ -66,13 +66,20 @@ export function Admin() {
   };
 
   const handleSavePhone = async (payload, id) => {
-    if (id) {
-      await adminService.updatePhone(id, payload);
-    } else {
-      await adminService.insertPhone(payload);
+    try {
+      if (id) {
+        await adminService.updatePhone(id, payload);
+      } else {
+        await adminService.insertPhone(payload);
+      }
+      // Refresh table safely
+      await fetchPhones();
+      return true; // Success
+    } catch (err) {
+      console.error("❌ Erro ao salvar celular:", err);
+      // Let the caller (modal) handle the error display
+      throw err;
     }
-    // Refresh table safely
-    await fetchPhones();
   };
 
   const handleConfirmDelete = async () => {

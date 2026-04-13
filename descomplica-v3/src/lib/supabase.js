@@ -3,20 +3,24 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-console.log("🔑 VITE ENV SUPABASE: URL encontrada?", !!supabaseUrl, "| Chave encontada? Tamanho:", supabaseAnonKey.length);
+// Debugging only in development mode
+if (import.meta.env.DEV) {
+  console.log("🔑 Supabase URL Configured:", !!supabaseUrl);
+}
 
-// Prevent crashes if the URL isn't configured yet or is a placeholder
 const isValidUrl = (url) => {
   try {
-    new URL(url);
-    return true;
+    return url && new URL(url).protocol.startsWith('http');
   } catch {
     return false;
   }
 };
 
-const isReady = isValidUrl(supabaseUrl) && supabaseAnonKey !== 'SUBSTITUA_PELA_CHAVE_AQUI' && supabaseAnonKey.length > 20;
-console.log("🚦 Supabase JS liberado para inicializar?", isReady);
+const isReady = isValidUrl(supabaseUrl) && supabaseAnonKey && supabaseAnonKey.length > 30;
+
+if (import.meta.env.DEV && !isReady) {
+  console.warn("⚠️ Supabase client is NOT ready. Check your .env file.");
+}
 
 export const supabase = isReady
   ? createClient(supabaseUrl, supabaseAnonKey)

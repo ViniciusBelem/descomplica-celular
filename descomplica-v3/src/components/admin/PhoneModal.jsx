@@ -58,6 +58,9 @@ export function PhoneModal({ isOpen, onClose, onSave, phoneToEdit = null }) {
     setLoading(true);
     setError(null);
 
+    // Basic sanitization to prevent XSS in the database
+    const sanitize = (str) => str.replace(/<[^>]*>?/gm, '').trim();
+
     try {
       // Validate empty numerical fields before saving
       const requiredNumbers = ['price', 'match_score', 'camera_score', 'battery_score', 'performance_score'];
@@ -68,20 +71,19 @@ export function PhoneModal({ isOpen, onClose, onSave, phoneToEdit = null }) {
       }
 
       // Format payload for EXACT Supabase Schema
-      // Relational fields + JSONB conversions
       const payload = {
-        name: formData.name.trim(),
-        brand: formData.brand.trim(),
-        model: formData.name.trim(), // Fallback model to name as it is NOT NULL in the schema
+        name: sanitize(formData.name),
+        brand: sanitize(formData.brand),
+        model: sanitize(formData.name), 
         price: parseFloat(formData.price),
         image_url: formData.image_url.trim() || null,
-        affiliate_link: formData.affiliate_link.trim() || null, // Returned to the payload!
+        affiliate_link: formData.affiliate_link.trim() || null,
         description: "",
         match_score: parseInt(formData.match_score, 10),
         
         // Tags are arrays of texts
-        profile_tags: formData.profile_tags.split(',').map(t => t.trim()).filter(Boolean),
-        priority_tags: formData.priority_tags.split(',').map(t => t.trim()).filter(Boolean),
+        profile_tags: formData.profile_tags.split(',').map(t => sanitize(t)).filter(Boolean),
+        priority_tags: formData.priority_tags.split(',').map(t => sanitize(t)).filter(Boolean),
 
         // Deep JSONB
         scores: {
@@ -92,10 +94,10 @@ export function PhoneModal({ isOpen, onClose, onSave, phoneToEdit = null }) {
         }
       };
 
-      await onSave(payload, phoneToEdit?.id); // Trigger parent save function
-      onClose(); // Close modal on success
+      await onSave(payload, phoneToEdit?.id); 
+      onClose(); 
     } catch (err) {
-      setError(err.message || 'Erro ao preparar dados do celular. Verifique os formatos.');
+      setError(err.message || 'Erro ao salvar. Verifique se você tem permissão de Admin.');
     } finally {
       setLoading(false);
     }

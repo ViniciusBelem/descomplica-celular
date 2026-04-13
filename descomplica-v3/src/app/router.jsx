@@ -3,6 +3,9 @@ import { Home } from "../pages/Home";
 import { Admin } from "../pages/Admin";
 import { AdminSettings } from "../pages/AdminSettings";
 import { Login } from "../pages/Login";
+import { Catalog } from "../pages/Catalog";
+import { Library } from "../pages/Library";
+import { Compare } from "../pages/Compare";
 import { ComingSoon } from "../pages/ComingSoon";
 import Layout from "../components/Layout";
 import AdminLayout from "../components/AdminLayout";
@@ -19,6 +22,18 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />
+      },
+      {
+        path: "catalog",
+        element: <Catalog />
+      },
+      {
+        path: "library",
+        element: <Library />
+      },
+      {
+        path: "compare",
+        element: <Compare />
       },
       // Fallback 404 (Tudo que não existir)
       { path: "*", element: <ComingSoon /> }
