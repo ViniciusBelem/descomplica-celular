@@ -17,8 +17,10 @@ export const useAdvisorStore = create((set, get) => ({
 
   // ─── COMPUTED ───
   isStep1Valid: () => {
-    const b = parseFloat(get().budget);
-    return !isNaN(b) && b > 0;
+    const b = get().budget.toString().trim();
+    if (!b) return false;
+    const num = parseFloat(b);
+    return !isNaN(num) && num >= 500; // Mínimo de 500 para ser um valor realista
   },
   
   isStep2Valid: () => !!get().profile,
@@ -31,9 +33,12 @@ export const useAdvisorStore = create((set, get) => ({
   
   nextStep: () => {
     const { step, isStep1Valid, isStep2Valid } = get();
-    if (step === 1 && !isStep1Valid()) return;
+    if (step === 1 && !isStep1Valid()) {
+      set({ error: "Por favor, insira um valor válido acima de R$ 500." });
+      return;
+    }
     if (step === 2 && !isStep2Valid()) return;
-    set({ step: Math.min(step + 1, 3) });
+    set({ step: Math.min(step + 1, 3), error: null });
   },
   
   prevStep: () => set((state) => ({ step: Math.max(state.step - 1, 1) })),

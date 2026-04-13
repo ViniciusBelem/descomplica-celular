@@ -23,56 +23,44 @@
     "viewOffer": "Ver Oferta"
   },
   "sidebar": {
-    "home": "Início"
+    "home": "Início",
+    "catalog": "Catálogo",
+    "library": "Biblioteca",
+    "compare": "Compare"
+  },
+  "catalog": {
+    "title": "Smart Catalog",
+    "subtitle": "Explore nossa base de dados neural e filtre por performance bruta.",
+    "searchPlaceholder": "O que você procura?",
+    "filters": "Filtros",
+    "maxPrice": "Preço Máximo",
+    "loading": "Sincronizando Banco...",
+    "empty": "Nenhum resultado encontrado para os filtros selecionados.",
+    "priceFrom": "Investimento",
+    "details": "Ver Detalhes"
+  },
+  "library": {
+    "title": "Minha Biblioteca",
+    "subtitle": "Sua seleção personalizada de aparelhos para facilitar sua escolha final.",
+    "emptyTitle": "Sua lista está vazia",
+    "emptyDesc": "Navegue pelo catálogo e favorite os aparelhos que mais te interessam para vê-los aqui.",
+    "goCatalog": "Explorar Catálogo",
+    "compareHint": "Deseja uma decisão técnica?",
+    "compareHintDesc": "Compare até 3 modelos da sua biblioteca lado a lado.",
+    "startCompare": "Ir para Comparador",
+    "goToCompare": "Comparar Seleção",
+    "details": "Detalhes",
+    "remove": "Remover"
+  },
+  "compare": {
+    "title": "Comparativo Técnico",
+    "subtitle": "Cruzamos os dados brutos para você decidir qual entrega mais valor.",
+    "selectTitle": "Escolher Aparelho",
+    "selectDesc": "Escolha um modelo da sua biblioteca."
   },
   "home": {
     "badge": "Algoritmo de Precisão",
     "title": "A Arte da Escolha. Redefinida.",
     "desc": "Descomplicamos o mercado de celulares. Use o nosso Algoritmo Dinâmico para descobrir o smartphone ideal para seu orçamento e perfil de uso, em menos de 10 segundos."
-  },
-  "comingSoon": {
-    "title": "Área em Construção",
-    "desc": "Esta seção faz parte do roadmap da Arquitetura V3 e será liberada em breve com integrações avançadas.",
-    "back": "Voltar ao Site"
-  },
-  "profile": {
-    "balanced": "Equilibrado",
-    "gamer": "Gamer / Performance",
-    "camera": "Fotografia",
-    "battery": "Bateria Máxima"
-  },
-  "priority": {
-    "camera": "Qualidade da Câmera",
-    "battery": "Durabilidade de Bateria",
-    "performance": "Performance em Jogos",
-    "screen": "Qualidade de Tela"
-  },
-  "admin": {
-    "dashboard": "Dashboard",
-    "logout": "Sair",
-    "panel": "Painel Admin",
-    "catalog": "Catálogo de Aparelhos",
-    "catalogDesc": "Gerencie a base de dados do Algoritmo de Decisão.",
-    "addPhone": "Adicionar Celular",
-    "noPhones": "Nenhum aparelho cadastrado no Supabase.",
-    "colModel": "Modelo",
-    "colBrand": "Marca",
-    "colPrice": "Preço (R$)",
-    "colScore": "Score Base",
-    "colActions": "Ações",
-    "errLoadDb": "Erro ao carregar banco de dados:",
-    "backHome": "Voltar ao Site",
-    "settings": "Configurações",
-    "settingsDesc": "Personalize sua experiência administrativa."
-  },
-  "settings": {
-    "appearance": "Aparência",
-    "appearanceDesc": "Altere o tema e paleta de cores.",
-    "colorMode": "Modo de Cor",
-    "light": "Claro",
-    "dark": "Escuro",
-    "palettes": "Paletas de Cores",
-    "language": "Idioma",
-    "languageDesc": "Escolha o idioma global da interface."
   }
 }

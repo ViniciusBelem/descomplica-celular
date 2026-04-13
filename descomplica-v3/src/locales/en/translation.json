@@ -23,14 +23,17 @@
     "viewOffer": "View Offer"
   },
   "sidebar": {
-    "home": "Home"
+    "home": "Home",
+    "catalog": "Catalog",
+    "compare": "Compare",
+    "library": "Library"
   },
   "home": {
     "badge": "Precision Algorithm",
     "title": "The Art of Choice. Redefined.",
     "desc": "We simplify the mobile market. Use our Dynamic Algorithm to discover the ideal smartphone for your budget and usage profile in less than 10 seconds."
   },
-  "coming_soon": {
+  "comingSoon": {
     "title": "Area Under Construction",
     "desc": "This section is part of the V3 Architecture roadmap and will be released soon with advanced integrations.",
     "back": "Return to Site"

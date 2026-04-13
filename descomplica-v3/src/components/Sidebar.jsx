@@ -10,9 +10,10 @@ export default function Sidebar() {
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 hidden lg:flex flex-col bg-surface border-r border-primary/10 z-40 transition-transform duration-500">
-      <div className="p-8 pb-12">
+      {/* Branding Section - Pushed down to clear the h-16 TopNav */}
+      <div className="pt-24 p-8 pb-12">
         <h2 className="text-xl font-black text-primary tracking-tighter">Descomplica</h2>
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Smart Advisor</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60 italic">Smart Advisor</p>
       </div>
       
       <nav className="flex-1 px-4 space-y-2">

@@ -33,7 +33,7 @@ export default function Layout() {
       <div className={!supabase ? "pt-8" : ""}>
         <TopNav />
         <Sidebar />
-        <main className="lg:pl-64 pt-16 relative z-10">
+        <main className="lg:pl-64 relative z-10">
           <Outlet />
         </main>
       </div>

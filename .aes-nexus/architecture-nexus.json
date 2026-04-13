@@ -1,0 +1,30 @@
+{
+  "project_name": "Descomplica Celular V3",
+  "version": "3.2.0",
+  "lead_partner": "Vinicius/Harveall",
+  "nexus_protocol": "A.E.S. 4.0",
+  "tech_stack": {
+    "frontend": "React (Vite)",
+    "styling": "Tailwind CSS",
+    "state_management": "Zustand",
+    "backend": "Supabase (PostgreSQL)",
+    "i18n": "react-i18next",
+    "router": "react-router-dom v7"
+  },
+  "critical_paths": [
+    "src/store/useAdvisorStore.js",
+    "src/store/useAuthStore.js",
+    "src/services/adminService.js",
+    "src/lib/supabase.js"
+  ],
+  "pending_milestones": [
+    { "id": "I18N_SYNC", "task": "Sincronização Total de Traduções Home/Admin", "status": "PENDING" },
+    { "id": "SEO_HELMET", "task": "Implementação de SEO Dinâmico (React Helmet)", "status": "PENDING" },
+    { "id": "ALGO_REFINE", "task": "Refinamento do Algoritmo de Match com Dados Reais", "status": "PENDING" }
+  ],
+  "known_issues": [
+    "Necessário confirmar coluna 'affiliate_link' no Supabase",
+    "Seções da Home ainda utilizam textos estáticos 'Navigating...'"
+  ],
+  "last_sync": "2026-04-13T10:00:00Z"
+}
