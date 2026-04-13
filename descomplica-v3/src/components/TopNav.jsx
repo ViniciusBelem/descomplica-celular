@@ -25,14 +25,15 @@ export default function TopNav() {
   return (
     <header 
       className={`
-        fixed top-0 w-full z-50 transition-all duration-500 h-16
+        fixed top-0 right-0 z-40 transition-all duration-500 h-16
+        w-full lg:w-[calc(100%-16rem)]
         ${isScrolled 
-          ? 'bg-surface/70 backdrop-blur-xl border-b border-primary/10 shadow-lg shadow-black/5' 
+          ? 'bg-surface/70 backdrop-blur-xl border-b border-primary/10 shadow-lg shadow-black/10' 
           : 'bg-transparent border-b border-transparent'}
       `}
     >
       <div className="flex justify-between items-center px-4 sm:px-8 h-full max-w-full mx-auto">
-        <div className="flex items-center gap-8 lg:ml-64">
+        <div className="flex items-center gap-8">
           <Link to="/" className="text-xl font-black tracking-tighter text-primary lg:hidden">
             Descomplica
           </Link>
@@ -42,6 +43,7 @@ export default function TopNav() {
             <Link to="/catalog" className="text-text-muted hover:text-primary transition-colors">{t('nav.specs')}</Link>
           </nav>
         </div>
+
         
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Language Selector Custom UI */}
