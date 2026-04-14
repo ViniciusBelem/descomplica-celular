@@ -2,7 +2,7 @@
   "nav": {
     "discover": "Discover",
     "compare": "Compare",
-    "specs": "Specs",
+    "specs": "Catalog",
     "advisors": "Advisors"
   },
   "advisor": {
@@ -25,18 +25,43 @@
   "sidebar": {
     "home": "Home",
     "catalog": "Catalog",
-    "compare": "Compare",
-    "library": "Library"
+    "library": "Library",
+    "compare": "Compare"
+  },
+  "catalog": {
+    "title": "Smart Catalog",
+    "subtitle": "Explore our neural database and filter by raw performance.",
+    "searchPlaceholder": "What are you looking for?",
+    "filters": "Filters",
+    "maxPrice": "Max Price",
+    "loading": "Syncing Database...",
+    "empty": "No results found for the selected filters.",
+    "priceFrom": "Investment",
+    "details": "View Details"
+  },
+  "library": {
+    "title": "My Library",
+    "subtitle": "Your personalized selection of devices to ease your final choice.",
+    "emptyTitle": "Your list is empty",
+    "emptyDesc": "Browse the catalog and favorite the devices you are interested in to see them here.",
+    "goCatalog": "Explore Catalog",
+    "compareHint": "Technical Decision",
+    "compareHintDesc": "Compare up to 3 models from your library side by side.",
+    "startCompare": "Go to Comparator",
+    "goToCompare": "Compare Selection",
+    "details": "Details",
+    "remove": "Remove"
+  },
+  "compare": {
+    "title": "Technical Duel",
+    "subtitle": "We cross-reference raw data for you to decide which delivers more value.",
+    "selectTitle": "Select Device",
+    "selectDesc": "Choose a model from your library."
   },
   "home": {
     "badge": "Precision Algorithm",
     "title": "The Art of Choice. Redefined.",
     "desc": "We simplify the mobile market. Use our Dynamic Algorithm to discover the ideal smartphone for your budget and usage profile in less than 10 seconds."
-  },
-  "comingSoon": {
-    "title": "Area Under Construction",
-    "desc": "This section is part of the V3 Architecture roadmap and will be released soon with advanced integrations.",
-    "back": "Return to Site"
   },
   "profile": {
     "balanced": "Balanced",
