@@ -65,7 +65,12 @@ Para rodar o motor localmente:
 
 ## 🛡️ Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+"Para encerrar, um ponto crucial: o Descomplica Celular não foi concebido como um software aberto, mas como uma solução proprietária. Mantemos o projeto
+  sob licença privada porque o nosso maior valor não está apenas no código, mas no algoritmo de peso e ranking que desenvolvemos.
 
+  Nosso objetivo é transformar essa estrutura em um SaaS (Software as a Service) B2B, onde o motor de recomendação pode ser licenciado para grandes
+  varejistas. Não estamos entregando apenas um site, mas uma camada de inteligência de dados pronta para ser monetizada e escalada.
+
+  Dito isso, agradeço a atenção e abro o espaço para perguntas técnicas ou de modelo de negócio."
 ---
 *Nexus Pulse 4.1 Engaged. Engineered for Excellence.*
