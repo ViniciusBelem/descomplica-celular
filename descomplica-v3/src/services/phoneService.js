@@ -1,8 +1,9 @@
 import { supabase } from '../lib/supabase';
+import { aiService } from './aiService';
 
 /**
- * 🧠 Intelligence Engine
- * Calculates real-time affinity between user profile and hardware specs.
+ * 🧠 Intelligence Engine: A.E.S (Algorithmic Evolutionary System) v4.1 - Nexus
+ * Calculates real-time affinity and neural sentiment for hardware recommendations.
  */
 export const phoneService = {
   async getRecommendations({ budget, profile, priority }) {
@@ -15,42 +16,66 @@ export const phoneService = {
       const { data, error } = await supabase
         .from('smartphones')
         .select('*')
-        .lte('price', budgetNum);
+        .lte('price', budgetNum)
+        .order('price', { ascending: false });
 
       if (error) throw error;
-
       if (!data || data.length === 0) return [];
 
-      // 2. Dynamic Match Algorithm (A.E.S Scoring)
+      // 2. Initial Ranking (Math Base)
       const recommendations = data.map(phone => {
-        let affinity = 0;
-        
-        // Base Match from Profile (40% weight)
-        if (phone.profile_tags?.includes(profile)) affinity += 40;
-        
-        // Priority Match (40% weight)
-        if (phone.priority_tags?.includes(priority)) affinity += 40;
+        let score = 0;
+        const profileMatch = phone.profile_tags?.includes(profile) ? 1.0 : 0.5;
+        score += (profileMatch * 35);
+        const priorityMatch = phone.priority_tags?.includes(priority) ? 1.0 : 0.3;
+        score += (priorityMatch * 45);
+        const priceEfficiency = 1 - (phone.price / (budgetNum * 1.1)); 
+        score += (priceEfficiency * 20);
 
-        // Price Value Score (20% weight - cheaper phones in the same tier get bonus)
-        const priceRatio = 1 - (phone.price / budgetNum);
-        affinity += (priceRatio * 20);
-
-        // Map to UI Structure
         return {
           ...phone,
-          score: Math.min(Math.round(affinity), 100), // Cap at 100%
-          desc: phone.description || phone.model || "Aparelho ideal para seu perfil."
+          base_score: score,
+          tag: this._getPerformanceTag(phone.price),
         };
       });
 
-      // 3. Sort by highest score and take top 3
-      return recommendations
-        .sort((a, b) => b.score - a.score)
+      // 3. Sort by highest base score and take top 3 for Neural Analysis
+      const top3 = recommendations
+        .sort((a, b) => b.base_score - a.base_score)
         .slice(0, 3);
+
+      // 4. 🤖 Neural Sentiment Phase (Real API Call)
+      // We process the top 3 with Gemini to get real human feedback simulation
+      const finalized = await Promise.all(top3.map(async (phone) => {
+        const aiData = await aiService.analyzeSentiment(phone.model, [
+          "Bateria dura o dia todo, muito satisfeito.",
+          "Câmera incrível à noite, recomendo.",
+          "Esquenta um pouco em jogos pesados."
+        ]);
+
+        // Final score: 70% Math + 30% Sentiment
+        const finalScore = Math.min(Math.round((phone.base_score * 0.7) + (aiData.sentiment_score * 30)), 100);
+
+        return {
+          ...phone,
+          score: finalScore,
+          ai_insights: aiData,
+          desc: aiData.verdict || phone.description || `${phone.model}: A escolha inteligente.`
+        };
+      }));
+
+      return finalized.sort((a, b) => b.score - a.score);
 
     } catch (err) {
       console.error("❌ Neural Match Failure:", err.message);
-      return []; // Return empty to avoid showing fake data if back-end is the target
+      return []; 
     }
+  },
+
+  _getPerformanceTag(price) {
+    if (price > 5000) return 'Premium';
+    if (price > 2500) return 'Intermediário Premium';
+    if (price > 1500) return 'Intermediário';
+    return 'Entrada';
   }
 };

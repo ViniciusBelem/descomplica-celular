@@ -20,7 +20,8 @@
     "btnRedo": "Run Again",
     "bestChoice": "Best Choice",
     "lowestPrice": "Lowest price available",
-    "viewOffer": "View Offer"
+    "viewOffer": "View Offer",
+    "details": "View Details"
   },
   "sidebar": {
     "home": "Home",

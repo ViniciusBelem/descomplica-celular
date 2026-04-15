@@ -15,7 +15,7 @@ export function Button({
   const variants = {
     primary: "bg-primary text-black hover:bg-primary/90 shadow-lg shadow-primary/20",
     secondary: "bg-secondary text-black hover:bg-secondary/90 shadow-lg shadow-secondary/20",
-    outline: "bg-transparent border border-white/20 hover:border-white text-gray-300 hover:text-white",
+    outline: "bg-transparent border-2 border-primary/30 hover:border-primary text-text/90 hover:text-primary transition-all duration-300",
     ghost: "bg-transparent hover:bg-white/5 text-gray-400 hover:text-white",
     danger: "bg-error text-white hover:bg-error/90"
   };

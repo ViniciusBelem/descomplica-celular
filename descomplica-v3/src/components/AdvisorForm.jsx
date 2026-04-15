@@ -30,10 +30,9 @@ export default function AdvisorForm() {
           className="space-y-6 w-full max-w-2xl mx-auto p-8 glass-panel rounded-3xl"
         >
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-3xl font-bold tracking-tighter text-white">
+            <h3 className="text-3xl font-bold tracking-tighter text-text">
               {t('advisor.resultsTitle')}
-            </h3>
-            <span className="px-3 py-1 bg-secondary/20 text-secondary text-[10px] font-black uppercase tracking-widest rounded-full border border-secondary/30">
+            </h3>            <span className="px-3 py-1 bg-secondary/20 text-secondary text-[10px] font-black uppercase tracking-widest rounded-full border border-secondary/30">
               Neural Match Found
             </span>
           </div>
