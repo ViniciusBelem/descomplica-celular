@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.smartphones (
     model TEXT,
     description TEXT,
     price NUMERIC(10, 2) NOT NULL,
-    img_url TEXT,
+    image_url TEXT,
     match_score INTEGER DEFAULT 0,
     profile_tags TEXT[] DEFAULT '{}', -- ['balanced', 'heavy', 'entry']
     priority_tags TEXT[] DEFAULT '{}', -- ['camera', 'battery', 'performance', 'screen']
@@ -50,7 +50,7 @@ DROP POLICY IF EXISTS "Allow users to see their own recommendations" ON public.r
 CREATE POLICY "Allow users to see their own recommendations" ON public.recommendations FOR SELECT USING (auth.uid() = user_id);
 
 -- 4. DADOS INICIAIS (SEED)
-INSERT INTO public.smartphones (name, brand, price, description, profile_tags, priority_tags, match_score, img_url)
+INSERT INTO public.smartphones (name, brand, price, description, profile_tags, priority_tags, match_score, image_url)
 VALUES 
 ('Samsung Galaxy A55 5G', 'Samsung', 2199.00, 'Equilíbrio premium com IA de câmera.', ARRAY['balanced'], ARRAY['camera', 'screen'], 90, 'https://images.samsung.com/is/image/samsung/p6pim/br/sm-a556ezkrzto/gallery/br-galaxy-a55-5g-sm-a556-sm-a556ezkrzto-thumb-540342672'),
 ('POCO X6 Pro', 'Xiaomi', 2450.00, 'Performance extrema para jogos e multitasking.', ARRAY['heavy'], ARRAY['performance'], 88, 'https://m.media-amazon.com/images/I/51v68uYfSXL._AC_SL1000_.jpg'),

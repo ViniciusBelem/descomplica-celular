@@ -5,13 +5,13 @@ import enTranslations from './locales/en/translation.json';
 import ptTranslations from './locales/pt/translation.json';
 
 i18n
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
       en: { translation: enTranslations },
       pt: { translation: ptTranslations }
     },
+    lng: 'pt', // Force PT as default
     fallbackLng: 'pt',
     interpolation: {
       escapeValue: false,

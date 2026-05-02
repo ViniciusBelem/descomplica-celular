@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useLibraryStore } from '../store/useLibraryStore';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { 
   Search, 
   Loader2, 
@@ -22,62 +23,120 @@ import {
 import { Button } from '../components/ui/Button';
 import DetailsModal from '../components/DetailsModal';
 
+const PAGE_SIZE = 6;
+
+const priceTiers = [
+  { id: 'all', label: 'Todos os Segmentos', min: 0, max: 99999 },
+  { id: 'entry', label: 'Entrada (Até 2k)', min: 0, max: 2000 },
+  { id: 'mid', label: 'Intermediário (2k-4k)', min: 2000, max: 4000 },
+  { id: 'premium', label: 'Premium (4k-7k)', min: 4000, max: 7000 },
+  { id: 'enthusiast', label: 'Elite (7k+)', min: 7000, max: 99999 },
+];
+
 export function Catalog() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
   const [phones, setPhones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceTier, setPriceTier] = useState('all');
   const [sortBy, setSortBy] = useState('name');
+  const pageRef = useRef(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState(null);
   
   // Modal State
   const [selectedPhone, setSelectedPhone] = useState(null);
 
-  const priceTiers = [
-    { id: 'all', label: 'Todos os Segmentos', min: 0, max: 99999 },
-    { id: 'entry', label: 'Entrada (Até 2k)', min: 0, max: 2000 },
-    { id: 'mid', label: 'Intermediário (2k-4k)', min: 2000, max: 4000 },
-    { id: 'premium', label: 'Premium (4k-7k)', min: 4000, max: 7000 },
-    { id: 'enthusiast', label: 'Elite (7k+)', min: 7000, max: 99999 },
-  ];
+  // Infinite Scroll Hook
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: false
+  });
 
-  useEffect(() => { fetchCatalog(); }, []);
+  const fetchCatalog = useCallback(async (isInitial = false) => {
+    if (isInitial) {
+      setLoading(true);
+      pageRef.current = 0;
+      setHasMore(true);
+    } else {
+      setLoadingMore(true);
+    }
 
-  async function fetchCatalog() {
-    setLoading(true);
     try {
-      const { data, error } = await supabase.from('smartphones').select('*').order('name');
-      if (error) throw error;
-      setPhones(data || []);
-    } catch (err) { console.error(err); } finally { setLoading(false); }
-  }
+      const from = pageRef.current * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
 
-  const brands = useMemo(() => {
-    const counts = phones.reduce((acc, p) => {
-      acc[p.brand] = (acc[p.brand] || 0) + 1;
-      return acc;
-    }, {});
-    return Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  }, [phones]);
+      let query = supabase.from('smartphones').select('*', { count: 'exact' });
 
-  const filteredAndSortedPhones = useMemo(() => {
-    let result = phones.filter(p => {
-      const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(p.brand);
+      // -- SERVER SIDE FILTERING --
+      if (searchTerm) {
+        query = query.ilike('name', `%${searchTerm}%`);
+      }
+
+      if (selectedBrands.length > 0) {
+        query = query.in('brand', selectedBrands);
+      }
+
       const tier = priceTiers.find(t => t.id === priceTier);
-      const matchesPrice = p.price >= tier.min && p.price <= tier.max;
-      return matchesSearch && matchesBrand && matchesPrice;
-    });
+      if (tier && tier.id !== 'all') {
+        query = query.gte('price', tier.min).lte('price', tier.max);
+      }
 
-    return result.sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
-      if (sortBy === 'score') return (b.match_score || 0) - (a.match_score || 0);
-      return a.name.localeCompare(b.name);
-    });
-  }, [phones, searchTerm, selectedBrands, priceTier, sortBy]);
+      // -- SERVER SIDE SORTING --
+      if (sortBy === 'price-asc') query = query.order('price', { ascending: true });
+      else if (sortBy === 'price-desc') query = query.order('price', { ascending: false });
+      else if (sortBy === 'score') query = query.order('match_score', { ascending: false });
+      else query = query.order('name', { ascending: true });
+
+      const { data, error, count } = await query.range(from, to);
+
+      if (error) throw error;
+
+      const newPhones = data || [];
+      
+      setPhones(prev => {
+        const combined = isInitial ? newPhones : [...prev, ...newPhones];
+        setHasMore(combined.length < (count || 0));
+        return combined;
+      });
+
+      pageRef.current += 1;
+      setError(null);
+
+    } catch (err) { 
+      console.error("❌ Catalog Fetch Error:", err); 
+      setError("Não foi possível carregar os dados. Verifique sua conexão.");
+    } finally { 
+      setLoading(false); 
+      setLoadingMore(false); 
+    }
+  }, [searchTerm, selectedBrands, priceTier, sortBy]);
+
+  // Initial load and filter/sort changes
+  useEffect(() => {
+    fetchCatalog(true);
+  }, [searchTerm, selectedBrands, priceTier, sortBy, fetchCatalog]);
+
+  // Infinite Scroll Trigger
+  useEffect(() => {
+    if (inView && hasMore && !loading && !loadingMore) {
+      fetchCatalog(false);
+    }
+  }, [inView, hasMore, loading, loadingMore, fetchCatalog]);
+
+  // We still need brands list for the filter UI. 
+  const [availableBrands, setAvailableBrands] = useState([]);
+  useEffect(() => {
+    async function fetchBrands() {
+      const { data } = await supabase.from('smartphones').select('brand');
+      if (data) {
+        const unique = [...new Set(data.map(d => d.brand))];
+        setAvailableBrands(unique.sort());
+      }
+    }
+    fetchBrands();
+  }, []);
 
   return (
     <div className="animate-in fade-in duration-1000 pb-32">
@@ -136,13 +195,13 @@ export function Catalog() {
                  )}
               </div>
               <div className="flex flex-wrap gap-3">
-                 {brands.map(([brand, count]) => (
+                 {availableBrands.map((brand) => (
                    <button
                      key={brand}
                      onClick={() => setSelectedBrands(prev => prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand])}
                      className={`px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${selectedBrands.includes(brand) ? 'bg-primary border-primary text-background shadow-lg shadow-primary/20' : 'bg-surface-container/50 border-primary/5 text-text-muted hover:border-primary/30'}`}
                    >
-                     {brand} <span className="ml-2 opacity-40 font-mono">{count}</span>
+                     {brand}
                    </button>
                  ))}
               </div>
@@ -173,14 +232,51 @@ export function Catalog() {
             <Loader2 className="animate-spin text-primary" size={56} strokeWidth={3} />
             <p className="font-black animate-pulse uppercase tracking-[0.3em] text-[10px] italic text-primary">Sincronizando Banco...</p>
           </div>
+        ) : error ? (
+          <div className="h-96 flex flex-col items-center justify-center gap-4 glass-panel rounded-3xl border-error/20 bg-error/5 p-12 text-center">
+            <X size={48} className="text-error mb-4" />
+            <h3 className="text-xl font-black text-text italic">Ops! Algo deu errado</h3>
+            <p className="text-text-muted font-medium max-w-md">{error}</p>
+            <Button variant="outline" className="mt-6 border-error/20 hover:bg-error/10 text-error" onClick={() => fetchCatalog(true)}>
+              Tentar Novamente
+            </Button>
+          </div>
+        ) : phones.length === 0 ? (
+          <div className="h-96 flex flex-col items-center justify-center gap-4 glass-panel rounded-3xl border-primary/10 bg-surface/30 p-12 text-center">
+            <Smartphone size={48} className="text-primary/20 mb-4" />
+            <h3 className="text-xl font-black text-text italic">Nenhum smartphone encontrado</h3>
+            <p className="text-text-muted font-medium max-w-md">Tente ajustar seus filtros ou termos de busca para encontrar o que procura.</p>
+            <Button variant="outline" className="mt-6 border-primary/20" onClick={() => {
+              setSearchTerm('');
+              setSelectedBrands([]);
+              setPriceTier('all');
+            }}>
+              Limpar Filtros
+            </Button>
+          </div>
         ) : (
-          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10 w-full">
-            <AnimatePresence>
-              {filteredAndSortedPhones.map(phone => (
-                <CatalogCard key={phone.id} phone={phone} onDetails={() => setSelectedPhone(phone)} />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <>
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10 w-full">
+              <AnimatePresence>
+                {phones.map(phone => (
+                  <CatalogCard key={phone.id} phone={phone} onDetails={() => setSelectedPhone(phone)} />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Infinite Scroll Trigger Area */}
+            <div ref={ref} className="h-24 flex items-center justify-center mt-12">
+               {loadingMore && (
+                 <div className="flex items-center gap-3">
+                    <Loader2 className="animate-spin text-primary" size={24} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-text-muted">Carregando mais...</span>
+                 </div>
+               )}
+               {!hasMore && phones.length > 0 && (
+                 <span className="text-[10px] font-black uppercase tracking-widest text-text-muted opacity-40 italic">Fim do Catálogo</span>
+               )}
+            </div>
+          </>
         )}
       </section>
 

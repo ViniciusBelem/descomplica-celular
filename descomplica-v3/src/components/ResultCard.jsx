@@ -10,7 +10,7 @@ import DetailsModal from "./DetailsModal";
  */
 export default function ResultCard({ item, rank }) {
   const { t } = useTranslation();
-  const [showDetails, setShowNoDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   // AI data fallback if API fails or is not present
   const ai = item.ai_insights || { 
@@ -56,7 +56,7 @@ export default function ResultCard({ item, rank }) {
           </div>
 
           {/* AI Pros & Cons Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="flex items-start gap-3 p-3 bg-green-500/5 rounded-xl border border-green-500/10 hover:bg-green-500/10 transition-colors">
               <CheckCircle2 size={16} className="text-green-500 mt-0.5 shrink-0" />
               <div>
@@ -72,6 +72,26 @@ export default function ResultCard({ item, rank }) {
               </div>
             </div>
           </div>
+
+          {/* AI Sources (Grounding) */}
+          {ai.sources && ai.sources.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-3 items-center">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">Fontes:</span>
+              <div className="flex gap-2">
+                {ai.sources.map((url, idx) => (
+                  <a 
+                    key={idx} 
+                    href={url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-1 px-2 py-1 bg-primary/5 hover:bg-primary/20 border border-primary/10 rounded-lg text-[10px] font-bold text-primary transition-all duration-300"
+                  >
+                    {new URL(url).hostname.replace('www.', '')} <ExternalLink size={10} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Pricing & Actions Area */}
@@ -96,7 +116,7 @@ export default function ResultCard({ item, rank }) {
             <Button 
               variant="outline" 
               className="w-full rounded-2xl py-6 font-black text-xs uppercase tracking-widest border-primary/20 hover:bg-primary/5 gap-3"
-              onClick={() => setShowNoDetails(true)}
+              onClick={() => setShowDetails(true)}
             >
               <Info size={16} /> {t('advisor.details')}
             </Button>
@@ -104,7 +124,7 @@ export default function ResultCard({ item, rank }) {
         </div>
       </div>
 
-      <DetailsModal phone={showDetails ? item : null} onClose={() => setShowNoDetails(false)} />
+      <DetailsModal phone={showDetails ? item : null} onClose={() => setShowDetails(false)} />
     </>
   );
 }

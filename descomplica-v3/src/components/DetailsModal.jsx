@@ -64,7 +64,7 @@ export default function DetailsModal({ phone, onClose }) {
              <div className="grid grid-cols-2 gap-6 mb-10">
                 <SpecItem icon={Camera} label="Câmera" value={`${phone.scores?.camera}%`} color="text-accent" />
                 <SpecItem icon={Battery} label="Bateria" value={`${phone.scores?.battery}%`} color="text-secondary" />
-                <SpecItem icon={Cpu} label="Perfomance" value={`${phone.scores?.performance}%`} color="text-primary" />
+                <SpecItem icon={Cpu} label="Performance" value={`${phone.scores?.performance}%`} color="text-primary" />
                 <SpecItem icon={Monitor} label="Tela" value={`${phone.scores?.display || 85}%`} color="text-blue-400" />
              </div>
 

@@ -13,23 +13,20 @@ import DetailsModal from '../components/DetailsModal';
  */
 export function Compare() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { savedIds } = useLibraryStore();
   const [libraryPhones, setLibraryPhones] = useState([]);
   const [selectedPhones, setSelectedPhones] = useState([null, null, null]);
-  const [loading, setLoading] = useState(false);
   const [showSelector, setShowSelector] = useState(null);
   const [selectedForDetails, setSelectedForDetails] = useState(null);
 
   useEffect(() => {
     if (savedIds.length > 0) {
       const fetchLibrary = async () => {
-        setLoading(true);
         try {
           const { data, error } = await supabase.from('smartphones').select('*').in('id', savedIds);
           if (error) throw error;
           setLibraryPhones(data || []);
-        } catch (err) { console.error(err); } finally { setLoading(false); }
+        } catch (err) { console.error(err); }
       };
       fetchLibrary();
     }
@@ -102,7 +99,7 @@ export function Compare() {
                   <div className="space-y-4">
                     <ScoreBar label="Câmera" value={phone.scores?.camera || 80} icon={Camera} />
                     <ScoreBar label="Bateria" value={phone.scores?.battery || 75} icon={Battery} />
-                    <ScoreBar label="Perfomance" value={phone.scores?.performance || 90} icon={Cpu} />
+                    <ScoreBar label="Performance" value={phone.scores?.performance || 90} icon={Cpu} />
                   </div>
                 </div>
               ) : (

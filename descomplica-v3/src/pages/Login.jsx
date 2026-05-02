@@ -63,7 +63,8 @@ export function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="E-mail" 
+                  autoComplete="email"
+                  placeholder={t('login.email', 'E-mail')} 
                   className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-bold" 
                 />
               </div>
@@ -74,6 +75,7 @@ export function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  autoComplete="current-password"
                   placeholder={t('login.password', 'Senha')} 
                   className="w-full bg-surface-container border border-primary/10 rounded-lg p-4 text-text outline-none focus:border-primary transition-all font-bold" 
                 />

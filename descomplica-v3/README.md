@@ -1,16 +1,18 @@
-# React + Vite
+# Descomplica Celular v3 - Neural Nexus 4.3
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma autônoma de recomendação de smartphones baseada no **Algoritmo de 4 Camadas (The 4-Layer Sieve)** com Mapeamento por Índice.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologias
+- **IA:** Gemini Flash (Grounding Habilitado)
+- **Engine:** Neural Nexus 4.3 (Auditoria Técnica por ID)
+- **Database:** Supabase (Expansão Autônoma)
+- **Frontend:** React + Tailwind (Design Original)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🧠 Sistema de 4 Camadas (O Crivo)
+1. **Context Hashing:** Instantaneidade via cache de cenário.
+2. **Strict Tribunal (Index Mapping):** Fim dos vereditos vazios. Mapeamento infalível entre IA e Banco de Dados.
+3. **Validation Sieve:** Filtro anti-preguiça para garantir análises de hardware reais.
+4. **Atomic Persistence:** Crescimento orgânico do banco de dados via IA.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+*Nexus 4.3: Rigor. Precisão. Autonomia.*

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAdvisorStore } from '../store/useAdvisorStore';
 import { BudgetStep } from './advisor/BudgetStep';
@@ -6,8 +5,6 @@ import { ProfileStep } from './advisor/ProfileStep';
 import { PriorityStep } from './advisor/PriorityStep';
 import ResultCard from './ResultCard';
 import { Button } from './ui/Button';
-
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**

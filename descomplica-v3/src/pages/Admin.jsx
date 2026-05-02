@@ -33,12 +33,12 @@ export function Admin() {
   async function fetchPhones() {
     setLoading(true);
     try {
-      const { data, err } = await supabase
+      const { data, error } = await supabase
         .from('smartphones')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (err) throw err;
+      if (error) throw error;
       setPhones(data || []);
       setError(null);
     } catch (err) {
